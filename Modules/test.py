@@ -1,4 +1,4 @@
-def team_name():
+def team_name(body):
     return '''
     <!DOCTYPE html>
 <html lang="ko">
@@ -9,9 +9,9 @@ def team_name():
     <title>Document</title>
 </head>
 <body>
-    <h1>도로로</h1>
+    {}
 </body>
 </html>
-    '''
+    '''.format(body)
 
 __all__ = ['team_name']
