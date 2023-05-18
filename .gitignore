@@ -1,0 +1,21 @@
+# 파이썬 가상환경
+venv/
+env/
+myenv/
+*.pyc
+__pycache__/
+
+# 로그 파일
+*.log
+
+# IDE/편집기 설정 파일
+.idea/
+.vscode/
+
+# 패키지 의존성
+# (예시) requirements.txt 파일이 있는 경우:
+# requirements.txt
+
+# 기타
+*.swp
+.DS_Store
