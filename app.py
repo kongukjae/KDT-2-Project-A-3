@@ -1,5 +1,5 @@
 # 패키지 모듈
-from flask import Flask
+from flask import Flask, render_template
 from pymongo import MongoClient
 
 # 로컬 모듈
@@ -29,9 +29,9 @@ for document in team_name:
 # 루트 URL에 대한 라우트
 @app.route('/')
 def html_body():
-    string_name = ' '.join(name_list)
+    # string_name = ' '.join(name_list)
     # name = test.team_name('<h1>' + string_name + '</h1>')
-    return render_tamplate()
+    return render_template("index.html", data = name_list)
 
 # 서버 실행
 if __name__ == '__main__':
