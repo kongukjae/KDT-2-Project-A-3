@@ -26,13 +26,12 @@ for document in team_name:
     print(document)
     print(name_list)
 
-string_name = ' '.join(name_list)
-
 # 루트 URL에 대한 라우트
 @app.route('/')
-def hello():
-    name = test.team_name('<h1>' + string_name + '</h1>')
-    return name
+def html_body():
+    string_name = ' '.join(name_list)
+    # name = test.team_name('<h1>' + string_name + '</h1>')
+    return render_tamplate()
 
 # 서버 실행
 if __name__ == '__main__':
