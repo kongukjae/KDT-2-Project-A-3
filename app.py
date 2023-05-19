@@ -1,6 +1,16 @@
 from flask import Flask
+from pymongo import MongoClient
+
 
 app= Flask(__name__)
+client=MongoClient("mongodb://localhost:27017/")
+db=client['test-db']
+
+db1= db.post.find_one({'author':'jimin'})['tags']
+
+
+
+
 
 @app.route('/')
 def home():
@@ -13,7 +23,7 @@ def home():
   <title>Document</title>
 </head>
 <body>
-  <h1>메인화면</h1>
+  <h1>'''+f"{db1}"+'''</h1>
 </body>
 </html>'''
 
@@ -24,3 +34,4 @@ def user(user_name, user_id):
 
 if __name__=='__main__':
   app.run(debug=True)
+
