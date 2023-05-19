@@ -1,13 +1,37 @@
+# 패키지 모듈
 from flask import Flask
+from pymongo import MongoClient
+
+# 로컬 모듈
 from Modules import test
 
 # Flask 앱 인스턴스 생성
 app = Flask(__name__)
 
+#DB 접속
+client = MongoClient('mongodb://localhost:27017/')
+
+#DB 생성 / 접속
+db = client["Dororo"]
+
+#collection 생성 / 접속
+collection = db["DororoCollection"]
+
+name_list = []
+
+#Read
+team_name = collection.find({"team": "Dororo"})
+for document in team_name:
+    name_list.append(document['name'])
+    print(document)
+    print(name_list)
+
+string_name = ' '.join(name_list)
+
 # 루트 URL에 대한 라우트
 @app.route('/')
 def hello():
-    name = test.team_name('<h1>도로로</h1>')
+    name = test.team_name('<h1>' + string_name + '</h1>')
     return name
 
 # 서버 실행
