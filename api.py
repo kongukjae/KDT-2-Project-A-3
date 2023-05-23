@@ -7,6 +7,8 @@ secret = "OeeQY05O9OEfjuOP2KEtVpbP77p8WKaClPqgOEdSAVdH/FazfG51bqSc97t16uYOsvjb5D
 acc_no ="12345678-01"
 
 broker = mojito.KoreaInvestment(api_key=key, api_secret=secret, acc_no=acc_no)
-resp = broker.fetch_price("005930")
+# resp = broker.fetch_price("005930")
+resp = broker.fetch_symbols()
+
 pprint.pprint(resp)
 
