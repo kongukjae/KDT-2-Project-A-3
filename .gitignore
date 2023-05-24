@@ -3,6 +3,7 @@ venv/
 env/
 myenv/
 api_test/
+testApp/
 *.pyc
 __pycache__/
 
