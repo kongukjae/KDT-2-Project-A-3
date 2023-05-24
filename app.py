@@ -1,25 +1,18 @@
-from flask import Flask, render_template
-from pymongo import MongoClient
+from flask import Flask, request, jsonify
 
+app = Flask(__name__)
 
+@app.route('/api/data', methods=['GET'])
+def get_data():
+    data = {'message': 'Hello from Flask!'}
+    return jsonify(data)
 
-app= Flask(__name__)
-client=MongoClient("mongodb://localhost:27017/")
-db=client['test-db']
+@app.route('/api/data', methods=['POST'])
+def post_data():
+    request_data = request.json
+    message = request_data.get('message')
+    response_data = {'message': f'You sent: {message}'}
+    return jsonify(response_data)
 
-db1= db.post.find_one({'author':'jimin'})['tags']
-
-
-
-
-
-@app.route('/')
-def home():
-  return render_template('html.html',name=db1) 
-
-
-
-
-if __name__=='__main__':
-  app.run(debug=True)
-
+if __name__ == '__main__':
+    app.run(debug=True)
