@@ -10,7 +10,7 @@ broker = mojito.KoreaInvestment(
     api_secret = secret,
     acc_no = acc_no
 )
-dir(broker)
+
 symbols = broker.fetch_symbols()
 resp = broker.fetch_price("005930")
 print(symbols, resp)
