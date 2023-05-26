@@ -1,12 +1,17 @@
-from flask import Flask, jsonify
-
+from flask import Flask
+from pymongo import MongoClient
+from bson.json_util import dumps
 app = Flask(__name__)
 
+client = MongoClient('mongodb://localhost:27017')
 
-@app.route('/get-pikachu-image')
-def get_pikachu_image():
-    image_url = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png"
-    return jsonify(image_url=image_url)
+# 데이터베이스를 선택합니다.
+db = client.jongyoon
+
+
+@app.route('/cute')
+def hello_world():
+    return 'Hello, World!'
 
 
 if __name__ == '__main__':
