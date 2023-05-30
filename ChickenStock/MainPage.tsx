@@ -65,31 +65,31 @@ function Main_page(): JSX.Element {
           </View>
         </View>
         <View style={styles.article_area}>
-          <TouchableHighlight onPress={articleLinkPress} style={styles.flex_row}>
+          <TouchableHighlight onPress={articleLinkPress}>
             <View style={styles.flex_row}>
               <Text>기사 1 제목 </Text>
               <Text>기사 1 내용</Text>
             </View>
           </TouchableHighlight>
-          <TouchableHighlight onPress={articleLinkPress} style={styles.flex_row}>
+          <TouchableHighlight onPress={articleLinkPress}>
             <View style={styles.flex_row}>
               <Text>기사 2 제목 </Text>
               <Text>기사 2 내용</Text>
             </View>
           </TouchableHighlight>
-          <TouchableHighlight onPress={articleLinkPress} style={styles.flex_row}>
+          <TouchableHighlight onPress={articleLinkPress}>
             <View style={styles.flex_row}>
               <Text>기사 3 제목 </Text>
               <Text>기사 3 내용</Text>
             </View>
           </TouchableHighlight>
-          <TouchableHighlight onPress={articleLinkPress} style={styles.flex_row}>
+          <TouchableHighlight onPress={articleLinkPress}>
             <View style={styles.flex_row}>
               <Text>기사 4 제목 </Text>
               <Text>기사 4 내용</Text>
             </View>
           </TouchableHighlight>
-          <TouchableHighlight onPress={articleLinkPress} style={styles.flex_row}>
+          <TouchableHighlight onPress={articleLinkPress}>
             <View style={styles.flex_row}>
               <Text>기사 5 제목 </Text>
               <Text>기사 5 내용</Text>
