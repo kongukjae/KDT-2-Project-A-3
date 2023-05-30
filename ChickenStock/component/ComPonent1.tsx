@@ -16,7 +16,7 @@ const ComPonent1 = () => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 5,
+    padding: 3,
   },
   text: {
     fontSize: 15,
