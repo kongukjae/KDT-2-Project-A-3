@@ -16,6 +16,9 @@ import {
   Colors,
 } from 'react-native/Libraries/NewAppScreen';
 
+import { RouteProp, useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+
 function Main_page(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
 
@@ -32,6 +35,21 @@ function Main_page(): JSX.Element {
   const addViews = () => {
     setViewCount(viewCount + 2); // 추가될 View 개수
   };
+
+  const navigation = useNavigation();
+
+  type RootStackParamList = {
+    ChoicePageOne: { choice: string };
+    ChoicePageTwo: { choice: string };
+    ChoicePageThree: { choice: string };
+    ChoicePageFour: { choice: string };
+    MainPage: undefined;
+  };
+
+  const handleLocation = (choice: string) => {
+    navigation.navigate('ChoicePageTwo', { choice: choice });
+    console.log(`${choice}`);
+  }
 
   return (
     <SafeAreaView style={backgroundStyle}>
@@ -123,10 +141,13 @@ function Main_page(): JSX.Element {
         </View>
         <View style={styles.container}>
         {[...Array(viewCount)].map((_, index) => (
-          <View key={index} style={styles.view} />
+          <TouchableHighlight key={index} style={styles.view}>
+            <View>
+              <Text>임시 텍스트 {index}</Text>
+            </View>
+          </TouchableHighlight>
         ))}
         </View>
-        
       </ScrollView>
     </SafeAreaView>
   );
