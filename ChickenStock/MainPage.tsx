@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -12,9 +12,9 @@ import {
   Linking,
 } from 'react-native';
 
-import {
-  Colors,
-} from 'react-native/Libraries/NewAppScreen';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
+import {RouteProp, useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
 
 function Main_page(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -45,27 +45,29 @@ function Main_page(): JSX.Element {
         <View style={styles.header}>
           <View>
             <Image
-            source={require('./resource/logo.jpg')}
-            style={styles.logo}
+              source={require('./resource/logo.jpg')}
+              style={styles.logo}
             />
           </View>
           <View style={styles.header_inner}>
             <View style={styles.icon_box}>
               <Image
-              source={require('./resource/Icon_search.png')}
-              style={styles.icon}
+                source={require('./resource/Icon_search.png')}
+                style={styles.icon}
               />
               <Image
-              source={require('./resource/Icon_cart.png')}
-              style={styles.icon}
+                source={require('./resource/Icon_cart.png')}
+                style={styles.icon}
               />
               <Image
-              source={require('./resource/Icon_AI_chat_bot.png')}
-              style={styles.icon}
+                source={require('./resource/Icon_AI_chat_bot.png')}
+                style={styles.icon}
               />
             </View>
             <View style={styles.login_box}>
-              <Text style={styles.login_user_name}>______님 로그인하셨습니다.</Text>
+              <Text style={styles.login_user_name}>
+                ______님 로그인하셨습니다.
+              </Text>
             </View>
           </View>
         </View>
@@ -103,30 +105,31 @@ function Main_page(): JSX.Element {
         </View>
         <View style={styles.flex_row}>
           <TouchableHighlight
-          style={styles.button}
-          // onPress={handlePress}
-          underlayColor="coral">
+            style={styles.button}
+            // onPress={handlePress}
+            underlayColor="coral">
             <Text style={styles.buttonText}>등락 순</Text>
           </TouchableHighlight>
-          <TouchableHighlight
-          style={styles.button}>
+          <TouchableHighlight style={styles.button}>
             <Text style={styles.buttonText}>가격 순</Text>
           </TouchableHighlight>
-          <TouchableHighlight
-          style={styles.button}>
+          <TouchableHighlight style={styles.button}>
             <Text style={styles.buttonText}>시가총액 순</Text>
           </TouchableHighlight>
-          <TouchableHighlight
-          style={styles.button}>
+          <TouchableHighlight style={styles.button}>
             <Text style={styles.buttonText}>거래량 순</Text>
           </TouchableHighlight>
         </View>
         <View style={styles.container}>
-        {[...Array(viewCount)].map((_, index) => (
-          <View key={index} style={styles.view} />
-        ))}
+          {[...Array(viewCount)].map((_, index) => (
+            <View key={index} style={styles.view} />
+          ))}
         </View>
-        
+
+        {/* const handleChoice = (choice: string) => {
+    navigation.navigate('Another');
+    console.log(`${choice}`);
+  }; */}
       </ScrollView>
     </SafeAreaView>
   );
@@ -171,7 +174,7 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
   },
-  flex_row:{
+  flex_row: {
     display: 'flex',
     flexDirection: 'row',
   },
@@ -191,7 +194,7 @@ const styles = StyleSheet.create({
   header: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   header_inner: {
     display: 'flex',
@@ -232,7 +235,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-  }
+  },
 });
 
 export default Main_page;
