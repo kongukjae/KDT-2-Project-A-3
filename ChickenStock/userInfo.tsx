@@ -42,6 +42,7 @@ type RootStackParamList = {
   ChoicePageTwo: { choice: string };
   ChoicePageThree: { choice: string };
   ChoicePageFour: { choice: string };
+  MainPage: undefined;
 };
 
 type ChoicePageOneNavigationProp = StackNavigationProp<RootStackParamList, 'ChoicePageTwo'>;
@@ -132,7 +133,7 @@ export const ChoicePageFour: React.FC = () => {
   const navigation = useNavigation<ChoicePageOneNavigationProp>();
 
   const handleChoice = (choice: string) => {
-    navigation.navigate('ChoicePageFour', { choice: choice });
+    navigation.navigate('MainPage');
     console.log(`${choice}`);
   }
 

@@ -9,6 +9,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text } from 'react-native';
 import {ChoicePageOne, ChoicePageTwo, ChoicePageThree, ChoicePageFour} from './userInfo';
+import MainPage from './MainPage';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
@@ -17,6 +18,7 @@ type RootStackParamList = {
   ChoicePageTwo: undefined;
   ChoicePageThree: undefined;
   ChoicePageFour: undefined;
+  MainPage: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -29,9 +31,11 @@ const App: React.FC = () => {
         <Stack.Screen name="ChoicePageTwo" component={ChoicePageTwo} options={{ headerShown: false }}/>
         <Stack.Screen name="ChoicePageThree" component={ChoicePageThree} options={{ headerShown: false }}/>
         <Stack.Screen name="ChoicePageFour" component={ChoicePageFour} options={{ headerShown: false }}/>
+        <Stack.Screen name="MainPage" component={MainPage} options={{ headerShown: false }}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
 };
+
 
 export default App;
