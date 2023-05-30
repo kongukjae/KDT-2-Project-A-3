@@ -12,7 +12,7 @@ type DetailPageNavigationProp = StackNavigationProp<
   'Detail'
 >;
 
-const MainPage = () => {
+const HomePage = () => {
   const navigation = useNavigation<DetailPageNavigationProp>();
   return (
     <Button
@@ -22,4 +22,4 @@ const MainPage = () => {
   );
 };
 
-export default MainPage;
+export default HomePage;
