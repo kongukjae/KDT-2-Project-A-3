@@ -9,14 +9,11 @@ import {
   View,
   Image,
   TouchableHighlight,
+  Linking,
 } from 'react-native';
 
 import {
   Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
 function Main_page(): JSX.Element {
@@ -24,6 +21,10 @@ function Main_page(): JSX.Element {
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+  };
+
+  const articleLinkPress = () => {
+    Linking.openURL('https://www.naver.com/');
   };
 
   const [viewCount, setViewCount] = useState(50); // 초기 View 개수
@@ -64,45 +65,55 @@ function Main_page(): JSX.Element {
           </View>
         </View>
         <View style={styles.article_area}>
-          <View style={styles.flex_row}>
-            <Text>기사 1 제목 </Text>
-            <Text>기사 1 내용</Text>
-          </View>
-          <View style={styles.flex_row}>
-            <Text>기사 2 제목 </Text>
-            <Text>기사 2 내용</Text>
-          </View>
-          <View style={styles.flex_row}>
-            <Text>기사 3 제목 </Text>
-            <Text>기사 3 내용</Text>
-          </View>
-          <View style={styles.flex_row}>
-            <Text>기사 4 제목 </Text>
-            <Text>기사 4 내용</Text>
-          </View>
-          <View style={styles.flex_row}>
-            <Text>기사 5 제목 </Text>
-            <Text>기사 5 내용</Text>
-          </View>
+          <TouchableHighlight onPress={articleLinkPress} style={styles.flex_row}>
+            <View style={styles.flex_row}>
+              <Text>기사 1 제목 </Text>
+              <Text>기사 1 내용</Text>
+            </View>
+          </TouchableHighlight>
+          <TouchableHighlight onPress={articleLinkPress} style={styles.flex_row}>
+            <View style={styles.flex_row}>
+              <Text>기사 2 제목 </Text>
+              <Text>기사 2 내용</Text>
+            </View>
+          </TouchableHighlight>
+          <TouchableHighlight onPress={articleLinkPress} style={styles.flex_row}>
+            <View style={styles.flex_row}>
+              <Text>기사 3 제목 </Text>
+              <Text>기사 3 내용</Text>
+            </View>
+          </TouchableHighlight>
+          <TouchableHighlight onPress={articleLinkPress} style={styles.flex_row}>
+            <View style={styles.flex_row}>
+              <Text>기사 4 제목 </Text>
+              <Text>기사 4 내용</Text>
+            </View>
+          </TouchableHighlight>
+          <TouchableHighlight onPress={articleLinkPress} style={styles.flex_row}>
+            <View style={styles.flex_row}>
+              <Text>기사 5 제목 </Text>
+              <Text>기사 5 내용</Text>
+            </View>
+          </TouchableHighlight>
         </View>
         <View style={styles.flex_row}>
           <TouchableHighlight
           style={styles.button}
           // onPress={handlePress}
           underlayColor="coral">
-            <Text>등락 순</Text>
+            <Text style={styles.buttonText}>등락 순</Text>
           </TouchableHighlight>
           <TouchableHighlight
           style={styles.button}>
-            <Text>가격 순</Text>
+            <Text style={styles.buttonText}>가격 순</Text>
           </TouchableHighlight>
           <TouchableHighlight
           style={styles.button}>
-            <Text>시가총액 순</Text>
+            <Text style={styles.buttonText}>시가총액 순</Text>
           </TouchableHighlight>
           <TouchableHighlight
           style={styles.button}>
-            <Text>거래량 순</Text>
+            <Text style={styles.buttonText}>거래량 순</Text>
           </TouchableHighlight>
         </View>
         <View style={styles.container}>
@@ -190,10 +201,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#1B9C85',
     padding: 10,
     borderRadius: 5,
+    marginRight: 5,
+    marginBottom: 5,
+    marginTop: 5,
   },
   buttonText: {
     color: 'white',
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: 'bold',
   },
 });
