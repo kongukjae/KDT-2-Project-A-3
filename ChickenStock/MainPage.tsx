@@ -1,7 +1,4 @@
 import React, { useState } from 'react';
-import type {PropsWithChildren} from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
 import {
   SafeAreaView,
   ScrollView,
@@ -22,7 +19,7 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-function main_page(): JSX.Element {
+function Main_page(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
 
   const backgroundStyle = {
@@ -201,4 +198,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default main_page;
+export default Main_page;
