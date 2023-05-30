@@ -1,5 +1,6 @@
 import mojito
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
+from pymongo import MongoClient
 
 key = "PSVT5oQXN4N39r3jhoLtrCiVen4fcJ3p7zOh"
 secret = "OeeQY05O9OEfjuOP2KEtVpbP77p8WKaClPqgOEdSAVdH/FazfG51bqSc97t16uYOsvjb5DzrbqB11cfuMfBXPtwDB2BQqg7otSZAHo61OkobqBGPWJHGOHE/lt+X4WPNhyDiDu06EMiC6t+lvcIrG50t4/alJf7qhfL/dkg8sfOJgC66SDA="
@@ -26,26 +27,36 @@ class myObject:
     def __str__(self):
         return str(self.data)
 
-
+client = MongoClient('mongodb://localhost:27017/')
+db = client['chicken_stock']
 
 app = Flask(__name__)
 
+@app.route('/api/user-info', methods=['POST'])
 @app.route('/api/data', methods=['GET'])
 
-def get_data():
-  my_object = myObject()
-
-  for i in range(len(symbols)):
-    key = symbols['한글명'][i]
-    value = {
-        '단축코드': symbols['단축코드'][i],
-        '시가총액': int(symbols['시가총액'][i])
-    }
-    my_object.data[key] = value
+def user_info():
+  choice = request.json['choice']
+  
+  collection = db['user_id']
+  collection.insert_one({'choice': choice})
     
-# print(my_object)
-  data = my_object.data['에이스침대']
-  return jsonify(data)
+  return '데이터 저장 완료'
+
+# def get_data():
+#   my_object = myObject()
+
+#   for i in range(len(symbols)):
+#     key = symbols['한글명'][i]
+#     value = {
+#         '단축코드': symbols['단축코드'][i],
+#         '시가총액': int(symbols['시가총액'][i])
+#     }
+#     my_object.data[key] = value
+    
+# # print(my_object)
+#   data = my_object.data['에이스침대']
+#   return jsonify(data)
 
 if(__name__) == '__main__':
   app.run(host='0.0.0.0', port=5000)

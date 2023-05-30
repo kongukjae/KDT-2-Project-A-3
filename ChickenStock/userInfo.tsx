@@ -54,6 +54,23 @@ export const ChoicePageOne: React.FC = () => {
   const handleChoice = (choice: string) => {
     navigation.navigate('ChoicePageTwo', { choice: choice });
     console.log(`${choice}`);
+    fetch('http://192.168.100.65/api/user-info', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ choice }),
+    })
+    .then(response => {
+      if (response.ok) {
+        console.log('데이터 저장 성공');
+      } else {
+        console.error('데이터 저장 실패');
+      }
+    })
+    .catch(error => {
+      console.error('데이터 저장 실패', error);
+    });
   }
 
   return (
