@@ -22,16 +22,4 @@ const MainPage = () => {
   );
 };
 
-// const HomeScreen = () => {
-//   const navigation = useNavigation();
-
-//   const handlePress = () => {
-//     navigation.navigate('MainScreen');
-//   };
-
-//   return (
-//     <Button title="Go to MainScreen" onPress={handlePress} />
-//   );
-// };
-
 export default MainPage;
