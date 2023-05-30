@@ -5,8 +5,10 @@
  * @format
  */
 
-import React, { useState } from 'react';
+import React from 'react';
 import type {PropsWithChildren} from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 import {
   SafeAreaView,
   ScrollView,
@@ -57,102 +59,23 @@ function Section({children, title}: SectionProps): JSX.Element {
   );
 }
 
-function App(): JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+// 화면 컴포넌트 import
+import HomeScreen from './Home';
+import MainPage from './MainPage';
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
+// 스택 네비게이터 생성
+const Stack = createStackNavigator();
 
-  const [viewCount, setViewCount] = useState(50); // 초기 View 개수
-
-  const addViews = () => {
-    setViewCount(viewCount + 2); // 추가될 View 개수
-  };
-
+const App = () => {
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        onScroll={addViews}
-        contentInsetAdjustmentBehavior="automatic">
-        <View style={styles.header}>
-          <View>
-            <Image
-            source={require('./resource/logo.jpg')}
-            style={styles.image}
-            />
-          </View>
-          <View style={styles.header_inner}>
-            <View style={styles.icon_box}>
-              <Image
-              source={require('./resource/Icon_search.png')}
-              />
-              <Image
-              source={require('./resource/Icon_cart.png')}
-              />
-              <Image
-              source={require('./resource/Icon_AI_chat_bot.png')}
-              />
-            </View>
-            <Text>___님 로그인하셨습니다.</Text>
-          </View>
-        </View>
-        <View style={styles.article_area}>
-          <View style={styles.flex_row}>
-            <Text>기사 1 제목 </Text>
-            <Text>기사 1 내용</Text>
-          </View>
-          <View style={styles.flex_row}>
-            <Text>기사 2 제목 </Text>
-            <Text>기사 2 내용</Text>
-          </View>
-          <View style={styles.flex_row}>
-            <Text>기사 3 제목 </Text>
-            <Text>기사 3 내용</Text>
-          </View>
-          <View style={styles.flex_row}>
-            <Text>기사 4 제목 </Text>
-            <Text>기사 4 내용</Text>
-          </View>
-          <View style={styles.flex_row}>
-            <Text>기사 5 제목 </Text>
-            <Text>기사 5 내용</Text>
-          </View>
-        </View>
-        <View style={styles.flex_row}>
-          <TouchableHighlight
-          style={styles.button}
-          // onPress={handlePress}
-          underlayColor="coral">
-            <Text>등락 순</Text>
-          </TouchableHighlight>
-          <TouchableHighlight
-          style={styles.button}>
-            <Text>가격 순</Text>
-          </TouchableHighlight>
-          <TouchableHighlight
-          style={styles.button}>
-            <Text>시가총액 순</Text>
-          </TouchableHighlight>
-          <TouchableHighlight
-          style={styles.button}>
-            <Text>거래량 순</Text>
-          </TouchableHighlight>
-        </View>
-        <View style={styles.container}>
-        {[...Array(viewCount)].map((_, index) => (
-          <View key={index} style={styles.view} />
-        ))}
-        </View>
-        
-      </ScrollView>
-    </SafeAreaView>
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Main" component={MainPage} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
-}
+};
 
 const styles = StyleSheet.create({
   view: {
