@@ -1,8 +1,12 @@
 
 import React from 'react';
 import { View, TextInput, Button, StyleSheet,Image,Text, Alert } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+
 
 const login = () => {
+  
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
 
@@ -22,12 +26,13 @@ const login = () => {
       else{
         Alert.alert("유효성 검사 성공")
       }
-      // ... 추가적인 로그인 처리 로직
+      // ... 추가적인 로그인 처리 로직  
     }
   };
-
-  return (
-    <View style={styles.container}>
+  const HomeScreen = ({ navigation }) => {
+    
+    return (
+      <View style={styles.container}>
       <View style={styles.LogoTag}>
         <Image 
           source={require('./image/logo.jpg')}
@@ -39,20 +44,21 @@ const login = () => {
         placeholder="Username"
         value={username}
         onChangeText={setUsername}
-      />
+        />
       <TextInput
         style={styles.input}
         placeholder="Password"
         value={password}
         onChangeText={setPassword}
         secureTextEntry // 패스워드타입
-      />
+        />
       <Button title="Login" onPress={handleLogin} />
-      <View style={styles.signUp}>
-      <Text>Sign up</Text>
+      <View style={styles.signUp} >
+      <Text onPress={() => navigation.navigate('Detail')}>Sign up</Text>
       </View>
     </View>
   );
+};
 };
 
 const styles = StyleSheet.create({
