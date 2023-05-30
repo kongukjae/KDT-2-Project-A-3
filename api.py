@@ -8,9 +8,9 @@ acc_no ="12345678-01"
 
 broker = mojito.KoreaInvestment(api_key=key, api_secret=secret, acc_no=acc_no)
 # resp = broker.fetch_price("005930")
-resp = broker.fetch_kosdaq_symbols()
+resp = broker.fetch_symbols()
 
-# pprint.pprint(resp['output']['stck_oprc'])
+pprint.pprint(resp['단축코드'])
 # print(resp)
 dir(broker)
 print(resp)
