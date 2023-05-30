@@ -4,8 +4,6 @@ import { View, TextInput, Button, StyleSheet,Image,Text, Alert } from 'react-nat
 import login from './login_module';
 
 const App = () => {
-  const [username, setUsername] = React.useState('');
-  const [password, setPassword] = React.useState('');
   return (
     login()
   )
