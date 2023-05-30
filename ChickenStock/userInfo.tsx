@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
-import { RouteProp, useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
+import {View, TouchableOpacity, Text, StyleSheet} from 'react-native';
+import {RouteProp, useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
 
 const styles = StyleSheet.create({
   container: {
@@ -16,21 +16,20 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'black',
     marginBottom: 50,
-    left: 10
+    left: 10,
   },
   text: {
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 10,
     color: '#E8F6EF',
-
   },
   button: {
     backgroundColor: '#1B9C85',
     padding: 10,
     marginBottom: 20,
     left: 10,
-    borderRadius: 10
+    borderRadius: 10,
   },
   buttonText: {
     color: 'white',
@@ -39,20 +38,24 @@ const styles = StyleSheet.create({
 });
 
 type RootStackParamList = {
-  ChoicePageTwo: { choice: string };
-  ChoicePageThree: { choice: string };
-  ChoicePageFour: { choice: string };
+  ChoicePageTwo: {choice: string};
+  ChoicePageThree: {choice: string};
+  ChoicePageFour: {choice: string};
   MainPage: undefined;
+  Another: undefined;
 };
 
-type ChoicePageOneNavigationProp = StackNavigationProp<RootStackParamList, 'ChoicePageTwo'>;
+type ChoicePageOneNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'ChoicePageTwo'
+>;
 type ChoicePageOneRouteProp = RouteProp<RootStackParamList, 'ChoicePageTwo'>;
 
 export const ChoicePageOne: React.FC = () => {
   const navigation = useNavigation<ChoicePageOneNavigationProp>();
 
   const handleChoice = (choice: string) => {
-    navigation.navigate('ChoicePageTwo', { choice: choice });
+    navigation.navigate('ChoicePageTwo', {choice: choice});
     console.log(`${choice}`);
     fetch('http://192.168.100.65/api/user-info', {
     method: 'POST',
@@ -90,15 +93,15 @@ export const ChoicePageOne: React.FC = () => {
       </TouchableOpacity>
     </View>
   );
-}
+};
 
 export const ChoicePageTwo: React.FC = () => {
   const navigation = useNavigation<ChoicePageOneNavigationProp>();
 
   const handleChoice = (choice: string) => {
-    navigation.navigate('ChoicePageThree', { choice: choice });
+    navigation.navigate('ChoicePageThree', {choice: choice});
     console.log(`${choice}`);
-  }
+  };
 
   return (
     <View style={styles.container}>
@@ -120,15 +123,15 @@ export const ChoicePageTwo: React.FC = () => {
       </TouchableOpacity>
     </View>
   );
-}
+};
 
 export const ChoicePageThree: React.FC = () => {
   const navigation = useNavigation<ChoicePageOneNavigationProp>();
 
   const handleChoice = (choice: string) => {
-    navigation.navigate('ChoicePageFour', { choice: choice });
+    navigation.navigate('ChoicePageFour', {choice: choice});
     console.log(`${choice}`);
-  }
+  };
 
   return (
     <View style={styles.container}>
@@ -144,7 +147,7 @@ export const ChoicePageThree: React.FC = () => {
       </TouchableOpacity>
     </View>
   );
-}
+};
 
 export const ChoicePageFour: React.FC = () => {
   const navigation = useNavigation<ChoicePageOneNavigationProp>();
@@ -152,7 +155,7 @@ export const ChoicePageFour: React.FC = () => {
   const handleChoice = (choice: string) => {
     navigation.navigate('MainPage');
     console.log(`${choice}`);
-  }
+  };
 
   return (
     <View style={styles.container}>
@@ -168,4 +171,4 @@ export const ChoicePageFour: React.FC = () => {
       </TouchableOpacity>
     </View>
   );
-}
+};
