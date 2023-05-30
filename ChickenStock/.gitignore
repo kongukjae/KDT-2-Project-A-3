@@ -61,3 +61,21 @@ yarn-error.log
 
 # Temporary files created by Metro to check the health of the file watcher
 .metro-health-check*
+
+# 프로젝트 사항 변경
+__tests__
+.bundle
+android
+ios
+.eslintrc.js
+.node-version
+.prettierrc.js
+.watchmanconfig
+app.json
+babel.config.js
+Gemfile
+index.js
+metro.config.js
+package-lock.json
+package.json
+tsconfig.json
