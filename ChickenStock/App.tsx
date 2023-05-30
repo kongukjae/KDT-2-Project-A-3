@@ -148,7 +148,7 @@
 
 // export default App;
 import React from 'react';
-import { View, TextInput, Button, StyleSheet,Image } from 'react-native';
+import { View, TextInput, Button, StyleSheet,Image,Text } from 'react-native';
 
 const App = () => {
   const [username, setUsername] = React.useState('');
@@ -183,7 +183,9 @@ const App = () => {
         secureTextEntry
       />
       <Button title="Login" onPress={handleLogin} />
-      
+      <View style={styles.signUp}>
+      <Text>Sign up</Text>
+      </View>
     </View>
   );
 };
@@ -211,7 +213,10 @@ const styles = StyleSheet.create({
   LogoImage:{
     width:200,
     height:200
-
+  },
+  signUp:{
+    alignItems:'flex-end',
+    marginTop: 10
   }
 });
 
