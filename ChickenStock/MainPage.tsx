@@ -46,22 +46,27 @@ function Main_page(): JSX.Element {
           <View>
             <Image
             source={require('./resource/logo.jpg')}
-            style={styles.image}
+            style={styles.logo}
             />
           </View>
           <View style={styles.header_inner}>
             <View style={styles.icon_box}>
               <Image
               source={require('./resource/Icon_search.png')}
+              style={styles.icon}
               />
               <Image
               source={require('./resource/Icon_cart.png')}
+              style={styles.icon}
               />
               <Image
               source={require('./resource/Icon_AI_chat_bot.png')}
+              style={styles.icon}
               />
             </View>
-            <Text>___님 로그인하셨습니다.</Text>
+            <View style={styles.login_box}>
+              <Text style={styles.login_user_name}>______님 로그인하셨습니다.</Text>
+            </View>
           </View>
         </View>
         <View style={styles.article_area}>
@@ -162,7 +167,7 @@ const styles = StyleSheet.create({
   highlight: {
     fontWeight: '700',
   },
-  image: {
+  logo: {
     width: 80,
     height: 80,
   },
@@ -171,9 +176,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   icon_box: {
+    width: '100%',
+    height: 40,
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+  icon: {
+    width: 25,
+    height: 25,
+    marginLeft: 5,
   },
   header: {
     display: 'flex',
@@ -185,8 +198,6 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'space-between',
     width: 277,
-    borderWidth: 1,
-    borderColor: 'red'
   },
   article_area: {
     width: '100%',
@@ -210,6 +221,18 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: 'bold',
   },
+  login_user_name: {
+    fontSize: 20,
+  },
+  login_box: {
+    width: '100%',
+    height: 40,
+    backgroundColor: '#1B9C85',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  }
 });
 
 export default Main_page;
