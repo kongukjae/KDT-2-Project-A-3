@@ -162,12 +162,13 @@ const App = () => {
   };
 
   return (
-    
     <View style={styles.container}>
-     <Image 
-      source={require('./image/logo.jpg')}
-      style={{width :200, height: 200}}
-     />
+      <View style={styles.LogoTag}>
+        <Image 
+          source={require('./image/logo.jpg')}
+          style={styles.LogoImage}
+          />
+      </View>
       <TextInput
         style={styles.input}
         placeholder="Username"
@@ -182,6 +183,7 @@ const App = () => {
         secureTextEntry
       />
       <Button title="Login" onPress={handleLogin} />
+      
     </View>
   );
 };
@@ -190,8 +192,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    paddingHorizontal: 16,
-
+    paddingHorizontal: 16, //수평 비율 조절 하는 거 인듯?
+    backgroundColor:'#FFE194'
   },
   input: {
     height: 40,
@@ -199,7 +201,18 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 16,
     paddingHorizontal: 8,
+    backgroundColor:'white'
   },
+  LogoTag:{
+    flex: 0.5,
+    justifyContent: 'center',
+    alignItems:'center'    
+  },
+  LogoImage:{
+    width:200,
+    height:200
+
+  }
 });
 
 export default App;
