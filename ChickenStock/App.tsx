@@ -117,33 +117,89 @@
 
 // export default App;
 
-import React, { useEffect, useState } from 'react';
-import { View, Text } from 'react-native';
+// import React, { useEffect, useState } from 'react';
+// import { View, Text } from 'react-native';
+
+// const App = () => {
+//   const [data, setData] = useState(null);
+
+//   useEffect(() => {
+//     fetch('http://192.168.100.65:5000/api/data')
+//       .then(response => response.json())
+//       .then(json => {
+//         setData(json);
+//         console.log(json)
+//       })
+//       .catch(error => {
+//         console.error(error);
+//       });
+//   }, []);
+
+//   return (
+//     <View>
+//       {data && (
+//         <View>
+//           <Text>시가총액: {data['시가총액']}</Text>
+//         </View>
+//       )}
+//     </View>
+//   );
+// };
+
+// export default App;
+import React from 'react';
+import { View, TextInput, Button, StyleSheet,Image } from 'react-native';
 
 const App = () => {
-  const [data, setData] = useState(null);
+  const [username, setUsername] = React.useState('');
+  const [password, setPassword] = React.useState('');
 
-  useEffect(() => {
-    fetch('http://192.168.100.65:5000/api/data')
-      .then(response => response.json())
-      .then(json => {
-        setData(json);
-        console.log(json)
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  }, []);
+  const handleLogin = () => {
+    // 로그인 처리 로직을 작성합니다.
+    console.log('Username:', username);
+    console.log('Password:', password);
+    // ... 추가적인 로그인 처리 로직
+  };
 
   return (
-    <View>
-      {data && (
-        <View>
-          <Text>시가총액: {data['시가총액']}</Text>
-        </View>
-      )}
+    
+    <View style={styles.container}>
+     <Image 
+      source={require('./image/logo.jpg')}
+      style={{width :200, height: 200}}
+     />
+      <TextInput
+        style={styles.input}
+        placeholder="Username"
+        value={username}
+        onChangeText={setUsername}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Password"
+        value={password}
+        onChangeText={setPassword}
+        secureTextEntry
+      />
+      <Button title="Login" onPress={handleLogin} />
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    paddingHorizontal: 16,
+
+  },
+  input: {
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginBottom: 16,
+    paddingHorizontal: 8,
+  },
+});
 
 export default App;
