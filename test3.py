@@ -25,9 +25,10 @@ samsung_code = samsung['단축코드'].values[0]
 
 # "삼성전자"의 가격 정보를 가져옵니다.
 samsung_price = broker.fetch_price(samsung_code)
-
-print(samsung_price)
-
+cute =broker.fetch_kospi_symbols()
+# print(samsung_price)
+# pprint.pprint(broker.fetch_price("05320"))
+pprint.pp(cute)
 
 # symbols = broker.fetch_kospi_symbols()        #
 # st_symbols = symbols[symbols['KRX100'] == 'Y']

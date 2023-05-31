@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {View, TouchableOpacity, Text, StyleSheet} from 'react-native';
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import {RouteProp, useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 
 const styles = StyleSheet.create({
@@ -36,14 +36,15 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
+
 type RootStackParamList = {
-  ChoicePageOne: undefined;
-  ChoicePageTwo: { choiceOne: string };
-  ChoicePageThree: { choiceOne: string; choiceTwo: string };
-  ChoicePageFour: { choiceOne: string; choiceTwo: string; choiceThree: string;};
+  ChoicePageTwo: {choice: string};
+  ChoicePageThree: {choice: string};
+  ChoicePageFour: {choice: string};
   MainPage: undefined;
   Another: undefined;
 };
+
 type ChoicePageOneNavigationProp = StackNavigationProp<
   RootStackParamList,
   'ChoicePageTwo'
@@ -53,146 +54,133 @@ type ChoicePageOneRouteProp = RouteProp<RootStackParamList, 'ChoicePageTwo'>;
 export const ChoicePageOne: React.FC = () => {
   const navigation = useNavigation<ChoicePageOneNavigationProp>();
 
-  const handleChoice = (choiceOne: string) => {
-    navigation.navigate('ChoicePageTwo', {choiceOne});
-  }
+  const handleChoice = (choice: string) => {
+    navigation.navigate('ChoicePageTwo', {choice: choice});
+    console.log(`${choice}`);
+  };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>어떤 주식 스타일을 선호하시나요?</Text>
-      <TouchableOpacity style={styles.button} onPress={() => handleChoice('안정적인 투자 스타일')}>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => handleChoice('Choice 1')}>
         <Text style={styles.text}>안정적인 투자 스타일</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={() => handleChoice('수익 분배형 투자 스타일')}>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => handleChoice('Choice 2')}>
         <Text style={styles.text}>수익 분배형 투자 스타일</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={() => handleChoice('수익 중심형 투자 스타일')}>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => handleChoice('Choice 3')}>
         <Text style={styles.text}>수익 중심형 투자 스타일</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={() => handleChoice('공격적인 투자 스타일')}>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => handleChoice('Choice 4')}>
         <Text style={styles.text}>공격적인 투자 스타일</Text>
       </TouchableOpacity>
     </View>
   );
 };
 
-type ChoicePageTwoNavigationProp = StackNavigationProp<RootStackParamList,'ChoicePageTwo'>;
-type ChoicePageTwoRouteProp = RouteProp<RootStackParamList, 'ChoicePageTwo'>;
-
-
 export const ChoicePageTwo: React.FC = () => {
-  const navigation = useNavigation<ChoicePageTwoNavigationProp>();
-  const route = useRoute<ChoicePageTwoRouteProp>();
-  const { choiceOne } = route.params;
+  const navigation = useNavigation<ChoicePageOneNavigationProp>();
 
-  const handleChoice = (choiceTwo: string) => {
-    navigation.navigate('ChoicePageThree', { choiceOne, choiceTwo });
+  const handleChoice = (choice: string) => {
+    navigation.navigate('ChoicePageThree', {choice: choice});
+    console.log(`${choice}`);
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>어떤 주식 종목에 관심 있으신가요? </Text>
-      <TouchableOpacity style={styles.button} onPress={() => handleChoice('제조')}>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => handleChoice('Choice 1')}>
         <Text style={styles.text}>제조</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={() => handleChoice('건설')}>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => handleChoice('Choice 2')}>
         <Text style={styles.text}>건설</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={() => handleChoice('엔터테인먼트')}>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => handleChoice('Choice 3')}>
         <Text style={styles.text}>엔터테인먼트</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={() => handleChoice('금융')}>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => handleChoice('Choice 4')}>
         <Text style={styles.text}>금융</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={() => handleChoice('IT')}>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => handleChoice('Choice 5')}>
         <Text style={styles.text}>IT / 반도체</Text>
       </TouchableOpacity>
     </View>
   );
 };
 
-type ChoicePageThreeNavigationProp = StackNavigationProp<RootStackParamList,'ChoicePageThree'>;
-type ChoicePageThreeRouteProp = RouteProp<RootStackParamList, 'ChoicePageThree'>;
-
 export const ChoicePageThree: React.FC = () => {
-  const navigation = useNavigation<ChoicePageThreeNavigationProp>();
-  const route = useRoute<ChoicePageThreeRouteProp>();
-  const { choiceOne, choiceTwo } = route.params;
+  const navigation = useNavigation<ChoicePageOneNavigationProp>();
 
-  const handleChoice = (choiceThree: string) => {
-    navigation.navigate('ChoicePageFour', { choiceOne, choiceTwo, choiceThree });
+  const handleChoice = (choice: string) => {
+    navigation.navigate('ChoicePageFour', {choice: choice});
+    console.log(`${choice}`);
   };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>주식 투자를 해보신 적 있으신가요? </Text>
-      <TouchableOpacity style={styles.button} onPress={() => handleChoice('처음이에요')}>
-        <Text style={styles.text}>처음이에요</Text>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => handleChoice('Choice 1')}>
+        <Text style={styles.text}>처음입니다</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={() => handleChoice('해보긴 해봤어요')}>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => handleChoice('Choice 2')}>
         <Text style={styles.text}>해보긴 해봤어요</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={() => handleChoice('많이 해봤어요')}>
-        <Text style={styles.text}>많이 해봤어요.</Text>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => handleChoice('Choice 3')}>
+        <Text style={styles.text}>많이 해봤습니다.</Text>
       </TouchableOpacity>
     </View>
   );
 };
 
-type ChoicePageFourNavigationProp = StackNavigationProp<RootStackParamList,'ChoicePageFour'>;
-type ChoicePageFourRouteProp = RouteProp<RootStackParamList, 'ChoicePageFour'>;
-
 export const ChoicePageFour: React.FC = () => {
-  const navigation = useNavigation<ChoicePageFourNavigationProp>();
-  const route = useRoute<ChoicePageFourRouteProp>();
-  const { choiceOne, choiceTwo, choiceThree } = route.params;
-  const [choiceFour, setChoiceFour] = useState('');
+  const navigation = useNavigation<ChoicePageOneNavigationProp>();
 
   const handleChoice = (choice: string) => {
-    setChoiceFour(choice);
-  };
-
-  const handleSubmit = () => {
-    const data = {
-      choiceOne,
-      choiceTwo,
-      choiceThree,
-      choiceFour,
-    };
-
-    fetch('http://192.168.100.65:5000/api/user-info', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    })
-    .then(response => {
-      if (response.ok) {
-        console.log('데이터 저장 성공');
-        navigation.navigate('MainPage'); // MainPage로 이동
-      } else {
-        console.error('데이터 저장 실패');
-      }
-    })
-    .catch(error => {
-      console.error('데이터 저장 실패', error);
-    });
+    navigation.navigate('Another');
+    console.log(`${choice}`);
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>주식의 구조, 위험에 대해 알고 계신가요? </Text>
-      <TouchableOpacity style={styles.button} onPress={() => handleChoice('이해하지 못해요')}>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => handleChoice('Choice 1')}>
         <Text style={styles.text}>이해하지 못해요.</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={() => handleChoice('일정 부분 이해해요')}>
-        <Text style={styles.text}>일정 부분 이해해요.</Text>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => handleChoice('Choice 2')}>
+        <Text style={styles.text}>일정 부분 이해합니다.</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={() => handleChoice('깊이 있게 이해해요')}>
-        <Text style={styles.text}>깊이 있게 이해해요.</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-        <Text style={styles.text}>저장</Text>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => handleChoice('Choice 3')}>
+        <Text style={styles.text}>깊이 있게 이해합니다.</Text>
       </TouchableOpacity>
     </View>
   );

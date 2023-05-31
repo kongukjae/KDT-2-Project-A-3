@@ -35,11 +35,12 @@ import {View, Text, StyleSheet} from 'react-native';
 const ComPonent1 = () => {
   const [company, setCompany] = useState({
     한글명: '',
-    그룹코드: '',
-    제조업: '',
-    기준가: 0,
+    단축코드: '',
+    기준가: '',
   });
 
+  // const [price, setPrice] = useState(0);
+  // 기준가: '';
   useEffect(() => {
     fetch('http://192.168.100.69:5000/companydetail')
       .then(response => response.json())
@@ -49,13 +50,23 @@ const ComPonent1 = () => {
       .catch(error => console.error(error));
   }, []);
 
+  // useEffect(() => {
+  //   // 가정: 기준가를 가져오는 API URL이 http://192.168.100.69:5000/companydetail/price 라고 가정했습니다.
+  //   fetch('http://192.168.100.69:5000/companydetailP')
+  //     .then(response => response.json())
+  //     .then(data => {
+  //       // 가정: data 객체 안에 price 항목이 있다고 가정하였습니다.
+  //       setPrice(data.stck_sdpr);
+  //     })
+  //     .catch(error => console.error(error));
+  // }, []);
+
   return (
     <View style={styles.container}>
       <Text style={styles.text}>기업 이름: {company['한글명']}</Text>
-      <Text style={styles.text}>그룹코드: {company['그룹코드']}</Text>
+      <Text style={styles.text}>단축코드: {company['단축코드']}</Text>
       <View style={styles.priceContainer}>
-        <Text style={styles.text}>제조업: {company['제조업']}</Text>
-        <Text style={styles.text}>기준가: {company['기준가']}원</Text>
+        <Text style={styles.text}>기준가: {company['기준가']}</Text>
       </View>
     </View>
   );
@@ -63,7 +74,7 @@ const ComPonent1 = () => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 3,
+    padding: 10,
   },
   text: {
     fontSize: 15,

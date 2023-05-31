@@ -22,11 +22,11 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    padding: 30,
+    padding: 20,
   },
   button: {
-    width: 150, // 버튼의 너비
-    height: 100, // 버튼의 높이
+    width: 170, // 버튼의 너비
+    height: 200, // 버튼의 높이
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#DDDDDD', // 버튼의 배경 색

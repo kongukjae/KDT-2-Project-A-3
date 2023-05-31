@@ -32,6 +32,7 @@
 from flask import Flask, jsonify, Response
 import mojito
 import json
+from pykrx import stock
 
 app = Flask(__name__)
 
@@ -52,16 +53,26 @@ broker = mojito.KoreaInvestment(
 def company_detail():
     symbols = broker.fetch_kospi_symbols()
     noru_row = symbols[symbols['한글명'] == '노루홀딩스']
-    mix = noru_row[['그룹코드', '제조업', '한글명', '기준가']]
+    mix = noru_row[['단축코드','한글명','기준가' ]]
     data = mix.to_dict(orient='records')[0]
 
     # mix를 dictionary 형태로 변환하고 이를 jsonify하여 응답으로 반환합니다.
     return Response(json.dumps(data,       ensure_ascii=False), mimetype='application/json')
 
 
-@app.route('companyInfo', methods=['GET'])
-def company_info():
-    symbols = broker.fetch_kospi_symbols()
+# @app.route('/companydetailP', methods=['GET'])
+# def company_info():
+#     symbols = broker.fetch_kospi_symbols()
+
+@app.route('/companydetailP')
+def get_stock_data():
+    df = stock.get_market_ohlcv_by_date("20200101", "20201021", "005930")
+    # 데이터프레임 인덱스를 '날짜' 열로 설정합니다.
+    df.index.name = '날짜'
+    df.reset_index(inplace=True)
+    data = df.to_dict('records')
+    return jsonify(data)
+
 
 
 if __name__ == '__main__':
