@@ -52,14 +52,14 @@ const LoginPage = () => {
   const postData= async () => {
     console.log(username)
     try {
-      const response = await fetch('http://192.168.100.135:5000/api/data', {
+      const response = await fetch('http://192.168.100.135:5000/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ id:username,pw:password }),
       });
-      const jsonData = await response.json();
+      const jsonData = await response.json(); //여기서 플라스크로부터 반환값을 가져옴.
       console.log(jsonData);
     } catch (error) {
       console.error(error);
