@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { Alert } from 'react-native';
-import axios from 'axios';
+import { RouteProp, useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 
 export default function SignUpPage() {
   const [id, setId] = useState('');
@@ -10,7 +11,27 @@ export default function SignUpPage() {
   const [bank, setBank] = useState('');
   const [number, setNumber] = useState('');
 
+  const navigation = useNavigation<ChoicePageOneNavigationProp>();
 
+  type RootStackParamList = {
+    ChoicePageOne: { choice: string };
+    ChoicePageTwo: { choice: string };
+    ChoicePageThree: { choice: string };
+    ChoicePageFour: { choice: string };
+    MainPage: undefined;
+    Another: undefined;
+    SignUpPage: undefined;
+  };
+
+  type ChoicePageOneNavigationProp = StackNavigationProp<
+    RootStackParamList,
+    'ChoicePageTwo'
+  >;
+  type ChoicePageOneRouteProp = RouteProp<RootStackParamList, 'ChoicePageTwo'>;
+
+  // const handleLocation = () => {
+  //   navigation.navigate('MainPage');
+  // }
 
   const handleSignUp = () => {
     // 여기에서 회원가입 로직을 추가할 수 있습니다.
@@ -65,7 +86,7 @@ export default function SignUpPage() {
         // 에러 처리 로직을 추가합니다.
         console.error('데이터 전송 실패', error);
       });
-    
+      navigation.navigate('MainPage');
   };
 
   return (
