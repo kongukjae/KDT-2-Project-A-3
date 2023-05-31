@@ -3,13 +3,28 @@ import React from 'react';
 import { View, TextInput, Button, StyleSheet,Image,Text, Alert } from 'react-native';
 
 const login = () => {
-  const [username, setUsername] = React.useState('');
+  const [userId, setUserId] = React.useState('');
   const [password, setPassword] = React.useState('');
-
+  const postData = async()=> {
+    try {
+      const response = await fetch('http://192.168.100.135:5000/api/data', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id:userId,pw:password }),
+      });
+      const jsonData = await response.json();
+      console.log(jsonData);
+    } catch (error) {
+      console.error(error);
+    }
+  }
   const handleLogin = () => {
+
     const passwordRegex= /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
     // 로그인 처리 로직을 작성합니다.
-    if(username===''){
+    if(userId===''){
       Alert.alert("아이디를 입력해주세요.")
     }
     else{
