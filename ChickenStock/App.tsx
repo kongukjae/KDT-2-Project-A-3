@@ -20,7 +20,7 @@ type RootStackParamList = {
   ChoicePageFour: undefined;
   MainPage: undefined;
   Another: undefined;
-  LoginPage:undefined
+  LoginPage:undefined;
   
 };
 
@@ -61,10 +61,11 @@ const App: React.FC = () => {
           options={{headerShown: false}}
         />
         <Stack.Screen
-          name="Login"
+          name="LoginPage"
           component={LoginPage}
-          options={{headerShown: false}}
+          options={{ headerShown: false }}
         />
+       
       </Stack.Navigator>
     </NavigationContainer>
   );

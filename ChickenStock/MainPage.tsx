@@ -46,6 +46,7 @@ function Main_page(): JSX.Element {
     ChoicePageFour: { choice: string };
     MainPage: undefined;
     Another: undefined;
+    LoginPage:undefined;
   };
 
   type ChoicePageOneNavigationProp = StackNavigationProp<
@@ -133,7 +134,7 @@ type ChoicePageOneRouteProp = RouteProp<RootStackParamList, 'ChoicePageTwo'>;
             style={styles.button}
             // onPress={handlePress}
             underlayColor="coral">
-            <Text style={styles.buttonText}>등락 순</Text>
+            <Text style={styles.buttonText} onPress={() => navigation.navigate('LoginPage')}>등락 순</Text>
           </TouchableHighlight>
           <TouchableHighlight style={styles.button}>
             <Text style={styles.buttonText}>가격 순</Text>

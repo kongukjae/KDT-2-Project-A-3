@@ -50,7 +50,7 @@ const LoginPage = () => {
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
 
-  const handleLogin = () => {
+  // const handleLogin = () => {
   const navigation = useNavigation<loginPageNavigationProp>();
     
 
@@ -93,13 +93,13 @@ const LoginPage = () => {
         onChangeText={setPassword}
         secureTextEntry // 패스워드타입
         />
-      <Button title="Login" onPress={handleLogin} />
+      <Button title="Login" />
       <View style={styles.signUp} >
       <Text onPress={() => navigation.navigate('Join')}>Sign up</Text>
       </View>
     </View>
   );
-};
+// };
 };
 
 
