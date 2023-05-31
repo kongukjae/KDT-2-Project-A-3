@@ -70,7 +70,7 @@ export default function SignUpPage() {
     };
 
     // 데이터를 Python 파일로 전송합니다.
-    fetch('http://127.0.0.1:5000/', {
+    fetch('http://192.168.100.140:5000/signup', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -78,15 +78,18 @@ export default function SignUpPage() {
       body: JSON.stringify(data),
     })
       .then(response => {
-        // 응답 처리 로직을 추가합니다.
-        // 예를 들어, 응답이 성공적으로 왔을 때의 동작을 정의할 수 있습니다.
-        console.log('데이터 전송 성공');
+        if (response.ok) {
+          console.log('데이터 저장 성공');
+          navigation.navigate('MainPage'); // MainPage로 이동
+        } else {
+          console.error('데이터 저장 실패');
+        }
       })
       .catch(error => {
         // 에러 처리 로직을 추가합니다.
         console.error('데이터 전송 실패', error);
       });
-      navigation.navigate('MainPage');
+
   };
 
   return (
