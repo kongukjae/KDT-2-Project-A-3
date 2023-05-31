@@ -12,9 +12,12 @@ import {
   Linking,
 } from 'react-native';
 
-import {Colors} from 'react-native/Libraries/NewAppScreen';
-import {RouteProp, useNavigation} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
+import {
+  Colors,
+} from 'react-native/Libraries/NewAppScreen';
+
+import { RouteProp, useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 
 function Main_page(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -23,15 +26,52 @@ function Main_page(): JSX.Element {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
+  // 관련 기사 링크 페이지
   const articleLinkPress = () => {
     Linking.openURL('https://www.naver.com/');
   };
 
-  const [viewCount, setViewCount] = useState(50); // 초기 View 개수
+  // 무한 스크롤 관련
+  const [scrollPosition, setScrollPosition] = useState(0);
+  const [viewCount, setViewCount] = useState(12);
 
-  const addViews = () => {
-    setViewCount(viewCount + 2); // 추가될 View 개수
+  const handleScroll = (event:any) => {
+    const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
+    // 무한스크롤 동작 조건: 화면상의 높이값 + 스크롤의 위치값 >= 페이지 전체 높이 - 50px 일 때 요소를 추가적으로 생성
+    const reachedBottom = layoutMeasurement.height + contentOffset.y >= contentSize.height - 50;
+    console.log(`layoutMeasurement.height`)
+    console.log(`${layoutMeasurement.height}`)
+    console.log(`contentOffset.y`)
+    console.log(`${contentOffset.y}`)
+    console.log(`contentSize.height`)
+    console.log(`${contentSize.height}`)
+    if (reachedBottom) {
+      setViewCount(viewCount + 4); // 추가될 View 개수
+    }
+    setScrollPosition(contentOffset.y);
   };
+
+
+  const navigation = useNavigation<ChoicePageOneNavigationProp>();
+
+  type RootStackParamList = {
+    ChoicePageOne: { choice: string };
+    ChoicePageTwo: { choice: string };
+    ChoicePageThree: { choice: string };
+    ChoicePageFour: { choice: string };
+    MainPage: undefined;
+    Another: undefined;
+  };
+
+  type ChoicePageOneNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'ChoicePageTwo'
+>;
+type ChoicePageOneRouteProp = RouteProp<RootStackParamList, 'ChoicePageTwo'>;
+
+  const handleLocation = () => {
+    navigation.navigate('Another');
+  }
 
   return (
     <SafeAreaView style={backgroundStyle}>
@@ -40,8 +80,9 @@ function Main_page(): JSX.Element {
         backgroundColor={backgroundStyle.backgroundColor}
       />
       <ScrollView
-        onScroll={addViews}
-        contentInsetAdjustmentBehavior="automatic">
+        onScroll={handleScroll}
+        contentInsetAdjustmentBehavior="automatic"
+        scrollEventThrottle={2}>
         <View style={styles.header}>
           <View>
             <Image
@@ -121,21 +162,24 @@ function Main_page(): JSX.Element {
           </TouchableHighlight>
         </View>
         <View style={styles.container}>
-          {[...Array(viewCount)].map((_, index) => (
-            <View key={index} style={styles.view} />
-          ))}
+        {[...Array(viewCount)].map((_, index) => (
+          <TouchableHighlight key={index} style={styles.view} onPress={() => handleLocation()}>
+            <View>
+              <Text>임시 텍스트 {index}</Text>
+            </View>
+          </TouchableHighlight>
+        ))}
         </View>
-
-        {/* const handleChoice = (choice: string) => {
-    navigation.navigate('Another');
-    console.log(`${choice}`);
-  }; */}
       </ScrollView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  infiniteScrollArea: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+  },
   view: {
     width: '48%',
     height: 100,
