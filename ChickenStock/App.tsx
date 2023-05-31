@@ -1,9 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
 
  import React, {useEffect, useState} from 'react';
  import {View, Text} from 'react-native';
@@ -18,6 +12,7 @@
  import {createStackNavigator} from '@react-navigation/stack';
  import AnotherPage from './AnotherPage';
 import SignUpPage from './SignUpPage';
+import LoginPage from './loginPage'
  
  type RootStackParamList = {
    ChoicePageOne: undefined;
@@ -27,6 +22,7 @@ import SignUpPage from './SignUpPage';
    MainPage: undefined;
    Another: undefined;
    SignUpPage: undefined;
+   LoginPage: undefined;
  };
  
  const Stack = createStackNavigator<RootStackParamList>();
@@ -34,7 +30,7 @@ import SignUpPage from './SignUpPage';
  const App: React.FC = () => {
    return (
      <NavigationContainer>
-       <Stack.Navigator initialRouteName="SignUpPage">
+       <Stack.Navigator initialRouteName="LoginPage">
          <Stack.Screen
            name="ChoicePageOne"
            component={ChoicePageOne}
@@ -70,6 +66,11 @@ import SignUpPage from './SignUpPage';
            component={SignUpPage}
            options={{headerShown: false}}
          />
+         <Stack.Screen
+          name="LoginPage"
+          component={LoginPage}
+          options={{ headerShown: false }}
+        />
        </Stack.Navigator>
      </NavigationContainer>
    );
