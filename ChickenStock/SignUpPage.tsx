@@ -21,6 +21,7 @@ export default function SignUpPage() {
     MainPage: undefined;
     Another: undefined;
     SignUpPage: undefined;
+    LoginPage: undefined;
   };
 
   type ChoicePageOneNavigationProp = StackNavigationProp<
@@ -80,7 +81,8 @@ export default function SignUpPage() {
       .then(response => {
         if (response.ok) {
           console.log('데이터 저장 성공');
-          navigation.navigate('MainPage'); // MainPage로 이동
+          console.log( JSON.stringify(data));
+          navigation.navigate('LoginPage'); // MainPage로 이동
         } else {
           console.error('데이터 저장 실패');
         }
