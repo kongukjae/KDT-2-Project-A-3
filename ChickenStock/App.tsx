@@ -1,55 +1,70 @@
 
-// import React from 'react';
-// import { View, TextInput, Button, StyleSheet,Image,Text, Alert } from 'react-native';
-// import {NavigationContainer} from '@react-navigation/native' 
-// import { createStackNavigator } from '@react-navigation/stack';
-// import login from './login_module';
+import React, {useEffect, useState} from 'react';
+import {View, Text} from 'react-native';
+import {
+  ChoicePageOne,
+  ChoicePageTwo,
+  ChoicePageThree,
+  ChoicePageFour,
+} from './userInfo';
+import MainPage from './MainPage';
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
+import AnotherPage from './AnotherPage';
+import LoginPage from './loginPage'
 
-// const App = () => {
-
-//   return (
-    
-//     login()
-
-//   )
-// };
-
-
-// export default App;
-
-import React from 'react';
-import { View, Button, Text } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-
-const HomeScreen = ({ navigation }) => {
-  return (
-    <View>
-      <Text>홈 화면</Text>
-      <Button
-        title="상세 화면으로 이동"
-        onPress={() => navigation.navigate('Detail')}
-      />
-    </View>
-  );
+type RootStackParamList = {
+  ChoicePageOne: undefined;
+  ChoicePageTwo: undefined;
+  ChoicePageThree: undefined;
+  ChoicePageFour: undefined;
+  MainPage: undefined;
+  Another: undefined;
+  LoginPage:undefined
+  
 };
 
-const DetailScreen = () => {
-  return (
-    <View>
-      <Text>상세 화면</Text>
-    </View>
-  );
-};
+const Stack = createStackNavigator<RootStackParamList>();
 
-const Stack = createStackNavigator();
-
-const App = () => {
+const App: React.FC = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Detail" component={DetailScreen} />
+      <Stack.Navigator initialRouteName="ChoicePageOne">
+        <Stack.Screen
+          name="ChoicePageOne"
+          component={ChoicePageOne}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="ChoicePageTwo"
+          component={ChoicePageTwo}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="ChoicePageThree"
+          component={ChoicePageThree}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="ChoicePageFour"
+          component={ChoicePageFour}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="MainPage"
+          component={MainPage}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Another"
+          component={AnotherPage}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Login"
+          component={LoginPage}
+          options={{headerShown: false}}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
