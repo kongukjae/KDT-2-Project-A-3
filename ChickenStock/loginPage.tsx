@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
 const LoginPage = () => {
   type RootStackParamList = {
     Login: undefined;
-    Join: undefined;
+    SignUpPage: undefined;
   };
   type loginPageNavigationProp = StackNavigationProp<
     RootStackParamList,
@@ -95,7 +95,7 @@ const LoginPage = () => {
         />
       <Button title="Login" />
       <View style={styles.signUp} >
-      <Text onPress={() => navigation.navigate('Join')}>Sign up</Text>
+      <Text onPress={() => navigation.navigate('SignUpPage')}>Sign up</Text>
       </View>
     </View>
   );
