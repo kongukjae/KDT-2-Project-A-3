@@ -31,11 +31,26 @@ function Main_page(): JSX.Element {
     Linking.openURL('https://www.naver.com/');
   };
 
-  const [viewCount, setViewCount] = useState(50); // 초기 View 개수
+  // 무한 스크롤 관련
+  const [scrollPosition, setScrollPosition] = useState(0);
+  const [viewCount, setViewCount] = useState(12);
 
-  const addViews = () => {
-    setViewCount(viewCount + 2); // 추가될 View 개수
+  const handleScroll = (event:any) => {
+    const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
+    // 무한스크롤 동작 조건: 화면상의 높이값 + 스크롤의 위치값 >= 페이지 전체 높이 - 50px 일 때 요소를 추가적으로 생성
+    const reachedBottom = layoutMeasurement.height + contentOffset.y >= contentSize.height - 50;
+    console.log(`layoutMeasurement.height`)
+    console.log(`${layoutMeasurement.height}`)
+    console.log(`contentOffset.y`)
+    console.log(`${contentOffset.y}`)
+    console.log(`contentSize.height`)
+    console.log(`${contentSize.height}`)
+    if (reachedBottom) {
+      setViewCount(viewCount + 4); // 추가될 View 개수
+    }
+    setScrollPosition(contentOffset.y);
   };
+
 
   const navigation = useNavigation<ChoicePageOneNavigationProp>();
 
@@ -65,8 +80,9 @@ type ChoicePageOneRouteProp = RouteProp<RootStackParamList, 'ChoicePageTwo'>;
         backgroundColor={backgroundStyle.backgroundColor}
       />
       <ScrollView
-        onScroll={addViews}
-        contentInsetAdjustmentBehavior="automatic">
+        onScroll={handleScroll}
+        contentInsetAdjustmentBehavior="automatic"
+        scrollEventThrottle={2}>
         <View style={styles.header}>
           <View>
             <Image
@@ -160,6 +176,10 @@ type ChoicePageOneRouteProp = RouteProp<RootStackParamList, 'ChoicePageTwo'>;
 }
 
 const styles = StyleSheet.create({
+  infiniteScrollArea: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+  },
   view: {
     width: '48%',
     height: 100,
