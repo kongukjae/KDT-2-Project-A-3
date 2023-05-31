@@ -14,7 +14,7 @@ def get_data():
 
 @app.route('/api/data', methods=['POST'])
 def post_data():
-    request_data = request.get_json()
+    request_data = request.get_json() #리액트로부터 데이터 받아옴
     # 여기서 request_data를 사용하여 필요한 작업을 수행합니다.``
     response_data = {
         'message': 'Data received successfully!',
