@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 import mojito
 from flask import Flask, jsonify, request
 from pymongo import MongoClient
@@ -65,4 +63,3 @@ def user_info():
 
 if(__name__) == '__main__':
   app.run(host='0.0.0.0', port=5000)
->>>>>>> 9c58872ff4706dd0b360fe756b7ad19edb563c99
