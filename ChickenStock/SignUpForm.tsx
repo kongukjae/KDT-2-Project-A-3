@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { Alert } from 'react-native';
+import axios from 'axios';
 
 export default function SignUpPage() {
   const [id, setId] = useState('');
@@ -20,51 +21,51 @@ export default function SignUpPage() {
 
     const validatePassword = () => {
       const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]+$/;
-      return (password.length >= 8)&&(passwordRegex.test(password));
+      return (password.length >= 8) && (passwordRegex.test(password));
     }
 
-    if(!id || !password || !name || !bank || !number){
+    if (!id || !password || !name || !bank || !number) {
       Alert.alert('경고', '모든 정보를 입력해주세요.');
       return;
     }
 
-    if(!validateId()){
+    if (!validateId()) {
       Alert.alert('경고', '아이디는 4자리 이상, 영문, 숫자를 포함하여 입력해주세요.');
       return;
     }
 
-    if(!validatePassword()){
+    if (!validatePassword()) {
       Alert.alert('경고', '비밀번호 8자리 이상, 영문, 숫자, 특수문자를 포함하여 입력해주세요.');
       return;
     }
 
     // 데이터를 서버에 전송하기 위해 필요한 형식으로 가공합니다.
-  const data = {
-    id,
-    password,
-    name,
-    bank,
-    number,
-  };
+    const data = {
+      id,
+      password,
+      name,
+      bank,
+      number,
+    };
 
-  // 데이터를 Python 파일로 전송합니다.
-  fetch('http://127.0.0.1:5000/save.py', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data),
-  })
-    .then(response => {
-      // 응답 처리 로직을 추가합니다.
-      // 예를 들어, 응답이 성공적으로 왔을 때의 동작을 정의할 수 있습니다.
-      console.log('데이터 전송 성공');
+    // 데이터를 Python 파일로 전송합니다.
+    fetch('http://127.0.0.1:5000/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
     })
-    .catch(error => {
-      // 에러 처리 로직을 추가합니다.
-      console.error('데이터 전송 실패', error);
-    });
-
+      .then(response => {
+        // 응답 처리 로직을 추가합니다.
+        // 예를 들어, 응답이 성공적으로 왔을 때의 동작을 정의할 수 있습니다.
+        console.log('데이터 전송 성공');
+      })
+      .catch(error => {
+        // 에러 처리 로직을 추가합니다.
+        console.error('데이터 전송 실패', error);
+      });
+    
   };
 
   return (
@@ -88,7 +89,7 @@ export default function SignUpPage() {
         placeholder="이름을 입력하세요"
         onChangeText={text => setName(text)}
         value={name}
-       
+
       />
       <TextInput
         style={styles.input}
