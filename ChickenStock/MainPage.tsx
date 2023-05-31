@@ -26,6 +26,7 @@ function Main_page(): JSX.Element {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
+  // 관련 기사 링크 페이지
   const articleLinkPress = () => {
     Linking.openURL('https://www.naver.com/');
   };
@@ -36,7 +37,7 @@ function Main_page(): JSX.Element {
     setViewCount(viewCount + 2); // 추가될 View 개수
   };
 
-  const navigation = useNavigation();
+  const navigation = useNavigation<ChoicePageOneNavigationProp>();
 
   type RootStackParamList = {
     ChoicePageOne: { choice: string };
@@ -44,11 +45,17 @@ function Main_page(): JSX.Element {
     ChoicePageThree: { choice: string };
     ChoicePageFour: { choice: string };
     MainPage: undefined;
+    Another: undefined;
   };
 
-  const handleLocation = (choice: string) => {
-    navigation.navigate('ChoicePageTwo', { choice: choice });
-    console.log(`${choice}`);
+  type ChoicePageOneNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'ChoicePageTwo'
+>;
+type ChoicePageOneRouteProp = RouteProp<RootStackParamList, 'ChoicePageTwo'>;
+
+  const handleLocation = () => {
+    navigation.navigate('Another');
   }
 
   return (
@@ -140,7 +147,7 @@ function Main_page(): JSX.Element {
         </View>
         <View style={styles.container}>
         {[...Array(viewCount)].map((_, index) => (
-          <TouchableHighlight key={index} style={styles.view}>
+          <TouchableHighlight key={index} style={styles.view} onPress={() => handleLocation()}>
             <View>
               <Text>임시 텍스트 {index}</Text>
             </View>
