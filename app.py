@@ -16,7 +16,7 @@ resp = broker.fetch_price("005930")
 # # print("최저가 : ", resp['output']['stck_lwpr'])     # 저가
 # # print("종가   : ", resp['output']['stck_prpr'])     # 종가
 
-symbols = broker.fetch_kosdaq_symbols()        # 코스닥
+# symbols = broker.fetch_kosdaq_symbols()        # 코스닥
 # print(dir(symbols))
 
 
@@ -27,20 +27,23 @@ class myObject:
     def __str__(self):
         return str(self.data)
 
-client = MongoClient('mongodb://localhost:27017/')
+client = MongoClient('mongodb://localhost:27017')
 db = client['chicken_stock']
 
 app = Flask(__name__)
 
-@app.route('/api/user-info', methods=['POST'])
 @app.route('/api/data', methods=['GET'])
+@app.route('/api/user-info', methods=['POST'])
 
 def user_info():
-  choice = request.json['choice']
+  data = request.get_json()
   
-  collection = db['user_id']
-  collection.insert_one({'choice': choice})
-    
+  print(data)
+  
+  collection = db['user_info']
+  collection.insert_one(data)
+  print('데이터 저장')
+  
   return '데이터 저장 완료'
 
 # def get_data():
