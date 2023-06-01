@@ -20,7 +20,7 @@ const ComPonent1 = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>기업 이름: {company['한글명']}</Text>
+      <Text style={styles.text}>기업이이름이름름: {company['한글명']}</Text>
       <Text style={styles.text}>단축코드: {company['단축코드']}</Text>
       <View style={styles.priceContainer}>
         <Text style={styles.text}>기준가: {company['기준가']}</Text>
@@ -31,7 +31,7 @@ const ComPonent1 = () => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 10,
+    padding: 5,
   },
   text: {
     fontSize: 15,

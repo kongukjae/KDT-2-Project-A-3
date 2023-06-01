@@ -1,9 +1,9 @@
-import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import Chart from './TabContents/Tab1';
-import Buy from './TabContents/Tab2';
-import Price from './TabContents/Tab3';
-import News from './TabContents/Tab4';
-import Info from './TabContents/Tab5';
+// import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
+// import Chart from './TabContents/Tab1';
+// import Buy from './TabContents/Tab2';
+// import Price from './TabContents/Tab3';
+// import News from './TabContents/Tab4';
+// import Info from './TabContents/Tab5';
 
 import React, {useState, useEffect} from 'react';
 import {LineChart, Grid, XAxis, YAxis} from 'react-native-svg-charts';
@@ -37,7 +37,7 @@ const ComPonent2 = () => {
   }, []);
 
   return (
-    <View style={{height: 200, flexDirection: 'row'}}>
+    <View style={{height: 150, flexDirection: 'row'}}>
       <YAxis
         data={data}
         contentInset={{top: 10, bottom: 10}}

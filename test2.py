@@ -46,7 +46,7 @@ broker = mojito.KoreaInvestment(
     acc_no=acc_no
 )
 
-@app.route('/companydata', methods=['GET'])
+@app.route('/companydetail', methods=['GET'])
 def get_company_data():
     return get_data_for_company('노루홀딩스')
 
@@ -76,7 +76,7 @@ def get_data_for_company(company_name, up_down_info=False):
 
 @app.route('/companydetailP')
 def get_stock_data():
-    df = stock.get_market_ohlcv_by_date("20200101", "20200121", "005910")
+    df = stock.get_market_ohlcv_by_date("20200101", "20200121", "005930")
     # 데이터프레임 인덱스를 '날짜' 열로 설정합니다.
     df.index.name = '날짜'
     df.reset_index(inplace=True)

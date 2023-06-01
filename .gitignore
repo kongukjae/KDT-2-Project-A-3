@@ -1,11 +1,2 @@
-<<<<<<< HEAD
-jsenv
-venv
-taek
 node_modules
-package-lock.json
-package.json
 myenv
-=======
-/jsenv
->>>>>>> e08e4ac2abf7f2644ccdea247a8fc321b41bf48d
