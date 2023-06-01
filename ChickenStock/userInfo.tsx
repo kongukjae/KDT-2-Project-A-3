@@ -42,7 +42,7 @@ type RootStackParamList = {
   ChoicePageThree: { choiceOne: string; choiceTwo: string };
   ChoicePageFour: { choiceOne: string; choiceTwo: string; choiceThree: string;};
   MainPage: undefined;
-  Another: undefined;
+  LoginPage: undefined;
 };
 type ChoicePageOneNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -169,7 +169,7 @@ export const ChoicePageFour: React.FC = () => {
     .then(response => {
       if (response.ok) {
         console.log('데이터 저장 성공');
-        navigation.navigate('MainPage'); // MainPage로 이동
+        navigation.navigate('LoginPage'); // LoginPage로 이동
       } else {
         console.error('데이터 저장 실패');
       }
