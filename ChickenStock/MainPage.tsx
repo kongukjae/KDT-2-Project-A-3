@@ -161,6 +161,7 @@ type ChoicePageOneRouteProp = RouteProp<RootStackParamList, 'ChoicePageTwo'>;
             <Text style={styles.buttonText}>거래량 순</Text>
           </TouchableHighlight>
         </View>
+        {/* 주식 리스트 영역 */}
         <View style={styles.container}>
         {[...Array(viewCount)].map((_, index) => (
           <TouchableHighlight key={index} style={styles.view} onPress={() => handleLocation()}>
