@@ -27,23 +27,24 @@ class myObject:
     def __str__(self):
         return str(self.data)
 
-client = MongoClient('mongodb://localhost:27017')
+
+client = MongoClient('mongodb+srv://ChickenStock:1234@jiseop.g8czkiu.mongodb.net/chicken_stock?retryWrites=true&w=majority')
 db = client['chicken_stock']
 
 app = Flask(__name__)
 
+
 @app.route('/api/data', methods=['GET'])
 @app.route('/api/user-info', methods=['POST'])
-
 def user_info():
   data = request.get_json()
-  
+
   print(data)
-  
+
   collection = db['user_info']
   collection.insert_one(data)
   print('데이터 저장')
-  
+
   return '데이터 저장 완료'
 
 # def get_data():
@@ -56,10 +57,12 @@ def user_info():
 #         '시가총액': int(symbols['시가총액'][i])
 #     }
 #     my_object.data[key] = value
-    
+
 # # print(my_object)
 #   data = my_object.data['에이스침대']
 #   return jsonify(data)
 
-if(__name__) == '__main__':
+
+if (__name__) == '__main__':
   app.run(host='0.0.0.0', port=5000)
+

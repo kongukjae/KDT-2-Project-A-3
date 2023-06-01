@@ -46,27 +46,37 @@ broker = mojito.KoreaInvestment(
     acc_no=acc_no
 )
 
-#  메인-컴포넌트1의 요청시 처리함수.
+@app.route('/companydata', methods=['GET'])
+def get_company_data():
+    return get_data_for_company('노루홀딩스')
 
+@app.route('/companyupdown', methods=['GET'])
+def get_company_updown():
+    return get_data_for_company('삼성전자', up_down_info=True)
 
-@app.route('/companydetail', methods=['GET'])
-def company_detail():
+def get_data_for_company(company_name, up_down_info=False):
     symbols = broker.fetch_kospi_symbols()
-    noru_row = symbols[symbols['한글명'] == '노루홀딩스']
-    mix = noru_row[['단축코드','한글명','기준가' ]]
-    data = mix.to_dict(orient='records')[0]
+    company_row = symbols[symbols['한글명'] == company_name]
+    
+    if up_down_info:
+        company_code = company_row['단축코드'].values[0]
+        company_price = broker.fetch_price(company_code)
+        company_info = {
+            '시가': company_price['output']['stck_oprc'],
+            '오늘최고가': company_price['output']['stck_hgpr'],
+            '오늘최저가': company_price['output']['stck_lwpr'],
+            '현재가': company_price['output']['stck_prpr'],
+            '시가총액': company_price['output']['cpfn_cnnm'],
+        }
+    else:
+        company_info = company_row[['단축코드', '한글명', '기준가']].to_dict(orient='records')[0]
 
-    # mix를 dictionary 형태로 변환하고 이를 jsonify하여 응답으로 반환합니다.
-    return Response(json.dumps(data,       ensure_ascii=False), mimetype='application/json')
+    return jsonify(company_info)
 
-
-# @app.route('/companydetailP', methods=['GET'])
-# def company_info():
-#     symbols = broker.fetch_kospi_symbols()
 
 @app.route('/companydetailP')
 def get_stock_data():
-    df = stock.get_market_ohlcv_by_date("20200101", "20201021", "005930")
+    df = stock.get_market_ohlcv_by_date("20200101", "20200121", "005910")
     # 데이터프레임 인덱스를 '날짜' 열로 설정합니다.
     df.index.name = '날짜'
     df.reset_index(inplace=True)
@@ -77,3 +87,24 @@ def get_stock_data():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
+
+
+
+
+
+
+#  쿼리스트링 사용하는 로직
+# @app.route('/companydetail', methods=['GET'])
+# def company_detail():
+#     symbols = broker.fetch_kospi_symbols()
+#     company_name = request.args.get('company')  # 쿼리스트링에서 'company' 파라미터 값을 가져옴
+    
+#     # 회사명에 따른 필터링
+#     company_row = symbols[symbols['한글명'] == company_name]
+    
+#     # 요청한 회사명이 존재하는 경우
+#     if not company_row.empty:
+#         data = company_row[['단축코드', '한글명', '기준가']].to_dict(orient='records')[0]
+#         return jsonify(data)
+#     else:
+#         return jsonify({'message': '해당 회사명은 존재하지 않습니다.'})
