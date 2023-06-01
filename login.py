@@ -30,7 +30,7 @@ def post_data():
 
     elif db.post.find_one({'author':request_data["id"]})==None:
         returnValue['state']=False;
-        returnValue['message']="일치하는 아이디가 없음" 
+        returnValue['message']="등록된 회원이 아닙니다." 
         return jsonify(returnValue)
 
     else: 
