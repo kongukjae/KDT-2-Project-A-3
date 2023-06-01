@@ -1,3 +1,4 @@
+
 import React, {useEffect, useState} from 'react';
 import {View, Text} from 'react-native';
 import {
@@ -11,7 +12,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import AnotherPage from './AnotherPage';
 import SignUpPage from './SignUpPage';
-import LoginPage from './loginPage';
+import LoginPage from './loginPage'
 
 type RootStackParamList = {
   ChoicePageOne: undefined;

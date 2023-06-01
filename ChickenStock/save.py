@@ -1,23 +1,46 @@
-from flask import Flask, request
-from flask_cors import CORS
-import json
+from flask import Flask, jsonify, request
+from pymongo import MongoClient
+
+# class myObject:
+#     def __init__(self):
+#         self.data = {}
+
+#     def __str__(self):
+#         return str(self.data)
+
+client = MongoClient('mongodb://localhost:27017')
+db = client['chicken_stock']
 
 app = Flask(__name__)
-CORS(app)
 
-@app.route('/', methods=['POST'])
-def save_data():
-    try:
-        data = request.get_json()
-        # 받은 데이터를 저장하거나 원하는 작업을 수행합니다.
-        # 예를 들어, 데이터베이스에 저장하는 등의 동작을 수행할 수 있습니다.
-        
-        # 예시로서 데이터를 콘솔에 출력합니다.
-        print(data)
-        
-        return '데이터 저장 성공', 200
-    except Exception as e:
-        return '데이터 저장 실패', 500
+# @app.route('/api/data', methods=['GET'])
+@app.route('/signup', methods=['POST'])
 
-if __name__ == '__main__':
-    app.run()
+def a():
+  data = request.get_json()
+  
+  print(data)
+  
+  collection = db['register']
+  collection.insert_one(data)
+  print('데이터 저장')
+  
+  return '데이터 저장 완료'
+
+# def get_data():
+#   my_object = myObject()
+
+#   for i in range(len(symbols)):
+#     key = symbols['한글명'][i]
+#     value = {
+#         '단축코드': symbols['단축코드'][i],
+#         '시가총액': int(symbols['시가총액'][i])
+#     }
+#     my_object.data[key] = value
+    
+# # print(my_object)
+#   data = my_object.data['에이스침대']
+#   return jsonify(data)
+
+if(__name__) == '__main__':
+  app.run(host='0.0.0.0', port=5000)
