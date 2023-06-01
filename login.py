@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request
 from pymongo import MongoClient
-
+import re
 
 app = Flask(__name__)
 
@@ -14,19 +14,23 @@ app = Flask(__name__)
 @app.route('/login', methods=['POST'])
 def post_data():
     request_data = request.get_json() #request.get_json()오로 리액트로부터 데이터 받아옴
+    pattern = r'^[a-zA-Z0-9]+$' #영문자와 숫자로만 입력된 값만 입력.
     returnValue={} 
     client=MongoClient("mongodb://localhost:27017")
     db=client['test-db']
-    # fromReactUserData.append(request_data["id"])
-    # fromReactUserData.append(request_data["pw"])
 
-    if db.post.find_one({'author':request_data["id"]})==None:
+    if not re.match(pattern,request_data['id']):
+        returnValue['state']=False;
+        returnValue['message']="아이디는 영문자와 숫자만 입력 가능합니다" 
+        return jsonify(returnValue)
+    elif request_data['id']=="" or request_data['pw']=="":
+        returnValue['state']=False;
+        returnValue['message']="아이디와 비밀번호 모두 입력해주세요." 
+        return jsonify(returnValue)
+
+    elif db.post.find_one({'author':request_data["id"]})==None:
         returnValue['state']=False;
         returnValue['message']="일치하는 아이디가 없음" 
-        return jsonify(returnValue)
-    elif request_data['pw']=="":
-        returnValue['state']=False;
-        returnValue['message']="비밀번호 미입력"
         return jsonify(returnValue)
 
     else: 
