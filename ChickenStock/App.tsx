@@ -75,7 +75,7 @@ const App: React.FC = () => {
         <Stack.Screen
           name="LoginPage"
           component={LoginPage}
-          options={{ headerShown: false }}
+          options={{headerShown: false}}
         />
       </Stack.Navigator>
     </NavigationContainer>

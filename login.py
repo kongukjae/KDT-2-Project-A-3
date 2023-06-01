@@ -17,8 +17,10 @@ def post_data():
     pattern = r'^[a-zA-Z0-9]+$' #영문자와 숫자로만 입력된 값만 입력.
     returnValue={} 
     client=MongoClient("mongodb+srv://ChickenStock:1234@jiseop.g8czkiu.mongodb.net/")
+
     db=client['chicken_stock']
-    
+    print(db.user_info.find_one({'id':request_data["id"]}))
+    print(request_data["id"])
 
     if not re.match(pattern,request_data['id']):
         returnValue['state']=False;
@@ -33,29 +35,43 @@ def post_data():
         returnValue['state']=False;
         returnValue['message']="등록된 회원이 아닙니다." 
         return jsonify(returnValue)
-    elif db.user_info.find_one({'id':request_data["id"]})['id']==request_data["id"]:
-        if db.user_info.find_one({"password":request_data["pw"]})['password']==request_data["pw"]:
-            returnValue['state']=True;
+    elif db.user_info.find_one({'id':request_data["id"]})["id"]==request_data["id"]:
+        if not db.user_info.find_one({'id':request_data["id"]})["password"]==request_data["pw"]:
+            returnValue['state']=False
+            returnValue['message']="비밀번호 불일치" 
+            return jsonify(returnValue) #클라언트에게 데이터를 반환.
+        else: 
+            returnValue['state']=True
             returnValue['message']="정상" 
-            return jsonify(returnValue)
-            
-        else:
-            returnValue['state']=False;
-            returnValue['message']="비밀번호 오류" 
-            return jsonify(returnValue)
-    else: 
-        returnValue['state']=False;
-        returnValue['message']="오류" 
+            return jsonify(returnValue) #클라언트에게 데이터를 반환.
+    else:
+        returnValue['state']=False
+        returnValue['message']="로그인 오류" 
         return jsonify(returnValue)
-        
 
-        
 
+
+    # elif db.user_info.find_one({'id':request_data["id"]})['id']==request_data["id"]:
+    #     if db.user_info.find_one({"password":request_data["pw"]})['password']==request_data["pw"]:
+    #         returnValue['state']=True;
+    #         returnValue['message']="정상" 
+    #         return jsonify(returnValue)
+            
+    #     else:
+    #         returnValue['state']=False;
+    #         returnValue['message']="비밀번호 오류" 
+    #         return jsonify(returnValue)
+    # else: 
+    #     returnValue['state']=False;
+    #     returnValue['message']="오류" 
+
+    #     return jsonify(returnValue)
+        
+    # else:
         
 
     
 
-    return jsonify() #클라언트에게 데이터를 반환.
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0',port=5000,debug=True)
