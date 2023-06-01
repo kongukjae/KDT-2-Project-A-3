@@ -4,6 +4,30 @@ import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 
 const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+    flexDirection: 'column',
+    backgroundColor: '#FFE194',
+  },
+  titleBox: {
+    height: 250,
+    flexDirection: 'row',
+    backgroundColor: '#FFE194',
+    alignItems: 'flex-end',
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'black',
+    left: 15,
+    top: 150,
+  },
+  type: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+    backgroundColor: '#FFE194',
+    gap: 30,
+  },
   container: {
     flex: 1,
     flexDirection: 'column',
@@ -100,33 +124,76 @@ export const ChoicePageTwo: React.FC = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>어떤 주식 종목에 관심 있으신가요? </Text>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => handleChoice('제조')}>
-        <Text style={styles.text}>제조</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => handleChoice('건설')}>
-        <Text style={styles.text}>건설</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => handleChoice('엔터테인먼트')}>
-        <Text style={styles.text}>엔터테인먼트</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => handleChoice('금융')}>
-        <Text style={styles.text}>금융</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => handleChoice('IT')}>
-        <Text style={styles.text}>IT / 반도체</Text>
-      </TouchableOpacity>
+    <View style={styles.root}>
+      <View>
+        <Text style={styles.titleBox}>어떤 주식 종목에 관심 있으신가요? </Text>
+      </View>
+      <View style={styles.type}>
+        <View>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => handleChoice('건설')}>
+            <Text style={styles.text}>건설업</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => handleChoice('금융')}>
+            <Text style={styles.text}>금융업</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => handleChoice('기계')}>
+            <Text style={styles.text}>기계</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => handleChoice('화학')}>
+            <Text style={styles.text}>화학</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => handleChoice('음·식료품')}>
+            <Text style={styles.text}>음·식료품</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => handleChoice('전기/전자')}>
+            <Text style={styles.text}>전기/전자</Text>
+          </TouchableOpacity>
+        </View>
+        <View>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => handleChoice('섬유/의복')}>
+            <Text style={styles.text}>섬유/의류</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => handleChoice('통신업')}>
+            <Text style={styles.text}>통신업</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => handleChoice('의약품')}>
+            <Text style={styles.text}>의약품</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => handleChoice('서비스업')}>
+            <Text style={styles.text}>서비스업</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => handleChoice('철강/금속')}>
+            <Text style={styles.text}>철강/금속</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => handleChoice('미분류')}>
+            <Text style={styles.text}>기타</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
     </View>
   );
 };
