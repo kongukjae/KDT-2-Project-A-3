@@ -61,7 +61,7 @@ const LoginPage = () => {
       });
       const jsonData = await response.json(); //여기서 플라스크로부터 반환값을 가져옴.
       if(jsonData["state"]===false){
-        console.log("a")
+        Alert.alert(jsonData['message'])
       }
       else{
         navigation.navigate('MainPage')
