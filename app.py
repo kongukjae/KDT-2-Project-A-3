@@ -28,7 +28,7 @@ class myObject:
         return str(self.data)
 
 
-client = MongoClient('mongodb://localhost:27017')
+client = MongoClient('mongodb+srv://ChickenStock:1234@jiseop.g8czkiu.mongodb.net/chicken_stock?retryWrites=true&w=majority')
 db = client['chicken_stock']
 
 app = Flask(__name__)
