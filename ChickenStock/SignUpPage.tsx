@@ -3,7 +3,6 @@ import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-nativ
 import { Alert } from 'react-native';
 import { RouteProp, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { MongoClient } from 'mongodb';
 
 export default function SignUpPage() {
   const [id, setId] = useState('');
@@ -82,7 +81,7 @@ export default function SignUpPage() {
     };
 
     // 데이터를 Python 파일로 전송합니다.
-    fetch('http://192.168.100.140:5000/signup', {
+    fetch('http://192.168.100.65:5000/signup', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
