@@ -24,14 +24,21 @@ def post_data():
         returnValue['state']=False;
         returnValue['message']="일치하는 아이디가 없음" 
         return jsonify(returnValue)
-    elif db.post.find_one({'author':request_data["id"]})['author']==db.post.find_one({'author':request_data["id"]}) :
-        if db.post.find_one({'author':request_data["id"]})['text']==
+    elif request_data['pw']=="":
+        returnValue['state']=False;
+        returnValue['message']="비밀번호 미입력"
+        return jsonify(returnValue)
 
     else: 
         if not db.post.find_one({'author':request_data["id"]})['text']==request_data['pw']:
             returnValue['state']=False;
             returnValue['message']="비밀번호 오류" 
             return jsonify(returnValue)
+        else :
+            returnValue['state']=True;
+            returnValue['message']="정상" 
+            return jsonify(returnValue)
+
 
         
 
