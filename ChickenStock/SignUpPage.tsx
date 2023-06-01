@@ -3,6 +3,7 @@ import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-nativ
 import { Alert } from 'react-native';
 import { RouteProp, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { MongoClient } from 'mongodb';
 
 export default function SignUpPage() {
   const [id, setId] = useState('');
@@ -11,10 +12,14 @@ export default function SignUpPage() {
   const [bank, setBank] = useState('');
   const [number, setNumber] = useState('');
 
+  const uri = 'mongodb://localhost:27017'; // MongoDB URI
+  const dbName = 'chicken_stock'; // 데이터베이스 이름
+  const collectionName = 'register';
+
   const navigation = useNavigation<ChoicePageOneNavigationProp>();
 
   type RootStackParamList = {
-    ChoicePageOne: { choice: string };
+    ChoicePageOne: undefined;
     ChoicePageTwo: { choice: string };
     ChoicePageThree: { choice: string };
     ChoicePageFour: { choice: string };
@@ -30,11 +35,7 @@ export default function SignUpPage() {
   >;
   type ChoicePageOneRouteProp = RouteProp<RootStackParamList, 'ChoicePageTwo'>;
 
-  // const handleLocation = () => {
-  //   navigation.navigate('MainPage');
-  // }
-
-  const handleSignUp = () => {
+  const handleSignUp = async () => {
     // 여기에서 회원가입 로직을 추가할 수 있습니다.
     const validateId = () => {
       const idRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9]+$/;
@@ -44,6 +45,11 @@ export default function SignUpPage() {
     const validatePassword = () => {
       const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]+$/;
       return (password.length >= 8) && (passwordRegex.test(password));
+    }
+
+    const validateNumber = () => {
+      const numberRegex = /^\d{10}$/;
+      return (number.length == 10) && (numberRegex.test(number))
     }
 
     if (!id || !password || !name || !bank || !number) {
@@ -58,6 +64,11 @@ export default function SignUpPage() {
 
     if (!validatePassword()) {
       Alert.alert('경고', '비밀번호 8자리 이상, 영문, 숫자, 특수문자를 포함하여 입력해주세요.');
+      return;
+    }
+
+    if (!validateNumber()) {
+      Alert.alert('경고', '계좌번호는 숫자 10자리로 입력해주세요');
       return;
     }
 
@@ -81,8 +92,8 @@ export default function SignUpPage() {
       .then(response => {
         if (response.ok) {
           console.log('데이터 저장 성공');
-          console.log( JSON.stringify(data));
-          navigation.navigate('LoginPage'); // MainPage로 이동
+          console.log(JSON.stringify(data));
+          navigation.navigate('ChoicePageOne'); // ChoicePageOne으로 이동
         } else {
           console.error('데이터 저장 실패');
         }
@@ -98,11 +109,14 @@ export default function SignUpPage() {
     <View style={styles.container}>
       <Text style={styles.title}>Sign up</Text>
       <TextInput
-        style={styles.input}
+        style={styles.inputid}
         placeholder="아이디를 입력하세요"
         onChangeText={text => setId(text)}
         value={id}
       />
+      <TouchableOpacity style={styles.buttonid} onPress={handleSignUp}>
+        <Text style={styles.buttonText}>중복확인</Text>
+      </TouchableOpacity>
       <TextInput
         style={styles.input}
         placeholder="비밀번호를 입력하세요"
@@ -115,7 +129,6 @@ export default function SignUpPage() {
         placeholder="이름을 입력하세요"
         onChangeText={text => setName(text)}
         value={name}
-
       />
       <TextInput
         style={styles.input}
@@ -149,7 +162,16 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   input: {
-    width: '100%',
+    width: '80%',
+    height: 40,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 4,
+    marginBottom: 12,
+    paddingHorizontal: 8,
+  },
+  inputid: {
+    width: '60%',
     height: 40,
     borderWidth: 1,
     borderColor: '#ccc',
@@ -163,9 +185,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     borderRadius: 4,
   },
+  buttonid: {
+    backgroundColor: '#2196F3',
+    paddingVertical: 8,
+    paddingHorizontal: 10,
+    borderRadius: 4,
+  },
   buttonText: {
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
   },
 });
+
+
+
