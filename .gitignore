@@ -1,10 +1,2 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-venv
-=======
-/jsenv
->>>>>>> e08e4ac2abf7f2644ccdea247a8fc321b41bf48d
-=======
-taek
 node_modules
->>>>>>> e0ac0afedde7a2640ffd409d1e370c2131b4dddd
+myenv
