@@ -45,7 +45,7 @@ function Main_page(): JSX.Element {
     console.log(`${contentOffset.y}`)
     console.log(`contentSize.height`)
     console.log(`${contentSize.height}`)
-    if (reachedBottom) {
+    if (reachedBottom && viewCount <= 16) {
       setViewCount(viewCount + 4); // 추가될 View 개수
     }
     setScrollPosition(contentOffset.y);
