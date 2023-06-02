@@ -27,7 +27,7 @@ class myObject:
     def __str__(self):
         return str(self.data)
 
-
+successID =""
 client = MongoClient(
     'mongodb+srv://ChickenStock:1234@jiseop.g8czkiu.mongodb.net/')
 db = client['chicken_stock']
@@ -68,9 +68,7 @@ def login_Check():
     request_data = request.get_json() #request.get_json()오로 리액트로부터 데이터 받아옴
     pattern = r'^[a-zA-Z0-9]+$' #영문자와 숫자로만 입력된 값만 입력. 
     returnValue={} # 응답할 값을들 담을 객체
-    client=MongoClient("mongodb+srv://ChickenStock:1234@jiseop.g8czkiu.mongodb.net/") # 데이터베이스 연결
-    db=client['chicken_stock']
-
+    
     if not re.match(pattern,request_data['id']): # 아이디 유효성 검사
         returnValue['state']=False;
         returnValue['message']="아이디는 영문자와 숫자만 입력 가능합니다" 
@@ -90,8 +88,10 @@ def login_Check():
             returnValue['message']="비밀번호 불일치" 
             return jsonify(returnValue) 
         else: 
+            successID=db.user_info.find_one({'id':request_data["id"]})["id"]
             returnValue['state']=True
             returnValue['message']="정상" 
+            print(successID)
             return jsonify(returnValue) 
     else:
         returnValue['state']=False
