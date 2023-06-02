@@ -18,7 +18,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import AnotherPage from './AnotherPage';
 import SignUpPage from './SignUpPage';
-import LoginPage from './loginPage'
+import LoginPage from './loginPage';
 
 type RootStackParamList = {
   ChoicePageOne: undefined;
@@ -36,7 +36,7 @@ const Stack = createStackNavigator<RootStackParamList>();
 const App: React.FC = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="LoginPage">
+      <Stack.Navigator initialRouteName="Another">
         <Stack.Screen
           name="ChoicePageOne"
           component={ChoicePageOne}
