@@ -1,14 +1,14 @@
 import mojito
 from flask import Flask, jsonify, request
 from pymongo import MongoClient
-import re
-key = "PSVT5oQXN4N39r3jhoLtrCiVen4fcJ3p7zOh"
-secret = "OeeQY05O9OEfjuOP2KEtVpbP77p8WKaClPqgOEdSAVdH/FazfG51bqSc97t16uYOsvjb5DzrbqB11cfuMfBXPtwDB2BQqg7otSZAHo61OkobqBGPWJHGOHE/lt+X4WPNhyDiDu06EMiC6t+lvcIrG50t4/alJf7qhfL/dkg8sfOJgC66SDA="
-acc_no = "00000000-01"
 
-broker = mojito.KoreaInvestment(api_key=key, api_secret=secret, acc_no=acc_no)
-# # print(dir(broker))
-resp = broker.fetch_price("005930")
+# key = "PSVT5oQXN4N39r3jhoLtrCiVen4fcJ3p7zOh"
+# secret = "OeeQY05O9OEfjuOP2KEtVpbP77p8WKaClPqgOEdSAVdH/FazfG51bqSc97t16uYOsvjb5DzrbqB11cfuMfBXPtwDB2BQqg7otSZAHo61OkobqBGPWJHGOHE/lt+X4WPNhyDiDu06EMiC6t+lvcIrG50t4/alJf7qhfL/dkg8sfOJgC66SDA="
+# acc_no = "00000000-01"
+
+# broker = mojito.KoreaInvestment(api_key=key, api_secret=secret, acc_no=acc_no)
+# # # print(dir(broker))
+# resp = broker.fetch_price("005930")
 # # pprint.pprint(resp)
 # # print("시가   :  ", resp['output']['stck_oprc'])    # 시가
 # # print("현재가 :  ", resp['output']['stck_prpr'])    # 시가
@@ -20,12 +20,12 @@ resp = broker.fetch_price("005930")
 # print(dir(symbols))
 
 
-class myObject:
-    def __init__(self):
-        self.data = {}
+# class myObject:
+#     def __init__(self):
+#         self.data = {}
 
-    def __str__(self):
-        return str(self.data)
+#     def __str__(self):
+#         return str(self.data)
 
 
 client = MongoClient(
@@ -56,9 +56,9 @@ def user_info():
     print(data)
 
     collection = db['user_info']
-    find_id = collection.find_one({})
-    update_data = {**find_id, **data}
-    collection.replace_one({'_id':find_id['_id']}, update_data)
+    find_id = collection.find_one({}, sort=[('_id', -1)])
+    find_id.update(data)
+    collection.replace_one({'_id': find_id['_id']}, find_id)
 
     print('사용자 정보 데이터 저장')
 
