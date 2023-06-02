@@ -41,6 +41,7 @@ const LoginPage = () => {
   type RootStackParamList = {
     Login: undefined;
     SignUpPage: undefined;
+    MainPage: undefined;
   };
   type loginPageNavigationProp = StackNavigationProp<
     RootStackParamList,
@@ -49,28 +50,33 @@ const LoginPage = () => {
 
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
+  const postData= async () => {
+    try {
+      const response = await fetch('http://192.168.100.135:5000/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id:username,pw:password }),
+      });
+      const jsonData = await response.json(); //여기서 플라스크로부터 반환값을 가져옴.
+      if(jsonData["state"]===false){
+        Alert.alert(jsonData['message'],"",[{text:"확인"}])
+      }
+      else{
+        navigation.navigate('MainPage')
+      }
+      // console.log(jsonData);
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
-  // const handleLogin = () => {
+
   const navigation = useNavigation<loginPageNavigationProp>();
     
 
-    // const passwordRegex= /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
-    // 로그인 처리 로직을 작성합니다.
-    // if(username===''){
-    //   Alert.alert("아이디를 입력해주세요.")
-    // }
-    // else{
-    //   if(password===''){
-    //     Alert.alert("비밀번호를 입력해주세요.")
-    //   }
-    //   else if(!passwordRegex.test(password)){
-    //     Alert.alert('암호는 최소 8자 이상으로 입력해야하며 최소 하나의 대문자와 하나의 숫자를 포함하여 입력해주세요')
-    //   }
-    //   else{
-    //     Alert.alert("유효성 검사 성공")
-    //   }
-    //   // ... 추가적인 로그인 처리 로직  
-    // }
+  
     
     return (
       <View style={styles.container}>
@@ -93,13 +99,12 @@ const LoginPage = () => {
         onChangeText={setPassword}
         secureTextEntry // 패스워드타입
         />
-      <Button title="Login" />
+      <Button onPress={postData}title="Login" />
       <View style={styles.signUp} >
       <Text onPress={() => navigation.navigate('SignUpPage')}>Sign up</Text>
       </View>
     </View>
   );
-// };
 };
 
 
