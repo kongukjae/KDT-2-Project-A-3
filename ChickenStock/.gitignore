@@ -76,6 +76,4 @@ babel.config.js
 Gemfile
 index.js
 metro.config.js
-package-lock.json
-package.json
 tsconfig.json
