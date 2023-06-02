@@ -261,7 +261,7 @@ export const ChoicePageFour: React.FC = () => {
       choiceFour,
     };
 
-    fetch('http://192.168.100.65:5000/api/user-info', {
+    fetch('http://10.0.2.2:5000/api/user-info', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
