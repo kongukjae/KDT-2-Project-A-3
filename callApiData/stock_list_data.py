@@ -13,3 +13,42 @@ client = MongoClient(
 db = client['chicken_stock']
 
 collection = db['business_name_list']
+
+def find_category(key):
+    document = collection.find_one({key: {"$exists": True}})
+    if document:
+        value = document["삼성전자"]
+    else:
+        value = '미분류'
+    return value
+
+# document = collection.find_one({"삼성전자": {"$exists": True}})
+# if document:
+#     value = document["삼성전자"]
+#     print(value)
+# else:
+#     print("문서를 찾을 수 없습니다.")
+
+class myObject:
+    def __init__(self):
+        self.data = {}
+
+    def __str__(self):
+        return str(self.data)
+
+    def to_dict(self):
+        return self.data
+
+
+my_object = myObject()
+
+for i in range(len(symbols)):
+    key = symbols['한글명'][i]
+    value = {
+        '단축코드': symbols['단축코드'][i],
+        '시가총액': symbols['시가총액'][i],
+        # '업종분류': find_category(symbols['한글명'][i]),
+    }
+    my_object.data[key] = value
+
+print(my_object.data)
