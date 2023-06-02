@@ -81,7 +81,7 @@ export default function SignUpPage() {
     };
 
     // 데이터를 Python 파일로 전송합니다.
-    fetch('http://192.168.100.65:5000/signup', {
+    fetch('http://10.0.2.2:5000/signup', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
