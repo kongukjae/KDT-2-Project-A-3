@@ -1,12 +1,12 @@
-import mojito
+import mojito, json
 from flask import Flask, jsonify, request
 from pymongo import MongoClient
+from pykrx import stock
+key = "PSVT5oQXN4N39r3jhoLtrCiVen4fcJ3p7zOh"
+secret = "OeeQY05O9OEfjuOP2KEtVpbP77p8WKaClPqgOEdSAVdH/FazfG51bqSc97t16uYOsvjb5DzrbqB11cfuMfBXPtwDB2BQqg7otSZAHo61OkobqBGPWJHGOHE/lt+X4WPNhyDiDu06EMiC6t+lvcIrG50t4/alJf7qhfL/dkg8sfOJgC66SDA="
+acc_no = "00000000-01"
 
-# key = "PSVT5oQXN4N39r3jhoLtrCiVen4fcJ3p7zOh"
-# secret = "OeeQY05O9OEfjuOP2KEtVpbP77p8WKaClPqgOEdSAVdH/FazfG51bqSc97t16uYOsvjb5DzrbqB11cfuMfBXPtwDB2BQqg7otSZAHo61OkobqBGPWJHGOHE/lt+X4WPNhyDiDu06EMiC6t+lvcIrG50t4/alJf7qhfL/dkg8sfOJgC66SDA="
-# acc_no = "00000000-01"
-
-# broker = mojito.KoreaInvestment(api_key=key, api_secret=secret, acc_no=acc_no)
+broker = mojito.KoreaInvestment(api_key=key, api_secret=secret, acc_no=acc_no)
 # # # print(dir(broker))
 # resp = broker.fetch_price("005930")
 # # pprint.pprint(resp)
@@ -63,6 +63,47 @@ def user_info():
     print('사용자 정보 데이터 저장')
 
     return '데이터 저장 완료'
+
+
+
+
+# 컴포넌트 2
+@app.route('/companydetailP')
+def get_stock_data():
+    df = stock.get_market_ohlcv_by_date("20200101", "20200121", "005930")
+    # 데이터프레임 인덱스를 '날짜' 열로 설정합니다.
+    df.index.name = '날짜'
+    df.reset_index(inplace=True)
+    data = df.to_dict('records')
+    return jsonify(data)
+
+# 컴포넌트 1-3
+@app.route('/companydetail', methods=['GET'])
+def get_company_data():
+    return get_data_for_company('노루홀딩스')
+
+@app.route('/companyupdown', methods=['GET'])
+def get_company_updown():
+    return get_data_for_company('삼성전자', up_down_info=True)
+
+def get_data_for_company(company_name, up_down_info=False):
+    symbols = broker.fetch_kospi_symbols()
+    company_row = symbols[symbols['한글명'] == company_name]
+    
+    if up_down_info:
+        company_code = company_row['단축코드'].values[0]
+        company_price = broker.fetch_price(company_code)
+        company_info = {
+            '시가': company_price['output']['stck_oprc'],
+            '오늘최고가': company_price['output']['stck_hgpr'],
+            '오늘최저가': company_price['output']['stck_lwpr'],
+            '현재가': company_price['output']['stck_prpr'],
+            '시가총액': company_price['output']['cpfn_cnnm'],
+        }
+    else:
+        company_info = company_row[['단축코드', '한글명', '기준가']].to_dict(orient='records')[0]
+
+    return jsonify(company_info)
 
 
 # def get_data():
