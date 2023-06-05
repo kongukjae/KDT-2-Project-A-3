@@ -1,4 +1,5 @@
 import mojito
+import pprint
 from pymongo import MongoClient
 from flask import Flask, jsonify, request
 
@@ -23,8 +24,20 @@ def find_company(key):
     if document:
         return key
 
+# 객체 생성
+class companyObject:
+    def __init__(self):
+        self.data = {}
+
+    def __str__(self):
+        return str(self.data)
+
+    def to_dict(self):
+        return self.data
+
 # 빈 배열 생성
-my_array = []
+code_array = []
+name_array = []
 
 # 카운터 변수 생성
 counter = 0
@@ -32,32 +45,29 @@ counter = 0
 # 반복문을 통해 회사 이름이 DB에 있는 값일 경우 my_array 배열에 회사 이름을 추가
 # 카운터 변수를 이용하여 시가총액 순으로 내림차순 정렬된 리스트에서 상위 20개만 추출
 for i in range(len(newSymbols)):
-    if counter < 20:
+    if counter < 16:
         if newSymbols['한글명'].iloc[i] == find_company(newSymbols['한글명'].iloc[i]):
             counter = counter + 1
-            my_array.append(newSymbols['한글명'].iloc[i])
+            name_array.append(newSymbols['한글명'].iloc[i])
+            code_array.append(newSymbols['단축코드'].iloc[i])
     else:
         print('반복문 종료')
         break
 
 print('결과 값')
-print(my_array)
+print(name_array)
+print(code_array)
 
+company_Object = companyObject()
 
+for i in range(len(code_array)):
+    temp = broker.fetch_price(code_array[i])
+    key = name_array[i]
+    value = {
+        '현재가': temp['output']['stck_prpr'],
+        '전일종가' : temp['output']['stck_sdpr'],
+        '등락' : (int(temp['output']['stck_prpr']) - int(temp['output']['stck_sdpr']))
+    }
+    company_Object.data[key] = value
 
-
-# def find_category(key):
-#     with open('./kospi_company_list.json', 'r', encoding='utf-8') as file:
-#         data = json.load(file)
-#     document = data[key]
-#     return document
-
-# class myObject:
-#     def __init__(self):
-#         self.data = {}
-
-#     def __str__(self):
-#         return str(self.data)
-
-#     def to_dict(self):
-#         return self.data
+print(company_Object.data)
