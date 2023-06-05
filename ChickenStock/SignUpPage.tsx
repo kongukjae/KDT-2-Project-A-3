@@ -81,7 +81,7 @@ export default function SignUpPage() {
     };
 
     // 데이터를 Python 파일로 전송합니다.
-    fetch('http://192.168.100.65:5000/signup', {
+    fetch('http://192.168.100.140:5000/signup', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -90,11 +90,11 @@ export default function SignUpPage() {
     })
       .then(response => {
         if (response.ok) {
-          console.log('데이터 전송 성공');
+          console.log('회원가입 데이터 전송 성공');
           console.log(JSON.stringify(data));
           navigation.navigate('ChoicePageOne'); // ChoicePageOne으로 이동
         } else {
-          console.error('데이터 전송 실패');
+          console.error('회원가입 데이터 전송 실패');
         }
       })
       .catch(error => {
@@ -106,17 +106,33 @@ export default function SignUpPage() {
 
   const checkId = () => {
 
-    fetch('http://192.168.100.65:5000/checkId', {
+    fetch('http://192.168.100.140:5000/checkId', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(id),
+      body: JSON.stringify({ id: id }),
     })
+
+      // if (response.ok) {
+      //   Alert.alert('알림', '사용가능한 ID입니다');
+      // } else {
+      //   Alert.alert('경고', '이미 사용중인 ID입니다.');
+      // }
       .then(response => {
         if (response.ok) {
-          Alert.alert('알림', '사용가능한 ID입니다');
+          return response.json();
         } else {
+          throw new Error('아이디 전송 실패');
+        }
+      })
+
+      .then(data => {
+        if (data.state === 'available') {
+          console.log('아이디 사용 가능');
+          Alert.alert('알림', '사용 가능한 ID입니다');
+        } else if (data.state === 'taken') {
+          console.log('아이디 이미 사용 중');
           Alert.alert('경고', '이미 사용중인 ID입니다.');
         }
       })
