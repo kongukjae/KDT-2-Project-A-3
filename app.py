@@ -2,6 +2,7 @@ import mojito, json
 from flask import Flask, jsonify, request
 from pymongo import MongoClient
 from pykrx import stock
+import pandas as pd
 key = "PSVT5oQXN4N39r3jhoLtrCiVen4fcJ3p7zOh"
 secret = "OeeQY05O9OEfjuOP2KEtVpbP77p8WKaClPqgOEdSAVdH/FazfG51bqSc97t16uYOsvjb5DzrbqB11cfuMfBXPtwDB2BQqg7otSZAHo61OkobqBGPWJHGOHE/lt+X4WPNhyDiDu06EMiC6t+lvcIrG50t4/alJf7qhfL/dkg8sfOJgC66SDA="
 acc_no = "00000000-01"
@@ -67,43 +68,73 @@ def user_info():
 
 
 
-# 컴포넌트 2
-@app.route('/companydetailP')
-def get_stock_data():
-    df = stock.get_market_ohlcv_by_date("20200101", "20200121", "005930")
-    # 데이터프레임 인덱스를 '날짜' 열로 설정합니다.
-    df.index.name = '날짜'
-    df.reset_index(inplace=True)
-    data = df.to_dict('records')
-    return jsonify(data)
+# 컴포넌트 2-1 실시간 주가 차트 데이터
+@app.route('/get_data', methods=['GET'])
+def get_data():
+   
+    data = broker.fetch_today_1m_ohlcv("005930")
+    df = pd.DataFrame(data['output2'])
+    df['stck_bsop_date'] = pd.to_datetime(df['stck_bsop_date'])
+    df['stck_cntg_hour'] = pd.to_datetime(df['stck_cntg_hour'], format='%H%M%S').dt.time
+    df[['stck_prpr', 'stck_oprc', 'stck_hgpr', 'stck_lwpr', 'cntg_vol', 'acml_tr_pbmn']] = df[['stck_prpr', 'stck_oprc', 'stck_hgpr', 'stck_lwpr', 'cntg_vol', 'acml_tr_pbmn']].astype(float)
+    df.index = pd.to_datetime(df['stck_bsop_date'].astype(str) + ' ' + df['stck_cntg_hour'].astype(str))
+    
+    return df.to_json(orient='records')
 
+# 컴포넌트 2-2 주가데이터(일주단위)
+@app.route('/get_Wdata', methods=['GET'])
+def get_Wdata():
+    data = broker.fetch_ohlcv("005930","W")
+    dfW = pd.DataFrame(data['output2'])
+    
+    return jsonify(dfW.to_dict(orient='records'))
+
+# 컴포넌트 2-3 주가데이터(한달단위)
+@app.route('/get_Mdata', methods=['GET'])
+def get_Mdata():
+    data = broker.fetch_ohlcv("005930","M")
+    dfM = pd.DataFrame(data['output2'])
+    return jsonify(dfM.to_dict(orient='records'))
 # 컴포넌트 1-3
 @app.route('/companydetail', methods=['GET'])
 def get_company_data():
-    return get_data_for_company('노루홀딩스')
+   
+    symbols = broker.fetch_kospi_symbols()
+    company_row = symbols[symbols['한글명'] == '노루홀딩스']
+
+    company_info = company_row[['단축코드', '한글명', '기준가']].to_dict(orient='records')[0]
+
+    return jsonify(company_info)
 
 @app.route('/companyupdown', methods=['GET'])
 def get_company_updown():
-    return get_data_for_company('삼성전자', up_down_info=True)
+   
 
-def get_data_for_company(company_name, up_down_info=False):
     symbols = broker.fetch_kospi_symbols()
-    company_row = symbols[symbols['한글명'] == company_name]
+    company_row = symbols[symbols['한글명'] == '삼성전자']
+    company_code = company_row['단축코드'].values[0]
+    company_price = broker.fetch_price(company_code)
+    company_infof = {
+        '시가': company_price['output']['stck_oprc'],
+        '오늘최고가': company_price['output']['stck_hgpr'],
+        '오늘최저가': company_price['output']['stck_lwpr'],
+        '현재가': company_price['output']['stck_prpr'],
+        '시가총액': company_price['output']['cpfn_cnnm'],
+    }
     
-    if up_down_info:
-        company_code = company_row['단축코드'].values[0]
-        company_price = broker.fetch_price(company_code)
-        company_info = {
-            '시가': company_price['output']['stck_oprc'],
-            '오늘최고가': company_price['output']['stck_hgpr'],
-            '오늘최저가': company_price['output']['stck_lwpr'],
-            '현재가': company_price['output']['stck_prpr'],
-            '시가총액': company_price['output']['cpfn_cnnm'],
-        }
-    else:
-        company_info = company_row[['단축코드', '한글명', '기준가']].to_dict(orient='records')[0]
+    return jsonify(company_infof)
 
-    return jsonify(company_info)
+
+
+@app.route('/changerate', methods=['GET'])
+def get_company_rate():
+    df=stock.get_market_ohlcv("20220720","20220720","005930")
+    dfd=df["등락률"].to_dict()
+    str_dfd={str(k):v for k, v in dfd.items()}
+
+    rate_value = list(str_dfd.values())[0]
+
+    return jsonify({"rate": rate_value})
 
 
 # def get_data():

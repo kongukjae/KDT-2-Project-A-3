@@ -48,11 +48,11 @@ const styles = StyleSheet.create({
   },
   button: {
     width: 170, // 버튼의 너비
-    height: 150, // 버튼의 높이
+    height: 100, // 버튼의 높이
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#1B9C85', // 버튼의 배경 색
-    padding: 10,
+    padding: 12,
   },
   buttonText: {
     fontSize: 18,

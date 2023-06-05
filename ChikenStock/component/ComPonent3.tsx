@@ -11,7 +11,7 @@ const ComPonent3 = () => {
   });
 
   useEffect(() => {
-    fetch('http://192.168.100.69:5000/companyupdown')
+    fetch('http://10.0.2.2:5000/companyupdown')
       .then(response => response.json())
       .then(data => {
         setCompany(data);
