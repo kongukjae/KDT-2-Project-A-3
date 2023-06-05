@@ -136,6 +136,7 @@ export default function SignUpPage() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Sign up</Text>
+      <View style={styles.innerContainer}>
       <TextInput
         style={styles.inputid}
         placeholder="아이디를 입력하세요"
@@ -143,8 +144,9 @@ export default function SignUpPage() {
         value={id}
       />
       <TouchableOpacity style={styles.buttonid} onPress={checkId}>
-        <Text style={styles.buttonText}>중복확인</Text>
+        <Text style={styles.buttonText}>중복 확인</Text>
       </TouchableOpacity>
+      </View>
       <TextInput
         style={styles.input}
         placeholder="비밀번호를 입력하세요"
@@ -171,7 +173,7 @@ export default function SignUpPage() {
         value={number}
       />
       <TouchableOpacity style={styles.button} onPress={sendSignUpData}>
-        <Text style={styles.buttonText}>가입하기</Text>
+        <Text style={styles.buttonText}>가입 하기</Text>
       </TouchableOpacity>
     </View>
   );
@@ -183,6 +185,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 16,
+  },
+  innerContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    
   },
   title: {
     fontSize: 24,
@@ -199,7 +208,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
   },
   inputid: {
-    width: '50%',
+    width: '55%',
     height: 40,
     borderWidth: 1,
     borderColor: '#ccc',
@@ -216,7 +225,9 @@ const styles = StyleSheet.create({
   buttonid: {
     backgroundColor: '#2196F3',
     paddingVertical: 8,
-    paddingHorizontal: 5,
+    paddingHorizontal: 10,
+    marginBottom: 12,
+    marginLeft: 9,
     borderRadius: 4,
   },
   buttonText: {
