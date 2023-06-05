@@ -52,16 +52,17 @@ const LoginPage = () => {
   const [password, setPassword] = React.useState('');
   const postData= async () => {
     try {
-      const response = await fetch('http://192.168.100.135:5000/api/login', {
+      const response = await fetch('http://10.0.2.2:5000/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ id:username,pw:password }),
+        body: JSON.stringify({ id:username,pw:password }), // 플라스크로 데이터를 담아 요청을 보냄
       });
-      const jsonData = await response.json(); //여기서 플라스크로부터 반환값을 가져옴.
+      
+      const jsonData = await response.json(); //여기서 플라스크로부터 반환값을 가져옴. 반환객체 ={'state':true or false,'message':"해당 에러 메세지"}
       if(jsonData["state"]===false){
-        Alert.alert(jsonData['message'],"",[{text:"확인"}])
+        Alert.alert(jsonData['message'],"",[{text:"확인"}]) //alert 첫번째 인자는 제목, 두번째 인자는 내용, 세번째 인자는 옵션을 넣을 수 있음 ex)예 아니오, 이벤트 등등
       }
       else{
         navigation.navigate('MainPage')

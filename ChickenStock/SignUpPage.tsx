@@ -3,6 +3,7 @@ import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-nativ
 import { Alert } from 'react-native';
 import { RouteProp, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { checkServerIdentity } from 'tls';
 
 export default function SignUpPage() {
   const [id, setId] = useState('');
@@ -11,9 +12,13 @@ export default function SignUpPage() {
   const [bank, setBank] = useState('');
   const [number, setNumber] = useState('');
 
-  const uri = 'mongodb://localhost:27017'; // MongoDB URI
-  const dbName = 'chicken_stock'; // 데이터베이스 이름
-  const collectionName = 'register';
+  const data = {
+    id,
+    password,
+    name,
+    bank,
+    number,
+  };
 
   const navigation = useNavigation<ChoicePageOneNavigationProp>();
 
@@ -33,9 +38,42 @@ export default function SignUpPage() {
     'ChoicePageTwo'
   >;
   type ChoicePageOneRouteProp = RouteProp<RootStackParamList, 'ChoicePageTwo'>;
+  let changeState = 0
+  // 중복 확인
+  const checkId = () => {
+    fetch('http://192.168.100.140:5000/checkId', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id: data.id }),
+    })
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('아이디 전송 실패');
+        }
+      })
+      .then(responseData => {
+        if (responseData.state === 'available') {
+          console.log('아이디 사용 가능');
+          changeState++
+          Alert.alert('알림', '사용 가능한 ID입니다');
+          // 회원가입 데이터 전송
+        } else if (responseData.state === 'taken') {
+          console.log('아이디 이미 사용 중');
+          Alert.alert('경고', '이미 사용중인 ID입니다.');
+        }
+      })
+      .catch(error => {
+        console.error('중복확인 실패', error);
+      });
+  };
 
-  const handleSignUp = async () => {
-    // 여기에서 회원가입 로직을 추가할 수 있습니다.
+  // 회원가입 데이터 전송
+
+  const sendSignUpData = () => {
     const validateId = () => {
       const idRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9]+$/;
       return (id.length >= 4) && (idRegex.test(id));
@@ -70,52 +108,45 @@ export default function SignUpPage() {
       Alert.alert('경고', '계좌번호는 숫자 10자리로 입력해주세요');
       return;
     }
+    if ((changeState) % 2 === 1) {
 
-    // 데이터를 서버에 전송하기 위해 필요한 형식으로 가공합니다.
-    const data = {
-      id,
-      password,
-      name,
-      bank,
-      number,
-    };
-
-    // 데이터를 Python 파일로 전송합니다.
-    fetch('http://192.168.100.65:5000/signup', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    })
-      .then(response => {
-        if (response.ok) {
-          console.log('데이터 저장 성공');
-          console.log(JSON.stringify(data));
-          navigation.navigate('ChoicePageOne'); // ChoicePageOne으로 이동
-        } else {
-          console.error('데이터 저장 실패');
-        }
+      fetch('http://192.168.100.140:5000/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
       })
-      .catch(error => {
-        // 에러 처리 로직을 추가합니다.
-        console.error('데이터 전송 실패', error);
-      });
-
+        .then(response => {
+          if (response.ok) {
+            console.log('회원가입 데이터 전송 성공');
+            console.log(JSON.stringify(data));
+            navigation.navigate('ChoicePageOne'); // ChoicePageOne으로 이동
+          } else {
+            console.error('회원가입 데이터 전송 실패');
+          }
+        })
+        .catch(error => {
+          console.error('데이터 전송 실패', error);
+        });
+    } else {
+      Alert.alert('경고', '아이디 중복확인 해주세요');
+    }
   };
-
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Sign up</Text>
+      <View style={styles.innerContainer}>
       <TextInput
         style={styles.inputid}
         placeholder="아이디를 입력하세요"
         onChangeText={text => setId(text)}
         value={id}
       />
-      <TouchableOpacity style={styles.buttonid} onPress={handleSignUp}>
-        <Text style={styles.buttonText}>중복확인</Text>
+      <TouchableOpacity style={styles.buttonid} onPress={checkId}>
+        <Text style={styles.buttonText}>중복 확인</Text>
       </TouchableOpacity>
+      </View>
       <TextInput
         style={styles.input}
         placeholder="비밀번호를 입력하세요"
@@ -141,8 +172,8 @@ export default function SignUpPage() {
         onChangeText={text => setNumber(text)}
         value={number}
       />
-      <TouchableOpacity style={styles.button} onPress={handleSignUp}>
-        <Text style={styles.buttonText}>가입하기</Text>
+      <TouchableOpacity style={styles.button} onPress={sendSignUpData}>
+        <Text style={styles.buttonText}>가입 하기</Text>
       </TouchableOpacity>
     </View>
   );
@@ -154,6 +185,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 16,
+  },
+  innerContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    
   },
   title: {
     fontSize: 24,
@@ -170,7 +208,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
   },
   inputid: {
-    width: '60%',
+    width: '55%',
     height: 40,
     borderWidth: 1,
     borderColor: '#ccc',
@@ -180,7 +218,7 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: '#2196F3',
-    paddingVertical: 12,
+    paddingVertical: 8,
     paddingHorizontal: 24,
     borderRadius: 4,
   },
@@ -188,6 +226,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#2196F3',
     paddingVertical: 8,
     paddingHorizontal: 10,
+    marginBottom: 12,
+    marginLeft: 9,
     borderRadius: 4,
   },
   buttonText: {
