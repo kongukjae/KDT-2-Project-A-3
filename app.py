@@ -77,6 +77,7 @@ def user_info():
     print('사용자 정보 데이터 저장')
 
     return '데이터 저장 완료'
+
 @app.route('/api/login', methods=['POST'])
 def login_Check():
     request_data = request.get_json() #request.get_json()오로 리액트로부터 데이터 받아옴
