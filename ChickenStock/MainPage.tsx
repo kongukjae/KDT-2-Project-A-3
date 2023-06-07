@@ -19,7 +19,7 @@ import {
 
 import { RouteProp, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-// const value = useContext(LoginContext)
+const value = useContext(LoginContext)
 function Main_page(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
 
