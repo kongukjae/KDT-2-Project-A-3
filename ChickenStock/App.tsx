@@ -20,6 +20,7 @@ import AnotherPage from './AnotherPage';
 import SignUpPage from './SignUpPage';
 import LoginPage from './loginPage';
 import BuyPage from './BuyPage';
+import SellPage from './SellPage';
 
 type RootStackParamList = {
   ChoicePageOne: undefined;
@@ -31,6 +32,7 @@ type RootStackParamList = {
   SignUpPage: undefined;
   LoginPage: undefined;
   BuyPage:undefined;
+  SellPage:undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -82,6 +84,11 @@ const App: React.FC = () => {
         <Stack.Screen
           name="BuyPage"
           component={BuyPage}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="SellPage"
+          component={SellPage}
           options={{headerShown: false}}
         />
       </Stack.Navigator>
