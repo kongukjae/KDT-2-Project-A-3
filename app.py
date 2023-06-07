@@ -2,7 +2,7 @@ import re
 import mojito, json
 from flask import Flask, jsonify, request
 from pymongo import MongoClient
-from pykrx import stock
+# from pykrx import stock
 import pandas as pd
 key = "PSVT5oQXN4N39r3jhoLtrCiVen4fcJ3p7zOh"
 secret = "OeeQY05O9OEfjuOP2KEtVpbP77p8WKaClPqgOEdSAVdH/FazfG51bqSc97t16uYOsvjb5DzrbqB11cfuMfBXPtwDB2BQqg7otSZAHo61OkobqBGPWJHGOHE/lt+X4WPNhyDiDu06EMiC6t+lvcIrG50t4/alJf7qhfL/dkg8sfOJgC66SDA="
