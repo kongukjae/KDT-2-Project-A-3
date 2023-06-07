@@ -31,8 +31,8 @@ type RootStackParamList = {
   Another: undefined;
   SignUpPage: undefined;
   LoginPage: undefined;
-  BuyPage:undefined;
-  SellPage:undefined;
+  BuyPage: undefined;
+  SellPage: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -40,7 +40,7 @@ const Stack = createStackNavigator<RootStackParamList>();
 const App: React.FC = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="LoginPage">
+      <Stack.Navigator initialRouteName="Another">
         <Stack.Screen
           name="ChoicePageOne"
           component={ChoicePageOne}
