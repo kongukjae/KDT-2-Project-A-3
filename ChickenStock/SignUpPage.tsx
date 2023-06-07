@@ -61,12 +61,13 @@ export default function SignUpPage() {
           throw new Error('아이디 전송 실패');
         }
       })
+      // 중복확인 여부 판단하는 로직
       .then(responseData => {
         if (responseData.state === 'available') {
           console.log('아이디 사용 가능');
           changeState++;
           Alert.alert('알림', '사용 가능한 ID입니다');
-          // 회원가입 데이터 전송
+          
         } else if (responseData.state === 'taken') {
           console.log('아이디 이미 사용 중');
           Alert.alert('경고', '이미 사용중인 ID입니다.');
@@ -78,19 +79,19 @@ export default function SignUpPage() {
   };
 
   // 회원가입 데이터 전송
-
+  // 아이디 형식 정규표현식
   const sendSignUpData = () => {
     const validateId = () => {
       const idRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9]+$/;
       return id.length >= 4 && idRegex.test(id);
     };
-
+    // 비밀번호 형식 정규표현식
     const validatePassword = () => {
       const passwordRegex =
         /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]+$/;
       return password.length >= 8 && passwordRegex.test(password);
     };
-
+    // 계좌번호 형식 정규표현식
     const validateNumber = () => {
       const numberRegex = /^\d{10}$/;
       return number.length == 10 && numberRegex.test(number);
