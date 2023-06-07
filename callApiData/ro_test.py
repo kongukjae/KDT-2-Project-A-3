@@ -145,9 +145,9 @@ for i in range(len(symbols)):
     else:
         key = symbols['한글명'][i]
         value = '미분류',
-    if value == '기계':
+    if value == '철강.금속':
         my_object.data[key] = value
-    time.sleep(0.5)
+    time.sleep(1)
 
 class MyEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -156,7 +156,7 @@ class MyEncoder(json.JSONEncoder):
         return super().default(obj)
 
 # JSON 파일로 저장할 때 한글 직접 표현
-with open('mechanic_data.json', 'w', encoding='utf-8') as json_file:
+with open('steel_data.json', 'w', encoding='utf-8') as json_file:
     json.dump(my_object, json_file, cls=MyEncoder, ensure_ascii=False)
 
 
