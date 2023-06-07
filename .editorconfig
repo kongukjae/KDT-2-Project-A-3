@@ -1,8 +1,0 @@
-# 전체 파일에 대한 설정
-[*]
-indent_style = space
-indent_size = 2
-
-# Python 파일에 대한 설정
-[*.py]
-indent_size = 4
