@@ -140,12 +140,14 @@ for i in range(len(symbols)):
     if 'bstp_kor_isnm' in broker.fetch_price(symbols['단축코드'][i])['output']:
         key = symbols['한글명'][i]
         value = broker.fetch_price(symbols['단축코드'][i])['output']['bstp_kor_isnm']
+        print(key)
+        print(value)
     else:
         key = symbols['한글명'][i]
         value = '미분류',
-    if value == '화학':
+    if value == '기계':
         my_object.data[key] = value
-    time.sleep(0.2)
+    time.sleep(0.5)
 
 class MyEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -154,7 +156,7 @@ class MyEncoder(json.JSONEncoder):
         return super().default(obj)
 
 # JSON 파일로 저장할 때 한글 직접 표현
-with open('chemistry_data.json', 'w', encoding='utf-8') as json_file:
+with open('mechanic_data.json', 'w', encoding='utf-8') as json_file:
     json.dump(my_object, json_file, cls=MyEncoder, ensure_ascii=False)
 
 

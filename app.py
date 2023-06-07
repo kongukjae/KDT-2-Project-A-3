@@ -2,32 +2,7 @@ import re
 import mojito
 from flask import Flask, jsonify, request
 from pymongo import MongoClient
-
-# key = "PSVT5oQXN4N39r3jhoLtrCiVen4fcJ3p7zOh"
-# secret = "OeeQY05O9OEfjuOP2KEtVpbP77p8WKaClPqgOEdSAVdH/FazfG51bqSc97t16uYOsvjb5DzrbqB11cfuMfBXPtwDB2BQqg7otSZAHo61OkobqBGPWJHGOHE/lt+X4WPNhyDiDu06EMiC6t+lvcIrG50t4/alJf7qhfL/dkg8sfOJgC66SDA="
-# acc_no = "00000000-01"
-
-# broker = mojito.KoreaInvestment(api_key=key, api_secret=secret, acc_no=acc_no)
-# # # print(dir(broker))
-# resp = broker.fetch_price("005930")
-# # pprint.pprint(resp)
-# # print("시가   :  ", resp['output']['stck_oprc'])    # 시가
-# # print("현재가 :  ", resp['output']['stck_prpr'])    # 시가
-# # print("최고가 : ", resp['output']['stck_hgpr'])     # 고가
-# # print("최저가 : ", resp['output']['stck_lwpr'])     # 저가
-# # print("종가   : ", resp['output']['stck_prpr'])     # 종가
-
-# symbols = broker.fetch_kosdaq_symbols()        # 코스닥
-# print(dir(symbols))
-
-
-# class myObject:
-#     def __init__(self):
-#         self.data = {}
-
-#     def __str__(self):
-#         return str(self.data)
-
+import callApiData.Mainpage_stock_data
 
 client = MongoClient(
     'mongodb+srv://ChickenStock:1234@jiseop.g8czkiu.mongodb.net/')
@@ -112,8 +87,12 @@ def login_Check():
         returnValue['message']="로그인 오류" 
         return jsonify(returnValue)
 
-
-
+@app.route('/api/main_page', methods=['POST'])
+def main_page_init():
+    reqData = 'elec_company_list'
+    init_data = callApiData.Mainpage_stock_data.Mainpage_stock_list(reqData)
+    print(init_data)
+    return jsonify(init_data)
 
 if (__name__) == '__main__':
     app.run(host='0.0.0.0', port=5000)

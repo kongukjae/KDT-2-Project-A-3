@@ -22,6 +22,24 @@ import { StackNavigationProp } from '@react-navigation/stack';
 function Main_page(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
 
+  const stock_list = async() => {
+    try {
+      const response = await fetch('http://10.0.2.2:5000/api/main_page', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify('종목데이터'), // 플라스크로 데이터를 담아 요청을 보냄
+      });
+      
+      const jsonData = await response.json(); //여기서 플라스크로부터 반환값을 가져옴. 반환객체
+      console.log(jsonData)
+      // console.log(jsonData);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };

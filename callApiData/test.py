@@ -1,21 +1,15 @@
-import requests
 import mojito
+import time
+import pprint
+import json
+from flask import Flask, jsonify, request
 
-def get_current_price(symbol):
-    url = "https://openapivts.koreainvestment.com:29443/uapi/domestic-stock/v1/quotations/inquire-price"  # 실제 API 호출 URL로 대체해야 합니다.
-    params = {
-        "symbol": symbol,
-        "type": "current_price"
-    }
-    response = requests.get(url, params=params)
-    data = response.json()
-    current_price = data["current_price"]
-    return current_price
+app = Flask(__name__)
 
-# 종목 코드를 가져온다고 가정합니다.
-symbol = "종목 코드"
+key = "PSVT5oQXN4N39r3jhoLtrCiVen4fcJ3p7zOh"
+secret = "OeeQY05O9OEfjuOP2KEtVpbP77p8WKaClPqgOEdSAVdH/FazfG51bqSc97t16uYOsvjb5DzrbqB11cfuMfBXPtwDB2BQqg7otSZAHo61OkobqBGPWJHGOHE/lt+X4WPNhyDiDu06EMiC6t+lvcIrG50t4/alJf7qhfL/dkg8sfOJgC66SDA="
+acc_no = "00000000-01"
 
-# 종목과 해당 종목의 현재가를 동시에 조회합니다.
-current_price = get_current_price(symbol)
-print("종목:", symbol)
-print("현재가:", current_price)
+broker = mojito.KoreaInvestment(api_key=key, api_secret=secret, acc_no=acc_no)
+symbols = broker.fetch_kospi_symbols()        # 코스피
+pprint.pprint(symbols['KRX100'])
