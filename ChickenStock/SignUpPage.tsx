@@ -9,7 +9,6 @@ import {
 import {Alert} from 'react-native';
 import {RouteProp, useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {checkServerIdentity} from 'tls';
 
 export default function SignUpPage() {
   const [id, setId] = useState('');

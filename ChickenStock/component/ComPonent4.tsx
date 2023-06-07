@@ -10,22 +10,25 @@ type RootStackParamList = {
   ChoicePageFour: {choice: string};
   MainPage: undefined;
   Another: undefined;
+  BuyPage: undefined;
+  SellPage: undefined;
 };
 
 type AnotherPageNavigationProp = StackNavigationProp<
   RootStackParamList,
-  'Another'
+  'BuyPage',
+  'SellPage'
 >;
 
 const Component4 = () => {
   const navigation = useNavigation<AnotherPageNavigationProp>();
 
   const handleLocationMain = () => {
-    navigation.navigate('MainPage');
+    navigation.navigate('BuyPage');
   };
 
   const handleLocationChoiceOne = () => {
-    navigation.navigate('ChoicePageOne', {choice: 'exampleChoice'}); // replace 'exampleChoice' with your choice string
+    navigation.navigate('SellPage');
   };
 
   return (

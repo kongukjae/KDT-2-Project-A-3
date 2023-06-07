@@ -118,31 +118,22 @@ def login_Check():
 # 컴포넌트 2-1 실시간 주가 차트 데이터(일단위)
 @app.route('/get_data', methods=['GET'])
 def get_data():
-   
-    data = broker._fetch_today_1m_ohlcv("005930",to="15:30:30")
+
+    data = broker._fetch_today_1m_ohlcv("005930", to="15:30:30")
     df = pd.DataFrame(data['output2'])
-    df['stck_bsop_date'] = pd.to_datetime(df['stck_bsop_date'])
-    df['stck_cntg_hour'] = pd.to_datetime(df['stck_cntg_hour'], format='%H%M%S').dt.time
+    df['stck_cntg_hour'] = pd.to_datetime(df['stck_cntg_hour'], format='%H%M%S').dt.strftime('%H:%M:%S')
     df[['stck_prpr', 'stck_oprc', 'stck_hgpr', 'stck_lwpr', 'cntg_vol', 'acml_tr_pbmn']] = df[['stck_prpr', 'stck_oprc', 'stck_hgpr', 'stck_lwpr', 'cntg_vol', 'acml_tr_pbmn']].astype(float)
-    df.index = pd.to_datetime(df['stck_bsop_date'].astype(str) + ' ' + df['stck_cntg_hour'].astype(str))
-    
+
     return df.to_json(orient='records')
 
+
 # 컴포넌트 2-2 주가데이터(일주단위)
-# @app.route('/get_Wdata', methods=['GET'])
-# def get_Wdata():
-#     data = broker.fetch_ohlcv("005930","W")
-#     dfW = pd.DataFrame(data['output2'])
+@app.route('/get_Wdata', methods=['GET'])
+def get_Wdata():
+    data = broker.fetch_ohlcv("005930","W","20230101","202306607")
+    dfW = pd.DataFrame(data['output2'])
     
-#     # Create a dictionary for chart data
-#     chart_data = {
-#         'dates': dfW['stck_bsop_date'].tolist(),
-#         'closing_prices': dfW['stck_clpr'].tolist(),
-#         'opening_prices': dfW['stck_oprc'].tolist(),
-#         'highest_prices': dfW['stck_hgpr'].tolist(),
-#         'lowest_prices': dfW['stck_lwpr'].tolist(),
-#     }
-#     return jsonify(chart_data)
+
 
 # # 컴포넌트 2-3 주가데이터(한달단위)
 # @app.route('/get_Mdata', methods=['GET'])
