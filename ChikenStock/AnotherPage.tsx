@@ -23,5 +23,4 @@ const styles = StyleSheet.create({
     backgroundColor: 'beige',
   },
 });
-
 export default AnotherPage;
