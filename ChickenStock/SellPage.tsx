@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const BuyPage = () => {
+const SellPage = () => {
   const [quantity, setQuantity] = useState('');
   const [price, setPrice] = useState('');
   const [selectedInput, setSelectedInput] = useState('');
@@ -136,7 +136,7 @@ const BuyPage = () => {
   };
 
   const handlePurchase = () => {
-    console.log('주식 구매:', quantity);
+    console.log('주식 판매:', quantity);
   };
 
   const handleInputSelection = (inputType: string) => {
@@ -146,7 +146,7 @@ const BuyPage = () => {
   return (
     <View style={styles.container}>
       <View style={styles.textBox}>
-        <Text style={styles.title}>구매하기</Text>
+        <Text style={styles.title}>판매하기</Text>
         <TouchableOpacity style={styles.textBtn}>
           <Text style={styles.btnText}>호가</Text>
         </TouchableOpacity>
@@ -229,11 +229,11 @@ const BuyPage = () => {
       </View>
       <View style={styles.btnContainer}>
         <TouchableOpacity style={styles.btnBox} onPress={handlePurchase}>
-          <Text style={styles.btnText}>구매하기</Text>
+          <Text style={styles.btnText}>판매하기</Text>
         </TouchableOpacity>
       </View>
     </View>
   );
 };
 
-export default BuyPage;
+export default SellPage;
