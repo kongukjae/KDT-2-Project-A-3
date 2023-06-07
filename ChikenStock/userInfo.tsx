@@ -89,6 +89,7 @@ export const ChoicePageOne: React.FC = () => {
         onPress={() => handleChoice('안정적인 투자 스타일')}>
         <Text style={styles.text}>안정적인 투자 스타일</Text>
       </TouchableOpacity>
+      //* addEventListener와 비슷한 태그 눌렀을 때 함수를 실행시킬수 있도록 하는 태그
       <TouchableOpacity
         style={styles.button}
         onPress={() => handleChoice('수익 분배형 투자 스타일')}>
@@ -261,7 +262,7 @@ export const ChoicePageFour: React.FC = () => {
       choiceFour,
     };
 
-    fetch('http://192.168.100.65:5000/api/user-info', {
+    fetch('http://10.0.2.2:5000/api/user-info', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -305,3 +306,4 @@ export const ChoicePageFour: React.FC = () => {
     </View>
   );
 };
+
