@@ -68,11 +68,11 @@ def user_info():
 
 
 
-# 컴포넌트 2-1 실시간 주가 차트 데이터
+# 컴포넌트 2-1 실시간 주가 차트 데이터(일단위)
 @app.route('/get_data', methods=['GET'])
 def get_data():
    
-    data = broker.fetch_today_1m_ohlcv("005930")
+    data = broker._fetch_today_1m_ohlcv("005930",to="15:30:30")
     df = pd.DataFrame(data['output2'])
     df['stck_bsop_date'] = pd.to_datetime(df['stck_bsop_date'])
     df['stck_cntg_hour'] = pd.to_datetime(df['stck_cntg_hour'], format='%H%M%S').dt.time
@@ -82,25 +82,40 @@ def get_data():
     return df.to_json(orient='records')
 
 # 컴포넌트 2-2 주가데이터(일주단위)
-@app.route('/get_Wdata', methods=['GET'])
-def get_Wdata():
-    data = broker.fetch_ohlcv("005930","W")
-    dfW = pd.DataFrame(data['output2'])
+# @app.route('/get_Wdata', methods=['GET'])
+# def get_Wdata():
+#     data = broker.fetch_ohlcv("005930","W")
+#     dfW = pd.DataFrame(data['output2'])
     
-    return jsonify(dfW.to_dict(orient='records'))
+#     # Create a dictionary for chart data
+#     chart_data = {
+#         'dates': dfW['stck_bsop_date'].tolist(),
+#         'closing_prices': dfW['stck_clpr'].tolist(),
+#         'opening_prices': dfW['stck_oprc'].tolist(),
+#         'highest_prices': dfW['stck_hgpr'].tolist(),
+#         'lowest_prices': dfW['stck_lwpr'].tolist(),
+#     }
+#     return jsonify(chart_data)
 
-# 컴포넌트 2-3 주가데이터(한달단위)
-@app.route('/get_Mdata', methods=['GET'])
-def get_Mdata():
-    data = broker.fetch_ohlcv("005930","M")
-    dfM = pd.DataFrame(data['output2'])
-    return jsonify(dfM.to_dict(orient='records'))
-# 컴포넌트 1-3
+# # 컴포넌트 2-3 주가데이터(한달단위)
+# @app.route('/get_Mdata', methods=['GET'])
+# def get_Mdata():
+#     data = broker.fetch_ohlcv("005930","M")
+#     dfM = pd.DataFrame(data['output2'])
+#     chart_datas = {
+#         'dates': dfM['stck_bsop_date'].tolist(),
+#         'closing_prices': dfM['stck_clpr'].tolist(),
+#         'opening_prices': dfM['stck_oprc'].tolist(),
+#         'highest_prices': dfM['stck_hgpr'].tolist(),
+#         'lowest_prices': dfM['stck_lwpr'].tolist(),
+#     }
+#     return jsonify(chart_datas)
+# # 컴포넌트 1-3
 @app.route('/companydetail', methods=['GET'])
 def get_company_data():
    
     symbols = broker.fetch_kospi_symbols()
-    company_row = symbols[symbols['한글명'] == '노루홀딩스']
+    company_row = symbols[symbols['한글명'] == '삼성전자']
 
     company_info = company_row[['단축코드', '한글명', '기준가']].to_dict(orient='records')[0]
 
@@ -125,16 +140,13 @@ def get_company_updown():
     return jsonify(company_infof)
 
 
-
+# 실시간 주식 등락률, API에서 제공되는 것을 가져다 씀
 @app.route('/changerate', methods=['GET'])
 def get_company_rate():
-    df=stock.get_market_ohlcv("20220720","20220720","005930")
-    dfd=df["등락률"].to_dict()
-    str_dfd={str(k):v for k, v in dfd.items()}
+    data=broker.fetch_today_1m_ohlcv("055930",to="15:30:30")
 
-    rate_value = list(str_dfd.values())[0]
+    return jsonify({"rate": data["output1"]["prdy_ctrt"]})
 
-    return jsonify({"rate": rate_value})
 
 
 # def get_data():

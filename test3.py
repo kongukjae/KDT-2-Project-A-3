@@ -12,9 +12,10 @@ acc_no = "00000000-01"
 broker = mojito.KoreaInvestment(api_key=key, api_secret=secret, acc_no=acc_no)
 
 # 데이터를 받는다.
-data = broker.fetch_ohlcv("005930","W")
+# data = broker.fetch_ohlcv("005930","D")
+data = broker._fetch_today_1m_ohlcv("000270",to="15:30:30")
 
-
+# pprint.pprint(data)
 # MongoDB 클라이언트를 생성 (여기서는 localhost와 포트 27017을 사용)
 client = MongoClient('localhost', 27017)
 
@@ -22,7 +23,7 @@ client = MongoClient('localhost', 27017)
 db = client.mydb
 
 # mystock라는 컬렉션 선택 (없으면 자동 생성)
-collection = db.mystockS
+collection = db.mysumsungG
 
 # data를 MongoDB에 저장
 collection.insert_one(data)

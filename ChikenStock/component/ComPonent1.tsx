@@ -24,6 +24,7 @@ const ComPonent1 = () => {
       .then(response => response.json())
       .then(data => {
         setChangeRate(data.rate);
+        console.log(data);
       })
       .catch(error => console.error(error));
   }, []);
