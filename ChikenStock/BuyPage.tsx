@@ -3,9 +3,7 @@ import {
   View,
   TouchableOpacity,
   Text,
-  Button,
   StyleSheet,
-  TextInput,
 } from 'react-native';
 
 const styles = StyleSheet.create({
@@ -42,9 +40,6 @@ const styles = StyleSheet.create({
   calculateText: {
     fontSize: 20,
     color: 'black',
-  },
-  count: {
-    flexDirection: 'row',
   },
   title: {
     color: 'black',
@@ -158,7 +153,7 @@ const BuyPage = () => {
         <View>
           <Text style={styles.calculateText}>
             {totalPrice !== '' ? totalPrice.toLocaleString() : ''} 원
-          </Text>
+          </Text> //! toLocaleString 1000 단위로 , 표시해줌
         </View>
       </View>
       <View style={styles.calculateBox}>
