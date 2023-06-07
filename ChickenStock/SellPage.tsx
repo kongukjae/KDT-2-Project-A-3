@@ -94,26 +94,28 @@ const styles = StyleSheet.create({
   },
 });
 
-const BuyPage = () => {
+const SellPage = () => {
   const [quantity, setQuantity] = useState('');
   const [price, setPrice] = useState('');
   const [selectedInput, setSelectedInput] = useState('');
 
   const totalPrice =
-    quantity !== '' && price !== '' ? parseInt(quantity) * parseInt(price) : '';
+    quantity !== '' && price !== '' ? parseInt(quantity) * parseInt(price) : ''; //! 수량과 가격이 ''이 아닐경우에 두 값을 곱하고 아닐경우에는 ''을 붙인다.
+  //* ?연산자 는 조건문 => ex) condition ? value1 : value2 condition이 true일 경우 value1, false일 경우 value2
 
   const handleNumberPress = (number: string) => {
+    //? selectedInput 변수를 확인하여 현재 선택된 입력 상자를 확인. 선택된 입력 상자는 'quantity'(수량)인지, 'price'(가격)인지를 나타냄.
     if (selectedInput === 'quantity') {
       if (quantity === '0') {
-        setQuantity(number);
+        setQuantity(number); //? 0일경우 누르는 값으로 값을 대체
       } else {
-        setQuantity(quantity + number);
+        setQuantity(quantity + number); //? 0이 아닐경우 그 뒤에 값을 붙임
       }
     } else if (selectedInput === 'price') {
       if (price === '0') {
-        setPrice(number);
+        setPrice(number); //? 0일경우 누르는 값으로 값을 대체
       } else {
-        setPrice(price + number);
+        setPrice(price + number); //? 0이 아닐 경우 그 뒤에 값을 붙임
       }
     }
   };
@@ -246,4 +248,4 @@ const BuyPage = () => {
   );
 };
 
-export default BuyPage;
+export default SellPage;

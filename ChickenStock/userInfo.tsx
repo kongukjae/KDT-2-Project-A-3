@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
     backgroundColor: '#FFE194',
-    gap: 30
+    gap: 30,
   },
   container: {
     flex: 1,
@@ -89,7 +89,8 @@ export const ChoicePageOne: React.FC = () => {
         onPress={() => handleChoice('안정적인 투자 스타일')}>
         <Text style={styles.text}>안정적인 투자 스타일</Text>
       </TouchableOpacity>
-      //* addEventListener와 비슷한 태그 눌렀을 때 함수를 실행시킬수 있도록 하는 태그
+      //* addEventListener와 비슷한 태그 눌렀을 때 함수를 실행시킬수 있도록 하는
+      태그
       <TouchableOpacity
         style={styles.button}
         onPress={() => handleChoice('수익 분배형 투자 스타일')}>
@@ -306,4 +307,3 @@ export const ChoicePageFour: React.FC = () => {
     </View>
   );
 };
-
