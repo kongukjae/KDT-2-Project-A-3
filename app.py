@@ -130,10 +130,18 @@ def get_data():
 # 컴포넌트 2-2 주가데이터(일주단위)
 @app.route('/get_Wdata', methods=['GET'])
 def get_Wdata():
-    data = broker.fetch_ohlcv("005930","W","20230101","202306607")
+    data = broker.fetch_ohlcv("005930","W")
     dfW = pd.DataFrame(data['output2'])
     
-
+    # Create a dictionary for chart data
+    chart_data = {
+        'dates': dfW['stck_bsop_date'].tolist(),
+        'closing_prices': dfW['stck_clpr'].tolist(),
+        'opening_prices': dfW['stck_oprc'].tolist(),
+        'highest_prices': dfW['stck_hgpr'].tolist(),
+        'lowest_prices': dfW['stck_lwpr'].tolist(),
+    }
+    return jsonify(chart_data)
 
 # # 컴포넌트 2-3 주가데이터(한달단위)
 # @app.route('/get_Mdata', methods=['GET'])
@@ -155,7 +163,7 @@ def get_company_data():
     symbols = broker.fetch_kospi_symbols()
     company_row = symbols[symbols['한글명'] == '삼성전자']
 
-    company_info = company_row[['단축코드', '한글명', '기준가']].to_dict(orient='records')[0]
+    company_info = company_row[['단축코드', '한글명']].to_dict(orient='records')[0]
 
     return jsonify(company_info)
 
@@ -183,7 +191,9 @@ def get_company_updown():
 def get_company_rate():
     data=broker.fetch_today_1m_ohlcv("055930",to="15:30:30")
 
-    return jsonify({"rate": data["output1"]["prdy_ctrt"]})
+    return jsonify({"rate": data["output1"]["prdy_ctrt"]["stck_prpr"]})
+
+
 
 
 
