@@ -90,10 +90,14 @@ def login_Check():
 
 @app.route('/api/main_page', methods=['POST'])
 def main_page_init():
+    print('요청 받음')
+    request_data = request.get_json()
+    print(request_data)
     reqData = 'elec_company_list'
     init_data = callApiData.Mainpage_stock_data.Mainpage_stock_list(reqData)
     print(init_data)
-    return jsonify(init_data)
+    return jsonify(init_data.to_dict())
+    # return jsonify('reqData')
 
 if (__name__) == '__main__':
     app.run(host='0.0.0.0', port=5000)

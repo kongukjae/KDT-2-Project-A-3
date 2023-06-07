@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -21,24 +21,32 @@ import { StackNavigationProp } from '@react-navigation/stack';
 
 function Main_page(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
+  const [jsonData, setJsonData] = useState(null); // jsonData 상태 초기값을 null로 설정
 
-  const stock_list = async() => {
-    try {
-      const response = await fetch('http://10.0.2.2:5000/api/main_page', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify('종목데이터'), // 플라스크로 데이터를 담아 요청을 보냄
-      });
-      
-      const jsonData = await response.json(); //여기서 플라스크로부터 반환값을 가져옴. 반환객체
-      console.log(jsonData)
-      // console.log(jsonData);
-    } catch (error) {
-      console.error(error);
-    }
-  }
+  useEffect(() => {
+    const fetchStockList = async () => {
+      try {
+        const response = await fetch('http://10.0.2.2:5000/api/main_page', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify('종목데이터'),
+        });
+
+        const data = await response.json();
+        setJsonData(data); // 응답받은 데이터를 상태로 설정
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchStockList();
+    const keys = Object.keys(jsonData)
+  }, []);
+  console.log('테스트용')
+  console.log(jsonData)
+
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,

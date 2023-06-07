@@ -40,7 +40,7 @@ const Stack = createStackNavigator<RootStackParamList>();
 const App: React.FC = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="LoginPage">
+      <Stack.Navigator initialRouteName="MainPage">
         <Stack.Screen
           name="ChoicePageOne"
           component={ChoicePageOne}
