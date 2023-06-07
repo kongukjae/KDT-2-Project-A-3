@@ -51,7 +51,7 @@ const LoginPage = () => {
 
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
-  const value = useContext(LoginContext)
+  
   const postData= async () => {
     try {
       const response = await fetch('http://10.0.2.2:5000/api/login', {
@@ -78,7 +78,8 @@ const LoginPage = () => {
   const inputIdToContext=()=>{
     //const value = useContext(LoginContext)
     return(
-      <LoginContext.Provider value ={username}>
+      <LoginContext.Provider value ="안녕하세요">
+        <Text></Text>
       </LoginContext.Provider>
     )
   }
@@ -117,7 +118,6 @@ const LoginPage = () => {
         inputIdToContext
         }}>Sign up</Text>
       </View>
-      <Text>{value}</Text>
     </View>
   );
 };

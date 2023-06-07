@@ -3,7 +3,7 @@ import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-nativ
 import { Alert } from 'react-native';
 import { RouteProp, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-//import { checkServerIdentity } from 'tls';/
+// import { checkServerIdentity } from 'tls';
 
 export default function SignUpPage() {
   const [id, setId] = useState('');

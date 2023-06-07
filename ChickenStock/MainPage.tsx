@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState,useContext} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -11,6 +11,7 @@ import {
   TouchableHighlight,
   Linking,
 } from 'react-native';
+import LoginContext from './AllContext';
 
 import {
   Colors,
@@ -18,7 +19,7 @@ import {
 
 import { RouteProp, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-
+// const value = useContext(LoginContext)
 function Main_page(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
 
@@ -141,6 +142,7 @@ type ChoicePageOneRouteProp = RouteProp<RootStackParamList, 'ChoicePageTwo'>;
             <View style={styles.flex_row}>
               <Text>기사 5 제목 </Text>
               <Text>기사 5 내용</Text>
+              <Text>aa</Text>
             </View>
           </TouchableHighlight>
         </View>
