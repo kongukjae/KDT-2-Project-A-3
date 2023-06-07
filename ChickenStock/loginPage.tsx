@@ -1,10 +1,11 @@
 
-import React from 'react';
+import React, {useContext} from 'react';
 import { View, TextInput, Button, StyleSheet,Image,Text, Alert } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {useNavigation} from '@react-navigation/native';
+import LoginContext from './AllContext';
 
 const styles = StyleSheet.create({
   container: {
@@ -50,6 +51,7 @@ const LoginPage = () => {
 
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
+  const value = useContext(LoginContext)
   const postData= async () => {
     try {
       const response = await fetch('http://10.0.2.2:5000/api/login', {
@@ -71,6 +73,14 @@ const LoginPage = () => {
     } catch (error) {
       console.error(error);
     }
+  }
+
+  const inputIdToContext=()=>{
+    //const value = useContext(LoginContext)
+    return(
+      <LoginContext.Provider value ={username}>
+      </LoginContext.Provider>
+    )
   }
 
 
@@ -102,8 +112,12 @@ const LoginPage = () => {
         />
       <Button onPress={postData}title="Login" />
       <View style={styles.signUp} >
-      <Text onPress={() => navigation.navigate('SignUpPage')}>Sign up</Text>
+      <Text onPress={() => {
+        navigation.navigate('SignUpPage')
+        inputIdToContext
+        }}>Sign up</Text>
       </View>
+      <Text>{value}</Text>
     </View>
   );
 };
