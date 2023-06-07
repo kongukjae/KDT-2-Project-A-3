@@ -29,7 +29,6 @@ broker = mojito.KoreaInvestment(api_key=key, api_secret=secret, acc_no=acc_no)
 #     def __str__(self):
 #         return str(self.data)
 
-
 client = MongoClient(
     'mongodb+srv://ChickenStock:1234@jiseop.g8czkiu.mongodb.net/')
 db = client['chicken_stock']
