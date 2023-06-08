@@ -31,8 +31,8 @@ type RootStackParamList = {
   Another: undefined;
   SignUpPage: undefined;
   LoginPage: undefined;
-  BuyPage:undefined;
-  SellPage:undefined;
+  BuyPage: undefined;
+  SellPage: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
