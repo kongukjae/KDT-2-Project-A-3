@@ -13,13 +13,17 @@ import {
 } from 'react-native';
 import LoginContext from './AllContext';
 
-import {
-  Colors,
-} from 'react-native/Libraries/NewAppScreen';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
 
+<<<<<<< HEAD
 import { RouteProp, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 const value = useContext(LoginContext)
+=======
+import {RouteProp, useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+
+>>>>>>> fb673ba47f634efeaa892a61a541049920d0ad54
 function Main_page(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
 
@@ -36,43 +40,43 @@ function Main_page(): JSX.Element {
   const [scrollPosition, setScrollPosition] = useState(0);
   const [viewCount, setViewCount] = useState(12);
 
-  const handleScroll = (event:any) => {
-    const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
+  const handleScroll = (event: any) => {
+    const {layoutMeasurement, contentOffset, contentSize} = event.nativeEvent;
     // 무한스크롤 동작 조건: 화면상의 높이값 + 스크롤의 위치값 >= 페이지 전체 높이 - 50px 일 때 요소를 추가적으로 생성
-    const reachedBottom = layoutMeasurement.height + contentOffset.y >= contentSize.height - 50;
-    console.log(`layoutMeasurement.height`)
-    console.log(`${layoutMeasurement.height}`)
-    console.log(`contentOffset.y`)
-    console.log(`${contentOffset.y}`)
-    console.log(`contentSize.height`)
-    console.log(`${contentSize.height}`)
+    const reachedBottom =
+      layoutMeasurement.height + contentOffset.y >= contentSize.height - 50;
+    console.log(`layoutMeasurement.height`);
+    console.log(`${layoutMeasurement.height}`);
+    console.log(`contentOffset.y`);
+    console.log(`${contentOffset.y}`);
+    console.log(`contentSize.height`);
+    console.log(`${contentSize.height}`);
     if (reachedBottom) {
       setViewCount(viewCount + 4); // 추가될 View 개수
     }
     setScrollPosition(contentOffset.y);
   };
 
-
   const navigation = useNavigation<ChoicePageOneNavigationProp>();
 
   type RootStackParamList = {
-    ChoicePageOne: { choice: string };
-    ChoicePageTwo: { choice: string };
-    ChoicePageThree: { choice: string };
-    ChoicePageFour: { choice: string };
+    ChoicePageOne: {choice: string};
+    ChoicePageTwo: {choice: string};
+    ChoicePageThree: {choice: string};
+    ChoicePageFour: {choice: string};
     MainPage: undefined;
     Another: undefined;
   };
 
   type ChoicePageOneNavigationProp = StackNavigationProp<
-  RootStackParamList,
-  'ChoicePageTwo'
->;
-type ChoicePageOneRouteProp = RouteProp<RootStackParamList, 'ChoicePageTwo'>;
+    RootStackParamList,
+    'ChoicePageTwo'
+  >;
+  type ChoicePageOneRouteProp = RouteProp<RootStackParamList, 'ChoicePageTwo'>;
 
   const handleLocation = () => {
     navigation.navigate('Another');
-  }
+  };
 
   return (
     <SafeAreaView style={backgroundStyle}>
@@ -164,13 +168,16 @@ type ChoicePageOneRouteProp = RouteProp<RootStackParamList, 'ChoicePageTwo'>;
           </TouchableHighlight>
         </View>
         <View style={styles.container}>
-        {[...Array(viewCount)].map((_, index) => (
-          <TouchableHighlight key={index} style={styles.view} onPress={() => handleLocation()}>
-            <View>
-              <Text>임시 텍스트 {index}</Text>
-            </View>
-          </TouchableHighlight>
-        ))}
+          {[...Array(viewCount)].map((_, index) => (
+            <TouchableHighlight
+              key={index}
+              style={styles.view}
+              onPress={() => handleLocation()}>
+              <View>
+                <Text>임시 텍스트 {index}</Text>
+              </View>
+            </TouchableHighlight>
+          ))}
         </View>
       </ScrollView>
     </SafeAreaView>

@@ -1,14 +1,32 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 
 const ComPonent3 = () => {
+  const [upAndDown, setCompany] = useState({
+    시가: '',
+    오늘최고가: '',
+    오늘최저가: '',
+    현재가: '',
+    시가총액: '',
+  });
+
+  useEffect(() => {
+    fetch('http://10.0.2.2:5000/companyupdown')
+      .then(response => response.json())
+      .then(data => {
+        setCompany(data);
+        console.log(data);
+      })
+      .catch(error => console.error(error));
+  }, []);
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>기업 이름: Samsung</Text>
-      <Text style={styles.text}>기업 코드: 005930</Text>
+      <Text style={styles.text}>시가: {upAndDown['시가']}</Text>
+      <Text style={styles.text}>오늘최고가: {upAndDown['오늘최고가']}</Text>
       <View style={styles.priceContainer}>
-        <Text style={styles.text}>가격: 85000원</Text>
-        <Text style={styles.text}>상승폭: +3000(+3.66%)</Text>
+        <Text style={styles.text}>오늘최저가: {upAndDown['오늘최저가']}</Text>
+        <Text style={styles.text}>현재가: {upAndDown['현재가']}</Text>
+        <Text style={styles.text}>시가총액: {upAndDown['시가총액']}</Text>
       </View>
     </View>
   );
@@ -16,10 +34,10 @@ const ComPonent3 = () => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
+    padding: 40,
   },
   text: {
-    fontSize: 20,
+    fontSize: 15,
   },
   priceContainer: {
     flexDirection: 'row',
