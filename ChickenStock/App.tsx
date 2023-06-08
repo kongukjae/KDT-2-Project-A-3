@@ -21,7 +21,7 @@ import SignUpPage from './SignUpPage';
 import LoginPage from './loginPage';
 import BuyPage from './BuyPage';
 import SellPage from './SellPage';
-
+import topMenuPage from './topMenuPage';
 type RootStackParamList = {
   ChoicePageOne: undefined;
   ChoicePageTwo: undefined;
@@ -33,6 +33,7 @@ type RootStackParamList = {
   LoginPage: undefined;
   BuyPage: undefined;
   SellPage: undefined;
+  topMenuPage: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -40,7 +41,7 @@ const Stack = createStackNavigator<RootStackParamList>();
 const App: React.FC = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="LoginPage">
+      <Stack.Navigator initialRouteName="ChoicePageOne">
         <Stack.Screen
           name="ChoicePageOne"
           component={ChoicePageOne}
@@ -89,6 +90,11 @@ const App: React.FC = () => {
         <Stack.Screen
           name="SellPage"
           component={SellPage}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="topMenuPage"
+          component={topMenuPage}
           options={{headerShown: false}}
         />
       </Stack.Navigator>
