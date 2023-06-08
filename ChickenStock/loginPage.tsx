@@ -45,6 +45,13 @@ const styles = StyleSheet.create({
 });
 
 const LoginPage = () => {
+  
+  const inputIdToContext=()=>{
+    return(
+      <LoginContext.Provider value ="zz">
+      </LoginContext.Provider>
+    )
+  }
   type RootStackParamList = {
     Login: undefined;
     SignUpPage: undefined;
@@ -72,6 +79,8 @@ const LoginPage = () => {
         Alert.alert(jsonData['message'], '', [{text: '확인'}]); //alert 첫번째 인자는 제목, 두번째 인자는 내용, 세번째 인자는 옵션을 넣을 수 있음 ex)예 아니오, 이벤트 등등
       } else {
         navigation.navigate('MainPage');
+        console.log(username)
+        inputIdToContext()
       }
       // console.log(jsonData);
     } catch (error) {
@@ -79,14 +88,7 @@ const LoginPage = () => {
     }
   }
 
-  const inputIdToContext=()=>{
-    //const value = useContext(LoginContext)
-    return(
-      <LoginContext.Provider value ="안녕하세요">
-        <Text></Text>
-      </LoginContext.Provider>
-    )
-  }
+ 
 
 
   const navigation = useNavigation<loginPageNavigationProp>();
@@ -113,7 +115,6 @@ const LoginPage = () => {
       <View style={styles.signUp} >
       <Text onPress={() => {
         navigation.navigate('SignUpPage')
-        inputIdToContext
         }}>Sign up</Text>
       </View>
     </View>

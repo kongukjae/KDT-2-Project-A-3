@@ -1,6 +1,6 @@
 import React, { createContext, useState } from 'react';
 
-const LoginContext = createContext('안녕하세요');
+const LoginContext = createContext('z');
 
 export default LoginContext;
 
