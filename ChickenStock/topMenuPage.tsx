@@ -13,8 +13,6 @@ import {
   Linking,
 } from 'react-native';
 
-import { Colors } from 'react-native/Libraries/NewAppScreen';
-
 import { RouteProp, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 
@@ -27,6 +25,7 @@ type RootStackParamList = {
   Another: undefined;
   SignUpPage: undefined;
   LoginPage: undefined;
+  MyPage: undefined;
 };
 
 type ChoicePageOneNavigationProp = StackNavigationProp<
@@ -38,8 +37,8 @@ type ChoicePageOneRouteProp = RouteProp<RootStackParamList, 'ChoicePageTwo'>;
 const TopMenuPage = () => {
   const navigation = useNavigation<ChoicePageOneNavigationProp>();
 
-  const goToChoicePageOne = () => {
-    navigation.navigate('LoginPage');
+  const goToChoicePage = () => {
+    navigation.navigate('MyPage');
   };
 
   return (
@@ -48,7 +47,7 @@ const TopMenuPage = () => {
         source={require('./resource/Icon_search.png')}
         style={styles.icon}
       />
-      <TouchableOpacity onPress={goToChoicePageOne}>
+      <TouchableOpacity onPress={goToChoicePage}>
         <Image
           source={require('./resource/Icon_cart.png')}
           style={styles.icon}
