@@ -1,10 +1,3 @@
-<<<<<<< HEAD
-
-import React, {useContext} from 'react';
-import { View, TextInput, Button, StyleSheet,Image,Text, Alert } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-=======
 import React from 'react';
 import {
   View,
@@ -17,7 +10,6 @@ import {
 } from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
->>>>>>> fb673ba47f634efeaa892a61a541049920d0ad54
 import {StackNavigationProp} from '@react-navigation/stack';
 import {useNavigation} from '@react-navigation/native';
 import LoginContext from './AllContext';
@@ -65,12 +57,7 @@ const LoginPage = () => {
 
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
-<<<<<<< HEAD
-  
-  const postData= async () => {
-=======
   const postData = async () => {
->>>>>>> fb673ba47f634efeaa892a61a541049920d0ad54
     try {
       const response = await fetch('http://10.0.2.2:5000/api/login', {
         method: 'POST',
@@ -90,7 +77,6 @@ const LoginPage = () => {
     } catch (error) {
       console.error(error);
     }
-<<<<<<< HEAD
   }
 
   const inputIdToContext=()=>{
@@ -102,9 +88,6 @@ const LoginPage = () => {
     )
   }
 
-=======
-  };
->>>>>>> fb673ba47f634efeaa892a61a541049920d0ad54
 
   const navigation = useNavigation<loginPageNavigationProp>();
 
@@ -125,7 +108,6 @@ const LoginPage = () => {
         value={password}
         onChangeText={setPassword}
         secureTextEntry // 패스워드타입
-<<<<<<< HEAD
         />
       <Button onPress={postData}title="Login" />
       <View style={styles.signUp} >
@@ -133,12 +115,6 @@ const LoginPage = () => {
         navigation.navigate('SignUpPage')
         inputIdToContext
         }}>Sign up</Text>
-=======
-      />
-      <Button onPress={postData} title="Login" />
-      <View style={styles.signUp}>
-        <Text onPress={() => navigation.navigate('SignUpPage')}>Sign up</Text>
->>>>>>> fb673ba47f634efeaa892a61a541049920d0ad54
       </View>
     </View>
   );

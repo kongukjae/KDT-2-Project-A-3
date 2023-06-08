@@ -1,24 +1,9 @@
-<<<<<<< HEAD
 import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { Alert } from 'react-native';
 import { RouteProp, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 // import { checkServerIdentity } from 'tls';
-=======
-import React, {useState} from 'react';
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import {Alert} from 'react-native';
-import {RouteProp, useNavigation} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {checkServerIdentity} from 'tls';
->>>>>>> fb673ba47f634efeaa892a61a541049920d0ad54
 
 export default function SignUpPage() {
   const [id, setId] = useState('');
