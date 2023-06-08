@@ -127,35 +127,38 @@ def get_data():
     return df.to_json(orient='records')
 
 
-# 컴포넌트 2-2 주가데이터(일주단위)
-@app.route('/get_Wdata', methods=['GET'])
-def get_Wdata():
-    data = broker.fetch_ohlcv("005930","W")
-    dfW = pd.DataFrame(data['output2'])
+# 컴포넌트 2-2 주가데이터(한달단위)
+@app.route('/get_Mdata', methods=['GET'])
+def get_Mdata():
+    data = broker.fetch_ohlcv_domestic("005930","M","20220608")
+    df = pd.DataFrame(data['output2'])
+
+    # 필요한 컬럼을 숫자로 변환
+    df[['stck_clpr', 'stck_hgpr', 'stck_lwpr', 'stck_oprc', 'acml_vol', 'acml_tr_pbmn']] = df[['stck_clpr', 'stck_hgpr', 'stck_lwpr', 'stck_oprc', 'acml_vol', 'acml_tr_pbmn']].astype(float)
     
-    # Create a dictionary for chart data
-    chart_data = {
-        'dates': dfW['stck_bsop_date'].tolist(),
-        'closing_prices': dfW['stck_clpr'].tolist(),
-        'opening_prices': dfW['stck_oprc'].tolist(),
-        'highest_prices': dfW['stck_hgpr'].tolist(),
-        'lowest_prices': dfW['stck_lwpr'].tolist(),
-    }
+    # 날짜 컬럼 형식 변경
+    df['stck_bsop_date'] = pd.to_datetime(df['stck_bsop_date'], format='%Y%m%d')
+
+    # 필요한 정보만 포함된 json 데이터로 변환
+    chart_data = df[['stck_bsop_date', 'stck_oprc', 'stck_hgpr', 'stck_lwpr', 'stck_clpr', 'acml_vol']].to_dict(orient='records')
+
     return jsonify(chart_data)
 
-# # 컴포넌트 2-3 주가데이터(한달단위)
-# @app.route('/get_Mdata', methods=['GET'])
-# def get_Mdata():
-#     data = broker.fetch_ohlcv("005930","M")
-#     dfM = pd.DataFrame(data['output2'])
-#     chart_datas = {
-#         'dates': dfM['stck_bsop_date'].tolist(),
-#         'closing_prices': dfM['stck_clpr'].tolist(),
-#         'opening_prices': dfM['stck_oprc'].tolist(),
-#         'highest_prices': dfM['stck_hgpr'].tolist(),
-#         'lowest_prices': dfM['stck_lwpr'].tolist(),
-#     }
-#     return jsonify(chart_datas)
+# 컴포넌트 2-3 주가데이터(연단위)
+@app.route('/get_Ydata', methods=['GET'])
+def get_Ydata():
+    data = broker.fetch_ohlcv("005930","Y")
+    df = pd.DataFrame(data['output2'])
+     # 필요한 컬럼을 숫자로 변환
+    df[['stck_clpr', 'stck_hgpr', 'stck_lwpr', 'stck_oprc', 'acml_vol', 'acml_tr_pbmn']] = df[['stck_clpr', 'stck_hgpr', 'stck_lwpr', 'stck_oprc', 'acml_vol', 'acml_tr_pbmn']].astype(float)
+    
+    # 날짜 컬럼 형식 변경
+    df['stck_bsop_date'] = pd.to_datetime(df['stck_bsop_date'], format='%Y%m%d')
+
+    # 필요한 정보만 포함된 json 데이터로 변환
+    chart_data = df[['stck_bsop_date', 'stck_oprc', 'stck_hgpr', 'stck_lwpr', 'stck_clpr', 'acml_vol']].to_dict(orient='records')
+
+    return jsonify(chart_data)
 # # 컴포넌트 1-3
 @app.route('/companydetail', methods=['GET'])
 def get_company_data():
@@ -186,12 +189,17 @@ def get_company_updown():
     return jsonify(company_infof)
 
 
-# 실시간 주식 등락률, API에서 제공되는 것을 가져다 씀
+# 실시간 주식 등락률,현재가격 API에서 제공되는 것을 가져다 씀
 @app.route('/changerate', methods=['GET'])
 def get_company_rate():
-    data=broker.fetch_today_1m_ohlcv("055930",to="15:30:30")
+    data=broker._fetch_today_1m_ohlcv("005930",to="15:30:30")
 
-    return jsonify({"rate": data["output1"]["prdy_ctrt"]["stck_prpr"]})
+    output1 = data["output1"]
+    output2 = data["output2"]
+
+    combined_output = {"prdy_ctrt": output1["prdy_ctrt"], "stck_prpr": output2[0]["stck_prpr"]}
+
+    return jsonify(combined_output)
 
 
 

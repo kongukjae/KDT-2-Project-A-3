@@ -149,8 +149,8 @@ const BuyPage = () => {
         <View>
           <Text style={styles.calculateText}>
             {totalPrice !== '' ? totalPrice.toLocaleString() : ''} 원
-          </Text>{' '}
-          //! toLocaleString 1000 단위로 , 표시해줌
+          </Text>
+          {/* //! toLocaleString 1000 단위로 , 표시해줌 */}
         </View>
       </View>
       <View style={styles.calculateBox}>

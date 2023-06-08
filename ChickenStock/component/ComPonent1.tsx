@@ -8,8 +8,8 @@ const ComPonent1 = () => {
     기준가: '',
   });
   const [changeRate, setChangeRate] = useState({
-    등락률: '',
-    현재가: '',
+    prdy_ctrt: '',
+    stck_prpr: '',
   });
 
   useEffect(() => {
@@ -25,9 +25,9 @@ const ComPonent1 = () => {
   useEffect(() => {
     fetch('http://10.0.2.2:5000/changerate')
       .then(response => response.json())
-      .then(data => {
-        setChangeRate(data.rate);
-        console.log(data);
+      .then(dataa => {
+        setChangeRate(dataa);
+        console.log(dataa);
       })
       .catch(error => console.error(error));
   }, []);
@@ -39,8 +39,8 @@ const ComPonent1 = () => {
         <Text style={styles2.text}>기업이름: {company['한글명']}</Text>
         <Text style={styles3.text}>단축코드: {company['단축코드']}</Text>
         <View style={styles1.priceContainer}>
-          <Text style={redblue.text}>등락률: {changeRate['등락률']} </Text>
-          <Text style={styles1.text}>기준가: {changeRate['현재가']}</Text>
+          <Text style={redblue.text}>등락률: {changeRate['prdy_ctrt']} </Text>
+          <Text style={styles1.text}>기준가: {changeRate['stck_prpr']}</Text>
         </View>
       </View>
     </View>
