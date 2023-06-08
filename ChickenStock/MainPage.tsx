@@ -18,33 +18,55 @@ import {RouteProp, useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 
 function Main_page(): JSX.Element {
+  const [jsonData, setJsonData] = useState<any>({});
   const isDarkMode = useColorScheme() === 'dark';
-  const [jsonData, setJsonData] = useState(null); // jsonData 상태 초기값을 null로 설정
+  const stock_list = async () => {
+    try {
+      const response = await fetch('http://10.0.2.2:5000/api/main_page', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify('종목데이터'),
+      });
+
+      const data = await response.json();
+      console.log('응답받음');
+      console.log(data);
+      setJsonData(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
-    const fetchStockList = async () => {
-      try {
-        const response = await fetch('http://10.0.2.2:5000/api/main_page', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify('종목데이터'),
-        });
-
-        const data = await response.json();
-        setJsonData(data); // 응답받은 데이터를 상태로 설정
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchStockList();
-    const keys = Object.keys(jsonData)
+    stock_list();
   }, []);
-  console.log('테스트용')
+
+  console.log('함수 밖')
   console.log(jsonData)
 
+  const dataArray = Object.entries(jsonData);
+  // console.log(dataArray[0])
+  // console.log(dataArray[0][1])
+  // console.log(dataArray[0][1]["등락"])
+  // console.log(typeof(dataArray[0][1]))
+
+  // const keys = Object.keys(jsonData);
+  // const index = 1;
+
+  // const name_data = keys[index]
+  // const company_data = jsonData[name_data]
+  // const end_price = jsonData[name_data]['전일종가']
+  // const up_down = jsonData[name_data]['등락']
+  // const current_price = jsonData[name_data]['현재가']
+
+  // console.log('객체 데이터')
+  // console.log(name_data)
+  // console.log(company_data)
+  // console.log(end_price)
+  // console.log(up_down)
+  // console.log(current_price)
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
@@ -57,24 +79,24 @@ function Main_page(): JSX.Element {
 
   // 무한 스크롤 관련
   const [scrollPosition, setScrollPosition] = useState(0);
-  const [viewCount, setViewCount] = useState(12);
+  const [viewCount, setViewCount] = useState(16);
 
-  const handleScroll = (event: any) => {
-    const {layoutMeasurement, contentOffset, contentSize} = event.nativeEvent;
-    // 무한스크롤 동작 조건: 화면상의 높이값 + 스크롤의 위치값 >= 페이지 전체 높이 - 50px 일 때 요소를 추가적으로 생성
-    const reachedBottom =
-      layoutMeasurement.height + contentOffset.y >= contentSize.height - 50;
-    console.log(`layoutMeasurement.height`);
-    console.log(`${layoutMeasurement.height}`);
-    console.log(`contentOffset.y`);
-    console.log(`${contentOffset.y}`);
-    console.log(`contentSize.height`);
-    console.log(`${contentSize.height}`);
-    if (reachedBottom) {
-      setViewCount(viewCount + 4); // 추가될 View 개수
-    }
-    setScrollPosition(contentOffset.y);
-  };
+  // const handleScroll = (event: any) => {
+  //   const {layoutMeasurement, contentOffset, contentSize} = event.nativeEvent;
+  //   // 무한스크롤 동작 조건: 화면상의 높이값 + 스크롤의 위치값 >= 페이지 전체 높이 - 50px 일 때 요소를 추가적으로 생성
+  //   const reachedBottom =
+  //     layoutMeasurement.height + contentOffset.y >= contentSize.height - 50;
+  //   console.log(`layoutMeasurement.height`);
+  //   console.log(`${layoutMeasurement.height}`);
+  //   console.log(`contentOffset.y`);
+  //   console.log(`${contentOffset.y}`);
+  //   console.log(`contentSize.height`);
+  //   console.log(`${contentSize.height}`);
+  //   if (reachedBottom) {
+  //     setViewCount(viewCount + 4); // 추가될 View 개수
+  //   }
+  //   setScrollPosition(contentOffset.y);
+  // };
 
   const navigation = useNavigation<ChoicePageOneNavigationProp>();
 
@@ -104,7 +126,6 @@ function Main_page(): JSX.Element {
         backgroundColor={backgroundStyle.backgroundColor}
       />
       <ScrollView
-        onScroll={handleScroll}
         contentInsetAdjustmentBehavior="automatic"
         scrollEventThrottle={2}>
         <View style={styles.header}>
@@ -186,16 +207,26 @@ function Main_page(): JSX.Element {
           </TouchableHighlight>
         </View>
         <View style={styles.container}>
-          {[...Array(viewCount)].map((_, index) => (
-            <TouchableHighlight
+          {[...Array(viewCount)].map((_, index) => {
+            const item = dataArray[index];
+            const name_data = item[0];
+            const company_data:any = item[1]; // up_down과 current_price에서 타입 에러가 발생하므로 any로 할당함
+            // const end_price = company_data['전일종가'];
+            const up_down = company_data['등락'];
+            const current_price = company_data['현재가'];
+
+            return (
+              <TouchableHighlight
               key={index}
-              style={styles.view}
-              onPress={() => handleLocation()}>
-              <View>
-                <Text>임시 텍스트 {index}</Text>
-              </View>
-            </TouchableHighlight>
-          ))}
+              style={styles.view}>
+                <View>
+                  <Text>{name_data}</Text>
+                  <Text>등락 {up_down}</Text>
+                  <Text>현재가 {current_price}</Text>
+                </View>
+              </TouchableHighlight>
+            );
+          })}
         </View>
       </ScrollView>
     </SafeAreaView>
