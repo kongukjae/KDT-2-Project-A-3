@@ -1,23 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-
-const colors = ['red', 'blue', 'green']; // 페이지 색상 배열
+import { View, Text, StyleSheet, Linking } from 'react-native';
+import { TouchableHighlight } from 'react-native-gesture-handler';
 
 const SlideComponent = () => {
   const [currentPage, setCurrentPage] = useState(0);
+  const [newsTitle, setNewsTitle] = useState('');
+  const [newsDetail, setNewsDetail] = useState('');
+  const [newsLink, setNewsLink] = useState('');
 
-  // function newsData(data) {
-  //   // 데이터 가공 및 활용 예시
-  //   const processedData = data.map(item => {
-  //     return {
-  //       title: item.title,
-  //       detail: item.detail,
-  //       link: item.link
-  //     };
-  //   });
-
-  //   console.log(processedData);
-  // }
+  const colors = ['red', 'blue', 'green'];
 
   const loadLocation = () => {
     fetch('http://10.0.2.2:5000/news')
@@ -25,7 +16,10 @@ const SlideComponent = () => {
       return response.json()
     })
     .then(data => {
-      console.log(data);
+      const jsonData = JSON.parse(data)
+      setNewsTitle(jsonData['title']);
+      setNewsDetail(jsonData['detail']);
+      setNewsLink(jsonData['link']);
     })
     .catch(error => {
       console.log(error)
@@ -35,6 +29,8 @@ const SlideComponent = () => {
   useEffect(() => {
     loadLocation();
   }, [])
+
+  
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -54,9 +50,21 @@ const SlideComponent = () => {
     }
   }, [currentPage]);
 
+  const handleNewsLinkPress = () => {
+    Linking.openURL(newsLink[currentPage]);
+  };
+
   return (
     <View style={styles.container}>
-      <View style={[styles.page, { backgroundColor: colors[currentPage] }]}/>
+      <View style={[styles.page]}>
+        <TouchableHighlight onPress={handleNewsLinkPress}>
+          <View>
+            <Text style={styles.newsTitle}>{newsTitle[currentPage]}</Text>
+            <Text> </Text>
+            <Text style={styles.newsDetail}>{newsDetail[currentPage]}</Text>
+          </View>
+        </TouchableHighlight>
+      </View>
     </View>
   );
 };
@@ -66,9 +74,19 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#E8F6EF'
+  },
+  newsTitle: {
+    color: 'black',
+    fontSize: 20,
+    fontWeight: '700',
+  },
+  newsDetail: {
+    fontSize: 13,
+    fontWeight: '500',
   },
   page: {
-    width: '80%',
+    width: '100%',
     height: '80%',
   },
   currentPageText: {
