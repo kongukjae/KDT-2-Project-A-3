@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState,useContext, useEffect} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -11,6 +11,8 @@ import {
   TouchableHighlight,
   Linking,
 } from 'react-native';
+import {AuthContext} from './AllContext';
+
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 
@@ -35,6 +37,7 @@ function Main_page(): JSX.Element {
   const [scrollPosition, setScrollPosition] = useState(0);
   const [viewCount, setViewCount] = useState(12);
 
+  const {userId} = useContext(AuthContext)
   const handleScroll = (event: any) => {
     const {layoutMeasurement, contentOffset, contentSize} = event.nativeEvent;
     // 무한스크롤 동작 조건: 화면상의 높이값 + 스크롤의 위치값 >= 페이지 전체 높이 - 50px 일 때 요소를 추가적으로 생성
@@ -107,7 +110,7 @@ function Main_page(): JSX.Element {
             </View>
             <View style={styles.login_box}>
               <Text style={styles.login_user_name}>
-                ______님 로그인하셨습니다.
+                {userId}님 환영합니다.
               </Text>
             </View>
           </View>

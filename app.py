@@ -3,7 +3,7 @@ import mojito
 import json
 from flask import Flask, jsonify, request
 from pymongo import MongoClient
-from pykrx import stock
+# from pykrx import stock
 import pandas as pd
 from bs4 import BeautifulSoup
 import requests
