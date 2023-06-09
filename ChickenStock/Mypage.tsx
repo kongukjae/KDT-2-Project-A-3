@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
   myMoneyCss: {
     width: '100%',
     height: 50,
-    backgroundColor: 'lightgray',
+    backgroundColor: 'gray',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center'
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 30,
     marginTop: 20,
-    backgroundColor: 'lightgray',
+    backgroundColor: 'gray',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center'
