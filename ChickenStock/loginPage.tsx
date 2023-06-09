@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {
   View,
   TextInput,
@@ -12,7 +12,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {useNavigation} from '@react-navigation/native';
-import LoginContext from './AllContext';
+import {AuthContext} from './AllContext';
 
 const styles = StyleSheet.create({
   container: {
@@ -45,13 +45,14 @@ const styles = StyleSheet.create({
 });
 
 const LoginPage = () => {
-  
-  const inputIdToContext=()=>{
-    return(
-      <LoginContext.Provider value ="zz">
-      </LoginContext.Provider>
-    )
-  }
+ const {setUserId}=useContext(AuthContext)
+  // const inputIdToContext=()=>{
+  //   return(
+  //     <LoginContext.Provider value ="zz">
+  //     </LoginContext.Provider>
+  //   )
+  // }
+
   type RootStackParamList = {
     Login: undefined;
     SignUpPage: undefined;
@@ -79,8 +80,8 @@ const LoginPage = () => {
         Alert.alert(jsonData['message'], '', [{text: '확인'}]); //alert 첫번째 인자는 제목, 두번째 인자는 내용, 세번째 인자는 옵션을 넣을 수 있음 ex)예 아니오, 이벤트 등등
       } else {
         navigation.navigate('MainPage');
-        console.log(username)
-        inputIdToContext()
+        setUserId(username)
+
       }
       // console.log(jsonData);
     } catch (error) {
