@@ -64,8 +64,6 @@ yarn-error.log
 
 __tests__
 .bundle
-android
-ios
 .eslintrc.js
 .node-version
 .prettierrc.js
