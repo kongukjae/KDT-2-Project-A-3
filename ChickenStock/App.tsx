@@ -21,6 +21,7 @@ import SignUpPage from './SignUpPage';
 import LoginPage from './loginPage';
 import BuyPage from './BuyPage';
 import SellPage from './SellPage';
+import SlideComponent from './NewsComponent'
 import {AuthProvider} from './AllContext';
 
 type RootStackParamList = {
@@ -34,6 +35,7 @@ type RootStackParamList = {
   LoginPage: undefined;
   BuyPage: undefined;
   SellPage: undefined;
+  SlideComponent: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -42,7 +44,7 @@ const App: React.FC = () => {
   return (
     <AuthProvider>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="LoginPage">
+        <Stack.Navigator initialRouteName="MainPage">
           <Stack.Screen
             name="ChoicePageOne"
             component={ChoicePageOne}
@@ -93,6 +95,11 @@ const App: React.FC = () => {
             component={SellPage}
             options={{headerShown: false}}
           />
+        <Stack.Screen
+          name="SlideComponent"
+          component={SlideComponent}
+          options={{headerShown: false}}
+        />
         </Stack.Navigator>
       </NavigationContainer>
     </AuthProvider>
