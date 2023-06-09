@@ -18,68 +18,115 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import TopMenuPage from './TopMenuPage';
 const MyPage = () => {
 
-  const items = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
-  const names = ['기업 명', '현재가', '등락', '보유 수량', '평가 금액']
-
+  const interest = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
+  const enter = ['기업 명', '현재가', '등락', '보유 수량', '평가 금액']
+  const transaction = ['구매', '판매', '미채결']
+  const enterValue = [1, 2, 3, 4, 5]
+  const transactionValue = [6, 7, 8, 9, 10]
   return (
-    <View style={{ flex: 1, borderWidth: 1, backgroundColor: 'red' }}>
+    <View>
       <View>
         <TopMenuPage></TopMenuPage>
       </View>
-      <View style={styles.my_money}>
+      <View style={styles.myMoneyCss}>
         <Text>내 계좌</Text>
       </View>
-      <View style={styles.my_interest}>
+      <View style={styles.myInterestCss}>
         <Text>본인 관심사</Text>
       </View>
-      <View style={styles.container}>
-        {items.map((item, index) => (
-          <TouchableOpacity style={styles.button}>
+      <View style={styles.circleContainerCss}>
+        {interest.map((item, index) => (
+          <TouchableOpacity style={styles.circleButtonCss}>
             <Text key={index}>{item}</Text>
           </TouchableOpacity>
         ))}
       </View>
-      <View style={styles.name}>
-        {names.map((item, index) => (
-          <View style={styles.setname}>
-          <Text key={index}>
-            {item}
-          </Text>
+      <View style={styles.enterCss}>
+        {enter.map((item, index) => (
+          <View style={styles.enterNameCss}>
+            <Text key={index}>
+              {item}
+            </Text>
           </View>
         ))}
       </View>
-      <View style={styles.valueContainer}>
-        <View style={styles.value}>
-          <View></View>
-          <View></View>
-          <View></View>
-          <View></View>
-          <View></View>
-        </View>
-        <View style={styles.value}>
-          <View></View>
-          <View></View>
-          <View></View>
-          <View></View>
-          <View></View>
-        </View>  
-        <View style={styles.value}>
-          <View></View>
-          <View></View>
-          <View></View>
-          <View></View>
-          <View></View>
-        </View>
-       
+      <View style={styles.enterValueCss}>
+        {enterValue.map((item, index) => (
+          <View style={styles.enterInsertCss}>
+            <Text key={index}>{item}</Text>
+          </View>
+        ))}
       </View>
-
+      <View style={styles.enterValueCss}>
+        {enterValue.map((item, index) => (
+          <View style={styles.enterInsertCss}>
+            <Text key={index}>{item}</Text>
+          </View>
+        ))}
+      </View>
+      <View style={styles.enterValueCss}>
+        {enterValue.map((item, index) => (
+          <View style={styles.enterInsertCss}>
+            <Text key={index}>{item}</Text>
+          </View>
+        ))}
+      </View>
+      <View style={styles.enterValueCss}>
+        {enterValue.map((item, index) => (
+          <View style={styles.enterInsertCss}>
+            <Text key={index}>{item}</Text>
+          </View>
+        ))}
+      </View>
+      <View style={styles.transactionContainerCss}>
+        {transaction.map((item, index) => (
+          <TouchableOpacity style={styles.transactionCss}>
+            <Text key={index} >{item}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+      <View style={styles.transactionValueCss}>
+        {transactionValue.map((item, index) => (
+          <View style={styles.transactionInsertCss}>
+            <Text key={index}>{item}</Text>
+          </View>
+        ))}
+      </View>
+      <View style={styles.transactionValueCss}>
+        {transactionValue.map((item, index) => (
+          <View style={styles.transactionInsertCss}>
+            <Text key={index}>{item}</Text>
+          </View>
+        ))}
+      </View>
+      <View style={styles.transactionValueCss}>
+        {transactionValue.map((item, index) => (
+          <View style={styles.transactionInsertCss}>
+            <Text key={index}>{item}</Text>
+          </View>
+        ))}
+      </View>
+      <View style={styles.transactionValueCss}>
+        {transactionValue.map((item, index) => (
+          <View style={styles.transactionInsertCss}>
+            <Text key={index}>{item}</Text>
+          </View>
+        ))}
+      </View>
+      <View style={styles.transactionValueCss}>
+        {transactionValue.map((item, index) => (
+          <View style={styles.transactionInsertCss}>
+            <Text key={index}>{item}</Text>
+          </View>
+        ))}
+      </View>
     </View>
 
   );
 };
 
 const styles = StyleSheet.create({
-  my_money: {
+  myMoneyCss: {
     width: '100%',
     height: 50,
     backgroundColor: 'lightgray',
@@ -87,7 +134,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center'
   },
-  my_interest: {
+  myInterestCss: {
     width: '100%',
     height: 30,
     marginTop: 20,
@@ -96,16 +143,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center'
   },
-  container: {
-    width : '100%',
-    heigt : 200,
+  circleContainerCss: {
+    width: '100%',
+    heigt: 200,
     flexDirection: "row",
     flexWrap: 'wrap',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'yellow'
   },
-  button: {
+  circleButtonCss: {
     flexDirection: "row",
     backgroundColor: 'lightgray',
     width: 100,
@@ -116,35 +162,68 @@ const styles = StyleSheet.create({
     flexBasis: '25%',
 
   },
-  name: {
+  enterCss: {
     width: '100%',
     height: 30,
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor:'green'
+    backgroundColor: 'gray',
   },
-  setname: {
+  enterNameCss: {
     width: '20%',
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
   },
-  valueContainer: {
+  enterValueCss: {
     width: '100%',
-    height: 200,
-    backgroundColor: 'black',
+    height: 50,
+    backgroundColor: 'lightgray',
+    borderColor: 'black',
+    borderWidth: 1,
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
   },
-  value:{
-    width:'100%',
-    height:50,
-    backgroundColor:'yellow'
+  enterInsertCss: {
+    width: '20%',
+    height: 50,
+    borderColor: 'black',
+    borderWidth: 1
+  },
+  transactionContainerCss: {
+    display: 'flex',
+    flexDirection: 'row',
+  },
+  transactionCss: {
+    width: 50,
+    height: 30,
+    backgroundColor: 'gray',
+    borderRadius: 30,
+    margin:8,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  transactionValueCss: {
+    width: '100%',
+    height: 30,
+    backgroundColor: 'lightgray',
+    borderColor: 'black',
+    borderWidth: 1,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  transactionInsertCss: {
+    width: '20%',
+    height: 30,
+    borderColor: 'black',
+    borderWidth: 1
   }
 
 })
