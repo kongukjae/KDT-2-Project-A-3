@@ -111,7 +111,6 @@ function Main_page(): JSX.Element {
                 style={styles.icon}
               /> */}
             <TopMenuPage></TopMenuPage>
-
           </View>
           <View style={styles.login_box}>
             <Text style={styles.login_user_name}>
