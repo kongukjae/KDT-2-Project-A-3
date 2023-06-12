@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
+import io from 'socket.io-client'; // socket.io-client import
 
 const ComPonent1 = () => {
   const [company, setCompany] = useState({
@@ -20,16 +21,21 @@ const ComPonent1 = () => {
         console.log(data);
       })
       .catch(error => console.error(error));
-  }, []);
 
-  useEffect(() => {
-    fetch('http://10.0.2.2:5000/changerate')
-      .then(response => response.json())
-      .then(dataa => {
-        setChangeRate(dataa);
-        console.log(dataa);
-      })
-      .catch(error => console.error(error));
+    // socket instance 생성
+    const socket = io('http://10.0.2.2:5000');
+
+    socket.emit('request_company_rate');
+    // socket 이벤트 리스너
+    socket.on('changerate', data => {
+      setChangeRate(data);
+      console.log(data);
+    });
+
+    return () => {
+      socket.off('changerate');
+      socket.disconnect();
+    };
   }, []);
 
   return (
