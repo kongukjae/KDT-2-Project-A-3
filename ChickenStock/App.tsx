@@ -25,7 +25,7 @@ import SlideComponent from './NewsComponent';
 import {AuthProvider} from './AllContext';
 import TopMenuPage from './TopMenuPage';
 import MyPage from './MyPage';
-import ModalPopup from './ModalPopup'
+import ModalPopup from './ModalPopup';
 
 type RootStackParamList = {
   ChoicePageOne: undefined;
@@ -41,7 +41,7 @@ type RootStackParamList = {
   TopMenuPage: undefined;
   MyPage: undefined;
   SlideComponent: undefined;
-  ModalPopup:undefined;
+  ModalPopup: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -50,7 +50,7 @@ const App: React.FC = () => {
   return (
     <AuthProvider>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="LoginPage">
+        <Stack.Navigator initialRouteName="Another">
           <Stack.Screen
             name="ChoicePageOne"
             component={ChoicePageOne}
@@ -109,13 +109,13 @@ const App: React.FC = () => {
           <Stack.Screen
             name="MyPage"
             component={MyPage}
-            options={{ headerShown: false }}
+            options={{headerShown: false}}
           />
           <Stack.Screen
-           name="ModalPopup"
-           component={ModalPopup}
-           options={{headerShown: false}}
-         />
+            name="ModalPopup"
+            component={ModalPopup}
+            options={{headerShown: false}}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </AuthProvider>
