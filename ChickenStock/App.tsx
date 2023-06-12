@@ -107,11 +107,6 @@ const App: React.FC = () => {
             options={{ headerShown: false }}
           />
           <Stack.Screen
-            name="TopMenuPage"
-            component={TopMenuPage}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
             name="MyPage"
             component={MyPage}
             options={{ headerShown: false }}

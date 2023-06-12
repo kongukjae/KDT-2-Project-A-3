@@ -30,9 +30,24 @@
 // export default ModalPopup;
 import React, { useState } from 'react';
 import { Button, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+
+
 
 const ModalPopup = () => {
-  const [modalVisible, setModalVisible] = useState(false);
+  const [modalVisible, setModalVisible] = useState(true);
+
+  type RootStackParamList = {
+    ModalPopup: undefined;
+    BuyPage: undefined;
+  };
+  type loginPageNavigationProp = StackNavigationProp<
+    RootStackParamList,
+    'ModalPopup'
+  >;
+
+  const navigation = useNavigation<loginPageNavigationProp>();
 
   const openModal = () => {
     setModalVisible(true);
@@ -44,17 +59,15 @@ const ModalPopup = () => {
 
   return (
     <View style={styles.container}>
-      <Button title="Open Modal" onPress={openModal} />
-
       <Modal visible={modalVisible} transparent={true}>
-        <TouchableOpacity style={styles.modalContainer} activeOpacity={1} onPress={closeModal}>
+        <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
+            <TouchableOpacity style={styles.closeButton} onPress={()=>{navigation.navigate('BuyPage')}} activeOpacity={0.8}>
               <Text style={styles.closeButtonText}>X</Text>
             </TouchableOpacity>
             <Text>Hello, Modal!</Text>
           </View>
-        </TouchableOpacity>
+        </View>
       </Modal>
     </View>
   );

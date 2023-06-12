@@ -103,6 +103,7 @@ const BuyPage = () => {
   const [quantity, setQuantity] = useState('');
   const [price, setPrice] = useState('');
   const [selectedInput, setSelectedInput] = useState('');
+  const [modal,setModal] = useState('')
 
   const totalPrice =
     quantity !== '' && price !== '' ? parseInt(quantity) * parseInt(price) : ''; 
