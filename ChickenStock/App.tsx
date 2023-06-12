@@ -23,7 +23,7 @@ import BuyPage from './BuyPage';
 import SellPage from './SellPage';
 import SlideComponent from './NewsComponent'
 import { AuthProvider } from './AllContext';
-import MyPage from './Mypage';
+import MyPage from './MyPage';
 
 type RootStackParamList = {
   ChoicePageOne: undefined;
@@ -47,7 +47,7 @@ const App: React.FC = () => {
   return (
     <AuthProvider>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="MyPage">
+        <Stack.Navigator initialRouteName="SignUpPage">
           <Stack.Screen
             name="ChoicePageOne"
             component={ChoicePageOne}

@@ -34,6 +34,7 @@ def register():
 
     collection = db['user_info']
     collection.insert_one(data)
+    # collection.insert_one(5000000)
     print('회원가입 데이터 저장')
 
     return '데이터 저장 완료'
