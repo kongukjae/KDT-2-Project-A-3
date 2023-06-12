@@ -1,4 +1,4 @@
-import React, {useState,useContext, useEffect} from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -11,15 +11,17 @@ import {
   TouchableHighlight,
   Linking,
 } from 'react-native';
-import {AuthContext} from './AllContext';
+import { AuthContext } from './AllContext';
 
 
-import {Colors} from 'react-native/Libraries/NewAppScreen';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
 
-import {RouteProp, useNavigation} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
+import { RouteProp, useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import SlideComponent from './NewsComponent'
 import { useEvent } from 'react-native-reanimated';
+import TopMenuPage from './TopMenuPage';
+
 
 function Main_page(): JSX.Element {
   const [jsonData, setJsonData] = useState<any>({});
@@ -85,9 +87,9 @@ function Main_page(): JSX.Element {
   const [scrollPosition, setScrollPosition] = useState(0);
   const [viewCount, setViewCount] = useState(16);
 
-  const {userId} = useContext(AuthContext)
+  const { userId } = useContext(AuthContext)
   const handleScroll = (event: any) => {
-    const {layoutMeasurement, contentOffset, contentSize} = event.nativeEvent;
+    const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
     // 무한스크롤 동작 조건: 화면상의 높이값 + 스크롤의 위치값 >= 페이지 전체 높이 - 50px 일 때 요소를 추가적으로 생성
     const reachedBottom =
       layoutMeasurement.height + contentOffset.y >= contentSize.height - 50;
@@ -106,10 +108,10 @@ function Main_page(): JSX.Element {
   const navigation = useNavigation<ChoicePageOneNavigationProp>();
 
   type RootStackParamList = {
-    ChoicePageOne: {choice: string};
-    ChoicePageTwo: {choice: string};
-    ChoicePageThree: {choice: string};
-    ChoicePageFour: {choice: string};
+    ChoicePageOne: { choice: string };
+    ChoicePageTwo: { choice: string };
+    ChoicePageThree: { choice: string };
+    ChoicePageFour: { choice: string };
     MainPage: undefined;
     Another: undefined;
   };
@@ -141,7 +143,8 @@ function Main_page(): JSX.Element {
             />
           </View>
           <View style={styles.header_inner}>
-            <View style={styles.icon_box}>
+            <View>
+            {/* <View style={styles.icon_box}>
               <Image
                 source={require('./resource/Icon_search.png')}
                 style={styles.icon}
@@ -153,59 +156,51 @@ function Main_page(): JSX.Element {
               <Image
                 source={require('./resource/Icon_AI_chat_bot.png')}
                 style={styles.icon}
-              />
-            </View>
-            <View style={styles.login_box}>
-              <Text style={styles.login_user_name}>
-                {userId}님 환영합니다.
-              </Text>
-            </View>
+              /> */}
+            <TopMenuPage></TopMenuPage>
+
+          </View>
+          <View style={styles.login_box}>
+            <Text style={styles.login_user_name}>
+              {userId}님 환영합니다.
+            </Text>
           </View>
         </View>
-        <View style={styles.article_area}>
-          <SlideComponent />
-        </View>
-        <View style={styles.flex_row}>
+      </View>
+      <View style={styles.article_area}>
+        <SlideComponent />
+      </View>
+      <View style={styles.flex_row}>
+        <TouchableHighlight
+          style={styles.button}
+          // onPress={handlePress}
+          underlayColor="coral">
+          <Text style={styles.buttonText}>등락 순</Text>
+        </TouchableHighlight>
+        <TouchableHighlight style={styles.button}>
+          <Text style={styles.buttonText}>가격 순</Text>
+        </TouchableHighlight>
+        <TouchableHighlight style={styles.button}>
+          <Text style={styles.buttonText}>시가총액 순</Text>
+        </TouchableHighlight>
+        <TouchableHighlight style={styles.button}>
+          <Text style={styles.buttonText}>거래량 순</Text>
+        </TouchableHighlight>
+      </View>
+      <View style={styles.container}>
+        {[...Array(viewCount)].map((_, index) => (
           <TouchableHighlight
-            style={styles.button}
-            // onPress={handlePress}
-            underlayColor="coral">
-            <Text style={styles.buttonText}>등락 순</Text>
+            key={index}
+            style={styles.view}
+            onPress={() => handleLocation()}>
+            <View>
+              <Text>임시 텍스트 {index}</Text>
+            </View>
           </TouchableHighlight>
-          <TouchableHighlight style={styles.button}>
-            <Text style={styles.buttonText}>가격 순</Text>
-          </TouchableHighlight>
-          <TouchableHighlight style={styles.button}>
-            <Text style={styles.buttonText}>시가총액 순</Text>
-          </TouchableHighlight>
-          <TouchableHighlight style={styles.button}>
-            <Text style={styles.buttonText}>거래량 순</Text>
-          </TouchableHighlight>
-        </View>
-        <View style={styles.container}>
-          {[...Array(viewCount)].map((_, index) => {
-            const item = dataArray[index];
-            const name_data = item[0];
-            const company_data:any = item[1]; // up_down과 current_price에서 타입 에러가 발생하므로 any로 할당함
-            // const end_price = company_data['전일종가'];
-            const up_down = company_data['등락'];
-            const current_price = company_data['현재가'];
-
-            return (
-              <TouchableHighlight
-              key={index}
-              style={styles.view}>
-                <View>
-                  <Text>{name_data}</Text>
-                  <Text>등락 {up_down}</Text>
-                  <Text>현재가 {current_price}</Text>
-                </View>
-              </TouchableHighlight>
-            );
-          })}
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+        ))}
+      </View>
+    </ScrollView>
+    </SafeAreaView >
   );
 }
 

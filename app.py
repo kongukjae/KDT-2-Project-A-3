@@ -7,7 +7,6 @@ from pymongo import MongoClient
 import pandas as pd
 # from bs4 import BeautifulSoup
 import requests
-
 import callApiData.Mainpage_stock_data
 
 f = open("./secret.key")
@@ -16,12 +15,8 @@ key = lines[0].strip()
 secret = lines[1].strip()
 acc_no = lines[2].strip()
 f.close()
-
-# key = "PSVT5oQXN4N39r3jhoLtrCiVen4fcJ3p7zOh"
-# secret = "OeeQY05O9OEfjuOP2KEtVpbP77p8WKaClPqgOEdSAVdH/FazfG51bqSc97t16uYOsvjb5DzrbqB11cfuMfBXPtwDB2BQqg7otSZAHo61OkobqBGPWJHGOHE/lt+X4WPNhyDiDu06EMiC6t+lvcIrG50t4/alJf7qhfL/dkg8sfOJgC66SDA="
-# acc_no = "00000000-01"
-
 broker = mojito.KoreaInvestment(api_key=key, api_secret=secret, acc_no=acc_no)
+
 
 client = MongoClient(
     'mongodb+srv://ChickenStock:1234@jiseop.g8czkiu.mongodb.net/')
@@ -204,6 +199,49 @@ def get_company_rate():
 
     return jsonify(combined_output)
 
+#! 크롤링할 웹 페이지 URL
+class news:
+        def __init__(self, title, detail, link):
+            self.title = title
+            self.detail = detail
+            self.link = link
+            
+@app.route('/news', methods=['GET'])
+def get_news_data():
+    url = 'https://search.naver.com/search.naver?where=news&sm=tab_opt&query=전기전자&nso_open=1'
+    response = requests.get(url)
+    html = response.text
+
+    title_array = []
+    detail_array = []
+    link_array = []
+
+    soup = BeautifulSoup(html, 'html.parser')
+
+    # ? 기사 제목
+    titles = soup.find_all('a', attrs={'class': 'news_tit'}, limit=3)
+    for a_tag in titles:
+        title_array.append(a_tag['title'])
+
+    # ? 기사 간략내용
+    details = soup.select(
+        'div.news_wrap.api_ani_send > div > div.news_dsc > div > a', limit=3)
+    for i in range(3):
+        detail_array.append(details[i].get_text())
+
+    # ? 기사 링크
+    for a_tag in titles:
+        link_array.append(a_tag['href'])
+
+                
+    news_object = news(title_array, detail_array, link_array)
+
+    #* 비 ASCII 문자를 유니코드로 유지하도록 ensure_ascii값을 false로 설정
+    #? news_object 인스턴스의 속성들을 딕셔너리 형태로 반환
+    json_news = json.dumps(news_object.__dict__, ensure_ascii=False)
+    
+
+    return jsonify(json_news)
 
 
 # 메인 페이지에 주식 목록 데이터
