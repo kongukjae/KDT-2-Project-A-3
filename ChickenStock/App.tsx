@@ -23,7 +23,6 @@ import BuyPage from './BuyPage';
 import SellPage from './SellPage';
 import SlideComponent from './NewsComponent';
 import {AuthProvider} from './AllContext';
-import TopMenuPage from './topMenuPage';
 import MyPage from './Mypage';
 
 type RootStackParamList = {
@@ -102,11 +101,6 @@ const App: React.FC = () => {
           <Stack.Screen
             name="SlideComponent"
             component={SlideComponent}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="TopMenuPage"
-            component={TopMenuPage}
             options={{headerShown: false}}
           />
           <Stack.Screen

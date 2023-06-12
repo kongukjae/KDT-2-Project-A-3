@@ -7,6 +7,7 @@ from pymongo import MongoClient
 import pandas as pd
 from bs4 import BeautifulSoup
 import requests
+import callApiData.Mainpage_stock_data
 from flask_socketio import SocketIO, emit
 f = open("./secret.key")
 lines = f.readlines()
@@ -254,6 +255,14 @@ def get_news_data():
 
     return jsonify(json_news)
 
+
+# 메인 페이지에 주식 목록 데이터
+@app.route('/api/main_page', methods=['POST'])
+def main_page_init():
+    request_data = request.get_json() #user_id를 받아와서 id를 통해 DB 데이터에 접근 할 예정
+    reqData = 'elec_company_list' # DB에서 접속한 user의 관심 종목 값을 받아옴 / 현재는 임시로 전기.전자 입력
+    init_data = callApiData.Mainpage_stock_data.Mainpage_stock_list(reqData) # 전기.전자 종목의 시가총액 순 상위 16개 목록 추출
+    return jsonify(init_data.to_dict()) # 직렬 화 후 main_page로 데이터 전달
 
 if (__name__) == '__main__':
     app.run(host='0.0.0.0', port=5000)
