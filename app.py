@@ -5,7 +5,7 @@ from flask import Flask, jsonify, request
 from pymongo import MongoClient
 # from pykrx import stock
 import pandas as pd
-# from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup
 import requests
 import callApiData.Mainpage_stock_data
 
