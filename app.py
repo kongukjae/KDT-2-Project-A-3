@@ -10,6 +10,7 @@ import requests
 import callApiData.Mainpage_stock_data
 import pprint
 from flask_socketio import SocketIO, emit
+
 f = open("./secret.key")
 lines = f.readlines()
 key = lines[0].strip()
