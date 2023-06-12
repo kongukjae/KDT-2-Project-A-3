@@ -140,12 +140,14 @@ for i in range(len(symbols)):
     if 'bstp_kor_isnm' in broker.fetch_price(symbols['단축코드'][i])['output']:
         key = symbols['한글명'][i]
         value = broker.fetch_price(symbols['단축코드'][i])['output']['bstp_kor_isnm']
-        print(key)
-        print(value)
+        if value != '철강.금속' or '화학' or '금융업' or '건설업' or '기계' or '음식료품' or '전기.전자' or '섬유.의복' or '통신업' or '의약품' or '서비스업':
+            value = '미분류'
+            print(key)
+            print(value)
     else:
         key = symbols['한글명'][i]
         value = '미분류',
-    if value == '철강.금속':
+    if value == '미분류':
         my_object.data[key] = value
     time.sleep(1)
 
