@@ -35,14 +35,13 @@ import {StackNavigationProp} from '@react-navigation/stack';
 
 
 interface ModalPopupProps extends ModalProps{
-  modalvisible:boolean;
   onClose: () => void;
 }
 
-const ModalPopup:React.FC<ModalPopupProps> = ({modalvisible, onClose}) => {
+const ModalPopup:React.FC<ModalPopupProps> = ({visible, onClose}) => {
 
   return (
-      <Modal visible={modalvisible} transparent={true}>
+      <Modal visible={visible} transparent={true}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <TouchableOpacity style={styles.closeButton} onPress={onClose} activeOpacity={0.8}>
