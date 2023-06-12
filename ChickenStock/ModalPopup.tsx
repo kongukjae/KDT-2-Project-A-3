@@ -35,40 +35,21 @@ import {StackNavigationProp} from '@react-navigation/stack';
 
 
 
-const ModalPopup = () => {
-  const [modalVisible, setModalVisible] = useState(true);
+const ModalPopup = ({modalvisible, onClose}) => {
 
-  type RootStackParamList = {
-    ModalPopup: undefined;
-    BuyPage: undefined;
-  };
-  type loginPageNavigationProp = StackNavigationProp<
-    RootStackParamList,
-    'ModalPopup'
-  >;
 
-  const navigation = useNavigation<loginPageNavigationProp>();
 
-  // const openModal = () => {
-  //   setModalVisible(true);
-  // };
-
-  // const closeModal = () => {
-  //   setModalVisible(false);
-  // };
   return (
-    <View style={styles.container}>
-      <Modal visible={modalVisible} transparent={true}>
+      <Modal visible={modalvisible} transparent={true}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <TouchableOpacity style={styles.closeButton} onPress={()=>{navigation.navigate('BuyPage')}} activeOpacity={0.8}>
+            <TouchableOpacity style={styles.closeButton} onPress={onClose} activeOpacity={0.8}>
               <Text style={styles.closeButtonText}>X</Text>
             </TouchableOpacity>
             <Text>Hello, Modal!</Text>
           </View>
         </View>
       </Modal>
-    </View>
   );
 };
 

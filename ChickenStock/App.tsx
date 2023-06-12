@@ -111,11 +111,6 @@ const App: React.FC = () => {
             component={MyPage}
             options={{ headerShown: false }}
           />
-          <Stack.Screen
-           name="ModalPopup"
-           component={ModalPopup}
-           options={{headerShown: false}}
-         />
         </Stack.Navigator>
       </NavigationContainer>
     </AuthProvider>

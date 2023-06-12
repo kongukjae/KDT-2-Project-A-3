@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {View, TouchableOpacity, Text, StyleSheet} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {useNavigation} from '@react-navigation/native';
+import ModalPopup from './ModalPopup';
 
 
 
@@ -103,7 +104,14 @@ const BuyPage = () => {
   const [quantity, setQuantity] = useState('');
   const [price, setPrice] = useState('');
   const [selectedInput, setSelectedInput] = useState('');
-  const [modal,setModal] = useState('')
+  const [modal,setModal] = useState(false)
+
+  const openModal=()=>{
+    setModal(true);
+  };
+  const closeModal=()=>{
+    setModal(false);
+  }
 
   const totalPrice =
     quantity !== '' && price !== '' ? parseInt(quantity) * parseInt(price) : ''; 
@@ -162,9 +170,8 @@ const BuyPage = () => {
       <View style={styles.textBox}>
         <Text style={styles.title}>구매하기</Text>
         <TouchableOpacity style={styles.textBtn}>
-          <Text style={styles.btnText} onPress={()=>{
-             navigation.navigate('ModalPopup')
-          }}>호가</Text>
+          <Text style={styles.btnText} onPress={openModal}>호가</Text>
+          <ModalPopup visible={modal} onClose={closeModal}></ModalPopup>
         </TouchableOpacity>
       </View>
       <View style={styles.calculateBox}>
