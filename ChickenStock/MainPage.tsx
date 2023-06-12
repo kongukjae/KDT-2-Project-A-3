@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useState,useContext, useEffect} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -11,11 +11,15 @@ import {
   TouchableHighlight,
   Linking,
 } from 'react-native';
+import {AuthContext} from './AllContext';
+
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 
 import {RouteProp, useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
+import SlideComponent from './NewsComponent'
+import { useEvent } from 'react-native-reanimated';
 
 function Main_page(): JSX.Element {
   const [jsonData, setJsonData] = useState<any>({});
@@ -81,22 +85,23 @@ function Main_page(): JSX.Element {
   const [scrollPosition, setScrollPosition] = useState(0);
   const [viewCount, setViewCount] = useState(16);
 
-  // const handleScroll = (event: any) => {
-  //   const {layoutMeasurement, contentOffset, contentSize} = event.nativeEvent;
-  //   // 무한스크롤 동작 조건: 화면상의 높이값 + 스크롤의 위치값 >= 페이지 전체 높이 - 50px 일 때 요소를 추가적으로 생성
-  //   const reachedBottom =
-  //     layoutMeasurement.height + contentOffset.y >= contentSize.height - 50;
-  //   console.log(`layoutMeasurement.height`);
-  //   console.log(`${layoutMeasurement.height}`);
-  //   console.log(`contentOffset.y`);
-  //   console.log(`${contentOffset.y}`);
-  //   console.log(`contentSize.height`);
-  //   console.log(`${contentSize.height}`);
-  //   if (reachedBottom) {
-  //     setViewCount(viewCount + 4); // 추가될 View 개수
-  //   }
-  //   setScrollPosition(contentOffset.y);
-  // };
+  const {userId} = useContext(AuthContext)
+  const handleScroll = (event: any) => {
+    const {layoutMeasurement, contentOffset, contentSize} = event.nativeEvent;
+    // 무한스크롤 동작 조건: 화면상의 높이값 + 스크롤의 위치값 >= 페이지 전체 높이 - 50px 일 때 요소를 추가적으로 생성
+    const reachedBottom =
+      layoutMeasurement.height + contentOffset.y >= contentSize.height - 50;
+    console.log(`layoutMeasurement.height`);
+    console.log(`${layoutMeasurement.height}`);
+    console.log(`contentOffset.y`);
+    console.log(`${contentOffset.y}`);
+    console.log(`contentSize.height`);
+    console.log(`${contentSize.height}`);
+    if (reachedBottom) {
+      setViewCount(viewCount + 4); // 추가될 View 개수
+    }
+    setScrollPosition(contentOffset.y);
+  };
 
   const navigation = useNavigation<ChoicePageOneNavigationProp>();
 
@@ -152,42 +157,13 @@ function Main_page(): JSX.Element {
             </View>
             <View style={styles.login_box}>
               <Text style={styles.login_user_name}>
-                ______님 로그인하셨습니다.
+                {userId}님 환영합니다.
               </Text>
             </View>
           </View>
         </View>
         <View style={styles.article_area}>
-          <TouchableHighlight onPress={articleLinkPress}>
-            <View style={styles.flex_row}>
-              <Text>기사 1 제목 </Text>
-              <Text>기사 1 내용</Text>
-            </View>
-          </TouchableHighlight>
-          <TouchableHighlight onPress={articleLinkPress}>
-            <View style={styles.flex_row}>
-              <Text>기사 2 제목 </Text>
-              <Text>기사 2 내용</Text>
-            </View>
-          </TouchableHighlight>
-          <TouchableHighlight onPress={articleLinkPress}>
-            <View style={styles.flex_row}>
-              <Text>기사 3 제목 </Text>
-              <Text>기사 3 내용</Text>
-            </View>
-          </TouchableHighlight>
-          <TouchableHighlight onPress={articleLinkPress}>
-            <View style={styles.flex_row}>
-              <Text>기사 4 제목 </Text>
-              <Text>기사 4 내용</Text>
-            </View>
-          </TouchableHighlight>
-          <TouchableHighlight onPress={articleLinkPress}>
-            <View style={styles.flex_row}>
-              <Text>기사 5 제목 </Text>
-              <Text>기사 5 내용</Text>
-            </View>
-          </TouchableHighlight>
+          <SlideComponent />
         </View>
         <View style={styles.flex_row}>
           <TouchableHighlight
