@@ -38,6 +38,7 @@ function Main_page(): JSX.Element {
   // 무한 스크롤 관련
   const [scrollPosition, setScrollPosition] = useState(0);
   const [viewCount, setViewCount] = useState(12);
+  const [response, setResponse] = useState('');
 
   const { userId } = useContext(AuthContext)
   const handleScroll = (event: any) => {

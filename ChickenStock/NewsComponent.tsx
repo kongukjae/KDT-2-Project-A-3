@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { View, Text, StyleSheet, Linking } from 'react-native';
 import { TouchableHighlight } from 'react-native-gesture-handler';
 
@@ -7,6 +7,7 @@ const SlideComponent = () => {
   const [newsTitle, setNewsTitle] = useState('');
   const [newsDetail, setNewsDetail] = useState('');
   const [newsLink, setNewsLink] = useState('');
+
 
   const colors = ['red', 'blue', 'green'];
 
