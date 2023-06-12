@@ -8,30 +8,14 @@ import pandas as pd
 from bs4 import BeautifulSoup
 import requests
 
-key = "PSVT5oQXN4N39r3jhoLtrCiVen4fcJ3p7zOh"
-secret = "OeeQY05O9OEfjuOP2KEtVpbP77p8WKaClPqgOEdSAVdH/FazfG51bqSc97t16uYOsvjb5DzrbqB11cfuMfBXPtwDB2BQqg7otSZAHo61OkobqBGPWJHGOHE/lt+X4WPNhyDiDu06EMiC6t+lvcIrG50t4/alJf7qhfL/dkg8sfOJgC66SDA="
-acc_no = "00000000-01"
-
+f = open("./secret.key")
+lines = f.readlines()
+key = lines[0].strip()
+secret = lines[1].strip()
+acc_no = lines[2].strip()
+f.close()
 broker = mojito.KoreaInvestment(api_key=key, api_secret=secret, acc_no=acc_no)
-# # # print(dir(broker))
-# resp = broker.fetch_price("005930")
-# # pprint.pprint(resp)
-# # print("시가   :  ", resp['output']['stck_oprc'])    # 시가
-# # print("현재가 :  ", resp['output']['stck_prpr'])    # 시가
-# # print("최고가 : ", resp['output']['stck_hgpr'])     # 고가
-# # print("최저가 : ", resp['output']['stck_lwpr'])     # 저가
-# # print("종가   : ", resp['output']['stck_prpr'])     # 종가
 
-# symbols = broker.fetch_kosdaq_symbols()        # 코스닥
-# print(dir(symbols))
-
-
-# class myObject:
-#     def __init__(self):
-#         self.data = {}
-
-#     def __str__(self):
-#         return str(self.data)
 
 client = MongoClient(
     'mongodb+srv://ChickenStock:1234@jiseop.g8czkiu.mongodb.net/')
@@ -213,24 +197,6 @@ def get_company_rate():
     combined_output = {"prdy_ctrt": output1["prdy_ctrt"], "stck_prpr": output2[0]["stck_prpr"]}
 
     return jsonify(combined_output)
-
-
-
-
-# def get_data():
-#   my_object = myObject()
-
-#   for i in range(len(symbols)):
-#     key = symbols['한글명'][i]
-#     value = {
-#         '단축코드': symbols['단축코드'][i],
-#         '시가총액': int(symbols['시가총액'][i])
-#     }
-#     my_object.data[key] = value
-
-# # print(my_object)
-#   data = my_object.data['에이스침대']
-#   return jsonify(data)
 
 #! 크롤링할 웹 페이지 URL
 class news:
