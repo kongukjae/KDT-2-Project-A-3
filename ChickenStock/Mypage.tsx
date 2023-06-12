@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -13,16 +13,15 @@ import {
   Linking,
 } from 'react-native';
 
-import { RouteProp, useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import TopMenuPage from './TopMenuPage';
+import {RouteProp, useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import TopMenuPage from './topMenuPage';
 const MyPage = () => {
-
-  const interest = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
-  const enter = ['기업 명', '현재가', '등락', '보유 수량', '평가 금액']
-  const transaction = ['구매', '판매', '미채결']
-  const enterValue = [1, 2, 3, 4, 5]
-  const transactionValue = [6, 7, 8, 9, 10]
+  const interest = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+  const enter = ['기업 명', '현재가', '등락', '보유 수량', '평가 금액'];
+  const transaction = ['구매', '판매', '미채결'];
+  const enterValue = [1, 2, 3, 4, 5];
+  const transactionValue = [6, 7, 8, 9, 10];
   return (
     <View>
       <View>
@@ -44,9 +43,7 @@ const MyPage = () => {
       <View style={styles.enterCss}>
         {enter.map((item, index) => (
           <View style={styles.enterNameCss}>
-            <Text key={index}>
-              {item}
-            </Text>
+            <Text key={index}>{item}</Text>
           </View>
         ))}
       </View>
@@ -81,7 +78,7 @@ const MyPage = () => {
       <View style={styles.transactionContainerCss}>
         {transaction.map((item, index) => (
           <TouchableOpacity style={styles.transactionCss}>
-            <Text key={index} >{item}</Text>
+            <Text key={index}>{item}</Text>
           </TouchableOpacity>
         ))}
       </View>
@@ -121,7 +118,6 @@ const MyPage = () => {
         ))}
       </View>
     </View>
-
   );
 };
 
@@ -132,7 +128,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'gray',
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   myInterestCss: {
     width: '100%',
@@ -141,18 +137,18 @@ const styles = StyleSheet.create({
     backgroundColor: 'gray',
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   circleContainerCss: {
     width: '100%',
     heigt: 200,
-    flexDirection: "row",
+    flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
     alignItems: 'center',
   },
   circleButtonCss: {
-    flexDirection: "row",
+    flexDirection: 'row',
     backgroundColor: 'lightgray',
     width: 100,
     height: 100,
@@ -160,7 +156,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     alignItems: 'center',
     flexBasis: '25%',
-
   },
   enterCss: {
     width: '100%',
@@ -193,7 +188,7 @@ const styles = StyleSheet.create({
     width: '20%',
     height: 50,
     borderColor: 'black',
-    borderWidth: 1
+    borderWidth: 1,
   },
   transactionContainerCss: {
     display: 'flex',
@@ -204,7 +199,7 @@ const styles = StyleSheet.create({
     height: 30,
     backgroundColor: 'gray',
     borderRadius: 30,
-    margin:8,
+    margin: 8,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -223,8 +218,7 @@ const styles = StyleSheet.create({
     width: '20%',
     height: 30,
     borderColor: 'black',
-    borderWidth: 1
-  }
-
-})
+    borderWidth: 1,
+  },
+});
 export default MyPage;
