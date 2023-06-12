@@ -29,15 +29,17 @@
 
 // export default ModalPopup;
 import React, { useState } from 'react';
-import { Button, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Button, Modal, StyleSheet, Text, TouchableOpacity, View, ModalProps } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 
 
+interface ModalPopupProps extends ModalProps{
+  modalvisible:boolean;
+  onClose: () => void;
+}
 
-const ModalPopup = ({modalvisible, onClose}) => {
-
-
+const ModalPopup:React.FC<ModalPopupProps> = ({modalvisible, onClose}) => {
 
   return (
       <Modal visible={modalvisible} transparent={true}>
