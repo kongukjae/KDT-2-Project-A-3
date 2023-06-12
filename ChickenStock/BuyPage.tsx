@@ -1,5 +1,9 @@
 import React, {useState} from 'react';
 import {View, TouchableOpacity, Text, StyleSheet} from 'react-native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {useNavigation} from '@react-navigation/native';
+
+
 
 const styles = StyleSheet.create({
   container: {
@@ -99,6 +103,7 @@ const BuyPage = () => {
   const [quantity, setQuantity] = useState('');
   const [price, setPrice] = useState('');
   const [selectedInput, setSelectedInput] = useState('');
+  const [modal,setModal] = useState('')
 
   const totalPrice =
     quantity !== '' && price !== '' ? parseInt(quantity) * parseInt(price) : ''; 
@@ -132,6 +137,17 @@ const BuyPage = () => {
       setPrice(price.slice(0, -1));
     }
   };
+  type RootStackParamList = {
+    ModalPopup: undefined;
+    MainPage: undefined;
+    BuyPage : undefined;
+  };
+  type loginPageNavigationProp = StackNavigationProp<
+    RootStackParamList,
+    'BuyPage'
+  >;
+  const navigation = useNavigation<loginPageNavigationProp>();
+
 
   const handlePurchase = () => {
     console.log('주식 구매:', quantity);
@@ -146,7 +162,9 @@ const BuyPage = () => {
       <View style={styles.textBox}>
         <Text style={styles.title}>구매하기</Text>
         <TouchableOpacity style={styles.textBtn}>
-          <Text style={styles.btnText}>호가</Text>
+          <Text style={styles.btnText} onPress={()=>{
+             navigation.navigate('ModalPopup')
+          }}>호가</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.calculateBox}>
