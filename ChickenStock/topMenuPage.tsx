@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -13,12 +13,12 @@ import {
   Linking,
 } from 'react-native';
 
-import { RouteProp, useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
+import {RouteProp, useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
 
 type RootStackParamList = {
   ChoicePageOne: undefined;
-  ChoicePageTwo:undefined;
+  ChoicePageTwo: undefined;
   ChoicePageThree: undefined;
   ChoicePageFour: undefined;
   MainPage: undefined;

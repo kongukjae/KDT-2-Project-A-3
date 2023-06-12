@@ -9,7 +9,7 @@ from bs4 import BeautifulSoup
 import requests
 import callApiData.Mainpage_stock_data
 import pprint
-
+from flask_socketio import SocketIO, emit
 f = open("./secret.key")
 lines = f.readlines()
 key = lines[0].strip()
@@ -25,6 +25,8 @@ db = client['chicken_stock']
 
 app = Flask(__name__)
 
+# Flask-SocketIO  인스턴스 생성
+socketio = SocketIO(app, cors_allowed_origins="*")
 
 @app.route('/api/data', methods=['GET'])
 @app.route('/signup', methods=['POST'])
@@ -189,16 +191,26 @@ def get_company_updown():
 
 
 # 실시간 주식 등락률,현재가격 API에서 제공되는 것을 가져다 씀
-@app.route('/changerate', methods=['GET'])
+@socketio.on('request_company_rate')
 def get_company_rate():
-    data=broker._fetch_today_1m_ohlcv("005930",to="15:30:30")
+    data = broker._fetch_today_1m_ohlcv("005930",to="15:30:30")
 
     output1 = data["output1"]
     output2 = data["output2"]
 
     combined_output = {"prdy_ctrt": output1["prdy_ctrt"], "stck_prpr": output2[0]["stck_prpr"]}
 
-    return jsonify(combined_output)
+    emit('changerate', combined_output)
+# @app.route('/changerate', methods=['GET'])
+# def get_company_rate():
+#     data=broker._fetch_today_1m_ohlcv("005930",to="15:30:30")
+
+#     output1 = data["output1"]
+#     output2 = data["output2"]
+
+#     combined_output = {"prdy_ctrt": output1["prdy_ctrt"], "stck_prpr": output2[0]["stck_prpr"]}
+
+#     return jsonify(combined_output)
 
 #! 크롤링할 웹 페이지 URL
 class news:
