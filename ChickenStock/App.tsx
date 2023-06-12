@@ -23,8 +23,7 @@ import BuyPage from './BuyPage';
 import SellPage from './SellPage';
 import SlideComponent from './NewsComponent'
 import { AuthProvider } from './AllContext';
-import TopMenuPage from './TopMenuPage';
-import MyPage from './MyPage';
+import MyPage from './Mypage';
 
 type RootStackParamList = {
   ChoicePageOne: undefined;
@@ -37,7 +36,6 @@ type RootStackParamList = {
   LoginPage: undefined;
   BuyPage: undefined;
   SellPage: undefined;
-  TopMenuPage: undefined;
   MyPage: undefined;
   SlideComponent: undefined;
 };
@@ -102,11 +100,6 @@ const App: React.FC = () => {
           <Stack.Screen
             name="SlideComponent"
             component={SlideComponent}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="TopMenuPage"
-            component={TopMenuPage}
             options={{ headerShown: false }}
           />
           <Stack.Screen
