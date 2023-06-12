@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -9,40 +9,58 @@ import {
   View,
   Image,
   TouchableHighlight,
-  Linking,
+  ActivityIndicator,
 } from 'react-native';
-import { AuthContext } from './AllContext';
+import {AuthContext} from './AllContext';
 
+import {Colors} from 'react-native/Libraries/NewAppScreen';
 
-import { Colors } from 'react-native/Libraries/NewAppScreen';
-
-import { RouteProp, useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import SlideComponent from './NewsComponent'
-import { useEvent } from 'react-native-reanimated';
+import {RouteProp, useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import SlideComponent from './NewsComponent';
+import {useEvent} from 'react-native-reanimated';
 import TopMenuPage from './TopMenuPage';
 
-
 function Main_page(): JSX.Element {
+  const [jsonData, setJsonData] = useState<any>({});
   const isDarkMode = useColorScheme() === 'dark';
+  const stock_list = async () => {
+    try {
+      const response = await fetch('http://10.0.2.2:5000/api/main_page', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userId),
+      });
+
+      const data = await response.json();
+      console.log('응답받음');
+      console.log(data);
+      setJsonData(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    stock_list();
+  }, []);
+
+  console.log('함수 밖');
+  console.log(jsonData);
+
+  const dataArray = Object.entries(jsonData);
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
-  // 관련 기사 링크 페이지
-  const articleLinkPress = () => {
-    Linking.openURL('https://www.naver.com/');
-  };
-
   // 무한 스크롤 관련
   const [scrollPosition, setScrollPosition] = useState(0);
-  const [viewCount, setViewCount] = useState(12);
-  const [response, setResponse] = useState('');
-
-  const { userId } = useContext(AuthContext)
+  const [viewCount, setViewCount] = useState(16);
   const handleScroll = (event: any) => {
-    const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
+    const {layoutMeasurement, contentOffset, contentSize} = event.nativeEvent;
     // 무한스크롤 동작 조건: 화면상의 높이값 + 스크롤의 위치값 >= 페이지 전체 높이 - 50px 일 때 요소를 추가적으로 생성
     const reachedBottom =
       layoutMeasurement.height + contentOffset.y >= contentSize.height - 50;
@@ -58,13 +76,18 @@ function Main_page(): JSX.Element {
     setScrollPosition(contentOffset.y);
   };
 
+  // 컨텍스트
+  const {userId} = useContext(AuthContext);
+  console.log('컨텍스트 테스트')
+  console.log(userId)
+
   const navigation = useNavigation<ChoicePageOneNavigationProp>();
 
   type RootStackParamList = {
-    ChoicePageOne: { choice: string };
-    ChoicePageTwo: { choice: string };
-    ChoicePageThree: { choice: string };
-    ChoicePageFour: { choice: string };
+    ChoicePageOne: {choice: string};
+    ChoicePageTwo: {choice: string};
+    ChoicePageThree: {choice: string};
+    ChoicePageFour: {choice: string};
     MainPage: undefined;
     Another: undefined;
   };
@@ -86,7 +109,6 @@ function Main_page(): JSX.Element {
         backgroundColor={backgroundStyle.backgroundColor}
       />
       <ScrollView
-        onScroll={handleScroll}
         contentInsetAdjustmentBehavior="automatic"
         scrollEventThrottle={2}>
         <View style={styles.header}>
@@ -98,63 +120,59 @@ function Main_page(): JSX.Element {
           </View>
           <View style={styles.header_inner}>
             <View>
-            {/* <View style={styles.icon_box}>
-              <Image
-                source={require('./resource/Icon_search.png')}
-                style={styles.icon}
-              />
-              <Image
-                source={require('./resource/Icon_cart.png')}
-                style={styles.icon}
-              />
-              <Image
-                source={require('./resource/Icon_AI_chat_bot.png')}
-                style={styles.icon}
-              /> */}
-            <TopMenuPage></TopMenuPage>
-
-          </View>
-          <View style={styles.login_box}>
-            <Text style={styles.login_user_name}>
-              {userId}님 환영합니다.
-            </Text>
+              <TopMenuPage></TopMenuPage>
+            </View>
+            <View style={styles.login_box}>
+              <Text style={styles.login_user_name}>{userId}님 환영합니다.</Text>
+            </View>
           </View>
         </View>
-      </View>
-      <View style={styles.article_area}>
-        <SlideComponent />
-      </View>
-      <View style={styles.flex_row}>
-        <TouchableHighlight
-          style={styles.button}
-          // onPress={handlePress}
-          underlayColor="coral">
-          <Text style={styles.buttonText}>등락 순</Text>
-        </TouchableHighlight>
-        <TouchableHighlight style={styles.button}>
-          <Text style={styles.buttonText}>가격 순</Text>
-        </TouchableHighlight>
-        <TouchableHighlight style={styles.button}>
-          <Text style={styles.buttonText}>시가총액 순</Text>
-        </TouchableHighlight>
-        <TouchableHighlight style={styles.button}>
-          <Text style={styles.buttonText}>거래량 순</Text>
-        </TouchableHighlight>
-      </View>
-      <View style={styles.container}>
-        {[...Array(viewCount)].map((_, index) => (
+        <View style={styles.article_area}>
+          <SlideComponent />
+        </View>
+        <View style={styles.flex_row}>
           <TouchableHighlight
-            key={index}
-            style={styles.view}
-            onPress={() => handleLocation()}>
-            <View>
-              <Text>임시 텍스트 {index}</Text>
-            </View>
+            style={styles.button}
+            // onPress={handlePress}
+            underlayColor="coral">
+            <Text style={styles.buttonText}>등락 순</Text>
           </TouchableHighlight>
-        ))}
-      </View>
-    </ScrollView>
-    </SafeAreaView >
+          <TouchableHighlight style={styles.button}>
+            <Text style={styles.buttonText}>가격 순</Text>
+          </TouchableHighlight>
+          <TouchableHighlight style={styles.button}>
+            <Text style={styles.buttonText}>시가총액 순</Text>
+          </TouchableHighlight>
+          <TouchableHighlight style={styles.button}>
+            <Text style={styles.buttonText}>거래량 순</Text>
+          </TouchableHighlight>
+        </View>
+        <View style={styles.container}>
+          {dataArray.length === 0 ? (
+            // 로딩 창 표시
+            <ActivityIndicator size="large" color="blue" />
+          ) : (
+            // 데이터 표시
+            dataArray.map((item, index) => {
+              const name_data = item[0];
+              const company_data: any = item[1]; // up_down과 current_price에서 타입 에러가 발생하므로 any로 할당함
+              const up_down = company_data['등락'];
+              const current_price = company_data['현재가'];
+
+              return (
+                <TouchableHighlight key={index} style={styles.view}>
+                  <View>
+                    <Text>{name_data}</Text>
+                    <Text>등락 {up_down}</Text>
+                    <Text>현재가 {current_price}</Text>
+                  </View>
+                </TouchableHighlight>
+              );
+            })
+          )}
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
