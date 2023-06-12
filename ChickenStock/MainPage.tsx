@@ -24,8 +24,15 @@ import TopMenuPage from './TopMenuPage';
 function Main_page(): JSX.Element {
   const [jsonData, setJsonData] = useState<any>({});
   const isDarkMode = useColorScheme() === 'dark';
+  // 컨텍스트
+  const {userId} = useContext(AuthContext);
+  console.log('컨텍스트 테스트1')
+  console.log(userId)
+
   const stock_list = async () => {
     try {
+      console.log('컨텍스트 테스트2')
+      console.log(userId)
       const response = await fetch('http://10.0.2.2:5000/api/main_page', {
         method: 'POST',
         headers: {
@@ -75,11 +82,6 @@ function Main_page(): JSX.Element {
     }
     setScrollPosition(contentOffset.y);
   };
-
-  // 컨텍스트
-  const {userId} = useContext(AuthContext);
-  console.log('컨텍스트 테스트')
-  console.log(userId)
 
   const navigation = useNavigation<ChoicePageOneNavigationProp>();
 

@@ -202,16 +202,6 @@ def get_company_rate():
     combined_output = {"prdy_ctrt": output1["prdy_ctrt"], "stck_prpr": output2[0]["stck_prpr"]}
 
     emit('changerate', combined_output)
-# @app.route('/changerate', methods=['GET'])
-# def get_company_rate():
-#     data=broker._fetch_today_1m_ohlcv("005930",to="15:30:30")
-
-#     output1 = data["output1"]
-#     output2 = data["output2"]
-
-#     combined_output = {"prdy_ctrt": output1["prdy_ctrt"], "stck_prpr": output2[0]["stck_prpr"]}
-
-#     return jsonify(combined_output)
 
 #! 크롤링할 웹 페이지 URL
 class news:
@@ -265,12 +255,9 @@ def main_page_init():
     print('받아온 데이터')
     print(request_data)
     collection = db['user_info']
-    user_category = collection.find({ id: "aaa1234" }, { 'choiceTwo': 1, '_id': 0 })
+    user_category = collection.find_one({ 'id': 'aaa1234' }, { 'choiceTwo': 1, '_id': 0 })
     print('user_category')
     print(user_category)
-    testData = user_category[0]
-    print(testData)
-    pprint.pprint(testData)
     reqData = 'elec_company_list' # DB에서 접속한 user의 관심 종목 값을 받아옴 / 현재는 임시로 전기.전자 입력
     init_data = callApiData.Mainpage_stock_data.Mainpage_stock_list(reqData) # 전기.전자 종목의 시가총액 순 상위 16개 목록 추출
     return jsonify(init_data.to_dict()) # 직렬 화 후 main_page로 데이터 전달
