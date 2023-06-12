@@ -24,7 +24,6 @@
     "react-native-svg": "^6.2.1||^7.0.3",
     "react-native-svg-charts": "^5.4.0",
     "react-native-swiper": "^1.6.0"
->>>>>>> 6bfb00aefb6bafe7faefa696a8359392b8f831cd
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
