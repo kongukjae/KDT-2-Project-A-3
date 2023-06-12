@@ -8,9 +8,12 @@ import pandas as pd
 from bs4 import BeautifulSoup
 import requests
 
-acc_no = "00000000-01"
-
-# key, secret key는 슬랙에 있는 것 참곤
+f = open("./secret.key")
+lines = f.readlines()
+key = lines[0].strip()
+secret = lines[1].strip()
+acc_no = lines[2].strip()
+f.close()
 broker = mojito.KoreaInvestment(api_key=key, api_secret=secret, acc_no=acc_no)
 
 
