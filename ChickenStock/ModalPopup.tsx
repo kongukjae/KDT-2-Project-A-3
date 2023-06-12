@@ -49,14 +49,13 @@ const ModalPopup = () => {
 
   const navigation = useNavigation<loginPageNavigationProp>();
 
-  const openModal = () => {
-    setModalVisible(true);
-  };
+  // const openModal = () => {
+  //   setModalVisible(true);
+  // };
 
-  const closeModal = () => {
-    setModalVisible(false);
-  };
-
+  // const closeModal = () => {
+  //   setModalVisible(false);
+  // };
   return (
     <View style={styles.container}>
       <Modal visible={modalVisible} transparent={true}>

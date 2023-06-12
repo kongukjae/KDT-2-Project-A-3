@@ -16,8 +16,6 @@ import {AuthContext} from './AllContext';
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 
-import {Colors} from 'react-native/Libraries/NewAppScreen';
-
 import {RouteProp, useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import SlideComponent from './NewsComponent';
