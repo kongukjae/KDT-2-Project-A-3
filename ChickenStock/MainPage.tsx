@@ -10,6 +10,7 @@ import {
   Image,
   TouchableHighlight,
   Linking,
+  ActivityIndicator,
 } from 'react-native';
 import { AuthContext } from './AllContext';
 
@@ -18,7 +19,7 @@ import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 import { RouteProp, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import SlideComponent from './NewsComponent'
+import SlideComponent from './NewsComponent';
 import { useEvent } from 'react-native-reanimated';
 import TopMenuPage from './TopMenuPage';
 
@@ -53,26 +54,6 @@ function Main_page(): JSX.Element {
   console.log(jsonData)
 
   const dataArray = Object.entries(jsonData);
-  // console.log(dataArray[0])
-  // console.log(dataArray[0][1])
-  // console.log(dataArray[0][1]["등락"])
-  // console.log(typeof(dataArray[0][1]))
-
-  // const keys = Object.keys(jsonData);
-  // const index = 1;
-
-  // const name_data = keys[index]
-  // const company_data = jsonData[name_data]
-  // const end_price = jsonData[name_data]['전일종가']
-  // const up_down = jsonData[name_data]['등락']
-  // const current_price = jsonData[name_data]['현재가']
-
-  // console.log('객체 데이터')
-  // console.log(name_data)
-  // console.log(company_data)
-  // console.log(end_price)
-  // console.log(up_down)
-  // console.log(current_price)
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
@@ -144,19 +125,6 @@ function Main_page(): JSX.Element {
           </View>
           <View style={styles.header_inner}>
             <View>
-            {/* <View style={styles.icon_box}>
-              <Image
-                source={require('./resource/Icon_search.png')}
-                style={styles.icon}
-              />
-              <Image
-                source={require('./resource/Icon_cart.png')}
-                style={styles.icon}
-              />
-              <Image
-                source={require('./resource/Icon_AI_chat_bot.png')}
-                style={styles.icon}
-              /> */}
             <TopMenuPage></TopMenuPage>
 
           </View>
@@ -188,17 +156,29 @@ function Main_page(): JSX.Element {
         </TouchableHighlight>
       </View>
       <View style={styles.container}>
-        {[...Array(viewCount)].map((_, index) => (
-          <TouchableHighlight
-            key={index}
-            style={styles.view}
-            onPress={() => handleLocation()}>
-            <View>
-              <Text>임시 텍스트 {index}</Text>
-            </View>
-          </TouchableHighlight>
-        ))}
-      </View>
+        {dataArray.length === 0 ? (
+          // 로딩 창 표시
+          <ActivityIndicator size="large" color="blue" />
+        ) : (
+          // 데이터 표시
+          dataArray.map((item, index) => {
+            const name_data = item[0];
+            const company_data: any = item[1]; // up_down과 current_price에서 타입 에러가 발생하므로 any로 할당함
+            const up_down = company_data['등락'];
+            const current_price = company_data['현재가'];
+
+            return (
+            <TouchableHighlight key={index} style={styles.view}>
+              <View>
+                <Text>{name_data}</Text>
+                <Text>등락 {up_down}</Text>
+                <Text>현재가 {current_price}</Text>
+              </View>
+            </TouchableHighlight>
+          );
+        })
+      )}
+    </View>
     </ScrollView>
     </SafeAreaView >
   );
