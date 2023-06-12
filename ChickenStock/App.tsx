@@ -42,6 +42,10 @@ const Stack = createStackNavigator<RootStackParamList>();
 
 const App: React.FC = () => {
   return (
+<<<<<<< HEAD
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Another">
+=======
     <AuthProvider>
       <NavigationContainer>
         <Stack.Navigator initialRouteName="MainPage">
@@ -95,6 +99,7 @@ const App: React.FC = () => {
             component={SellPage}
             options={{headerShown: false}}
           />
+>>>>>>> a3386da21ab1f81e4a514a799a4dee1543535fdb
         <Stack.Screen
           name="SlideComponent"
           component={SlideComponent}
