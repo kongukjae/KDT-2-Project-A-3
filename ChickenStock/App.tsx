@@ -21,6 +21,7 @@
  import LoginPage from './loginPage';
  import BuyPage from './BuyPage';
  import SellPage from './SellPage';
+ import MyModal from './modal'
  
  type RootStackParamList = {
    ChoicePageOne: undefined;
@@ -33,6 +34,7 @@
    LoginPage: undefined;
    BuyPage: undefined;
    SellPage: undefined;
+   MyModal:undefined;
  };
  
  const Stack = createStackNavigator<RootStackParamList>();
@@ -40,7 +42,7 @@
  const App: React.FC = () => {
    return (
      <NavigationContainer>
-       <Stack.Navigator initialRouteName="LoginPage">
+       <Stack.Navigator initialRouteName="MyModal">
          <Stack.Screen
            name="ChoicePageOne"
            component={ChoicePageOne}
@@ -89,6 +91,11 @@
          <Stack.Screen
            name="SellPage"
            component={SellPage}
+           options={{headerShown: false}}
+         />
+         <Stack.Screen
+           name="MyModal"
+           component={MyModal}
            options={{headerShown: false}}
          />
        </Stack.Navigator>
