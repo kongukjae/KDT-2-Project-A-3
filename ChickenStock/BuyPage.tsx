@@ -171,7 +171,7 @@ const BuyPage = () => {
         <Text style={styles.title}>구매하기</Text>
         <TouchableOpacity style={styles.textBtn}>
           <Text style={styles.btnText} onPress={openModal}>호가</Text>
-          <ModalPopup modalvisible={modal} onClose={closeModal}></ModalPopup>
+          <ModalPopup visible={modal} onClose={closeModal}></ModalPopup>
         </TouchableOpacity>
       </View>
       <View style={styles.calculateBox}>

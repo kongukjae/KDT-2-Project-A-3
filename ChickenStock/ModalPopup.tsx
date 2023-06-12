@@ -35,22 +35,29 @@ import {StackNavigationProp} from '@react-navigation/stack';
 
 
 interface ModalPopupProps extends ModalProps{
-  modalvisible:boolean
   onClose: () => void;
 }
 
-const ModalPopup:React.FC<ModalPopupProps> = ({modalvisible, onClose}) => {
+
+const ModalPopup:React.FC<ModalPopupProps> = ({visible, onClose}) => {
+  
+
 
   return (
-      <Modal visible={modalvisible} transparent={true}>
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
+      <Modal visible={visible} transparent={true}>
+        <TouchableOpacity style={styles.modalContainer} onPress={onClose}>
+          <TouchableOpacity style={styles.modalContent} activeOpacity={1}> 
+          {/* activeOpacity를 통해 깜빡거리는 문제 해결 */}
             <TouchableOpacity style={styles.closeButton} onPress={onClose} activeOpacity={0.8}>
               <Text style={styles.closeButtonText}>X</Text>
             </TouchableOpacity>
-            <Text>Hello, Modal!</Text>
-          </View>
-        </View>
+            <Text>Hello, Modal1!</Text>
+            <Text>Hello, Modal2!</Text>
+            <Text>Hello, Modal3!</Text>
+            <Text>Hello, Modal4!</Text>
+
+          </TouchableOpacity>
+        </TouchableOpacity>
       </Modal>
   );
 };
@@ -65,13 +72,16 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     justifyContent: 'center',
+    alignItems:'flex-end'
+    // 모달창
   },
   modalContent: {
-    width: '100%',
-    height: '70%',
+    width: '80%',
+    height: '80%',
     backgroundColor: 'white',
     borderRadius: 10,
     padding: 20,
+    
   },
   closeButton: {
     position: 'absolute',
