@@ -125,16 +125,17 @@ def login_Check():
 
 
 # 컴포넌트 2-1 실시간 주가 차트 데이터(일단위)
-@app.route('/get_data', methods=['GET'])
+# @app.route('/get_data', methods=['GET'])
+@socketio.on('get_data')
 def get_data():
 
-    data = broker._fetch_today_1m_ohlcv("005930", to="15:30:30")
+    data = broker._fetch_today_1m_ohlcv("001470", to="15:30:30")
     df = pd.DataFrame(data['output2'])
     df['stck_cntg_hour'] = pd.to_datetime(df['stck_cntg_hour'], format='%H%M%S').dt.strftime('%H:%M:%S')
     df[['stck_prpr', 'stck_oprc', 'stck_hgpr', 'stck_lwpr', 'cntg_vol', 'acml_tr_pbmn']] = df[['stck_prpr', 'stck_oprc', 'stck_hgpr', 'stck_lwpr', 'cntg_vol', 'acml_tr_pbmn']].astype(float)
-
-    return df.to_json(orient='records')
-
+     
+    emit('data_response', df.to_dict(orient='records'))
+    print(df.to_dict)
 
 # 컴포넌트 2-2 주가데이터(한달단위)
 @app.route('/get_Mdata', methods=['GET'])
@@ -168,9 +169,9 @@ def get_Ydata():
     chart_data = df[['stck_bsop_date', 'stck_oprc', 'stck_hgpr', 'stck_lwpr', 'stck_clpr', 'acml_vol']].to_dict(orient='records')
 
     return jsonify(chart_data)
-# # 컴포넌트 1-3
 
 
+# 컴포넌트 1-1 기업 이름, 코드
 @app.route('/companydetail', methods=['GET'])
 def get_company_data():
 
@@ -181,7 +182,7 @@ def get_company_data():
 
     return jsonify(company_info)
 
-
+# 컴포넌트3 기업 상세 정보
 @app.route('/companyupdown', methods=['GET'])
 def get_company_updown():
 
@@ -199,7 +200,7 @@ def get_company_updown():
 
     return jsonify(company_infof)
 
-
+# 컴포넌트 1-2 기업 등락률, 가격
 # 실시간 주식 등락률,현재가격 API에서 제공되는 것을 가져다 씀
 @socketio.on('request_company_rate')
 def get_company_rate():
@@ -209,7 +210,7 @@ def get_company_rate():
     output2 = data["output2"]
 
     combined_output = {"prdy_ctrt": output1["prdy_ctrt"], "stck_prpr": output2[0]["stck_prpr"]}
-
+    
     emit('changerate', combined_output)
 # @app.route('/changerate', methods=['GET'])
 # def get_company_rate():
