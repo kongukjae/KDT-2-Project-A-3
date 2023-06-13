@@ -15,7 +15,7 @@ import {
 
 import {RouteProp, useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import TopMenuPage from './topMenuPage';
+import TopMenuPage from './TopMenuPage';
 const MyPage = () => {
   const interest = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
   const enter = ['기업 명', '현재가', '등락', '보유 수량', '평가 금액'];
