@@ -68,15 +68,83 @@ const ModalPopup:React.FC<ModalPopupProps> = ({visible, onClose}) => {
               </View>
               <View style={styles.hogaBuyContent}>
                 <View style={styles.hogaBuyBox1}>
-                  
+                  <View style={styles.hogadivide}>
+                    <View style={styles.hogaContents1}>
+                      <Text>매수잔량1</Text>
+                    </View>
+                    <View style={styles.hogaContents1}>
+                      <Text>매수잔량2</Text>
+                    </View>
+                    <View style={styles.hogaContents1}>
+                      <Text>매수잔량3</Text>
+                    </View>
+                    <View style={styles.hogaContents1}>
+                      <Text>매수잔량4</Text>
+                    </View>
+                    <View style={styles.hogaContents1}>
+                      <Text>매수잔량5</Text>
+                    </View>
+                  </View>
+                  <View style={styles.hogadivide}>
+                    <View style={styles.hogaContents1}>
+                      <Text>매수시간1</Text>
+                    </View>
+                    <View style={styles.hogaContents1}>
+                      <Text>매수시간2</Text>
+                    </View>
+                    <View style={styles.hogaContents1}>
+                      <Text>매수시간3</Text>
+                    </View>
+                    <View style={styles.hogaContents1}>
+                      <Text>매수시간4</Text>
+                    </View>
+                    <View style={styles.hogaContents1}>
+                      <Text>매수시간5</Text>
+                    </View>
+                  </View>
                 </View>
                 <View style={styles.hogaBuyBox2}></View>
               </View>
               <View style={styles.hogaSellContent}>
-                <View style={styles.hogaSellBox1}>
-                  
+                <View style={styles.hogaSellBox1}></View>
+                <View style={styles.hogaSellBox2}>
+                  {/* 매수시간view */}
+                  <View style={styles.hogadivide}>
+                    <View style={styles.hogaContents2}>
+                      <Text>매수시간1</Text>
+                    </View>
+                    <View style={styles.hogaContents2}>
+                      <Text>매수시간2</Text>
+                    </View>
+                    <View style={styles.hogaContents2}>
+                      <Text>매수시간3</Text>
+                    </View>
+                    <View style={styles.hogaContents2}>
+                      <Text>매수시간4</Text>
+                    </View>
+                    <View style={styles.hogaContents2}>
+                      <Text>매수시간5</Text>
+                    </View>
+                  </View>
+                  {/* 매수잔량 view */}
+                  <View style={styles.hogadivide}> 
+                    <View style={styles.hogaContents2}>
+                      <Text>매수잔량1</Text>
+                    </View>
+                    <View style={styles.hogaContents2}>
+                      <Text>매수잔량2</Text>
+                    </View>
+                    <View style={styles.hogaContents2}>
+                      <Text>매수잔량3</Text>
+                    </View>
+                    <View style={styles.hogaContents2}>
+                      <Text>매수잔량4</Text>
+                    </View>
+                    <View style={styles.hogaContents2}>
+                      <Text>매수잔량5</Text>
+                    </View>
+                  </View>
                 </View>
-                <View style={styles.hogaSellBox2}></View>
               </View>
               <View style={styles.hogaBottomContent}>
                 <View style={styles.hogaBottomText}>
@@ -158,37 +226,45 @@ const styles = StyleSheet.create({
   }, 
   hogaTopText:{
     flex:1,
-    borderWidth:1,
-    borderColor:'black',
     justifyContent:'center',
     alignItems:'center'
   },
   hogaBuyBox1:{
     flex:2,
-    borderWidth:1,
-    borderColor:'black',
+    flexDirection:'row'
   },
   hogaBuyBox2:{
     flex:1,
-    borderWidth:1,
-    borderColor:'black',
   },
   hogaSellBox1:{
     flex:1,
-    borderWidth:1,
-    borderColor:'black',
   },
   hogaSellBox2:{
     flex:2,
-    borderWidth:1,
-    borderColor:'black',
+    flexDirection:'row'
+
   },
   hogaBottomText:{
     flex:1,
-    borderWidth:1,
-    borderColor:'black',
     justifyContent:'center',
     alignItems:'center'
+  },
+  hogadivide:{
+    flex:1,
+  },
+  hogaContents1:{
+    flex:1,
+    justifyContent:'center',
+    alignItems:"center",
+    borderRightWidth:1,
+    borderColor:'black'
+  },
+  hogaContents2:{
+    flex:1,
+    justifyContent:'center',
+    alignItems:"center",
+    borderLeftWidth:1,
+    borderColor:'black'
   }
 
 });
