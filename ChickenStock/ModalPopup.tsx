@@ -53,10 +53,14 @@ const ModalPopup:React.FC<ModalPopupProps> = ({visible, onClose}) => {
             </TouchableOpacity>
             <Text>호가 모달</Text>
             <View style ={styles.hogaContainer}>
-              <View></View>
-              <View></View>
-              <View></View>
-              <View></View>
+              <View style={styles.hogaTopContent}>
+                <View></View>
+                <View></View>
+                <View></View>
+              </View>
+              <View style={styles.hogaBuyContent}></View>
+              <View style={styles.hogaSellContent}></View>
+              <View style={styles.hogaBottomContent}></View>
             </View>
             
 
@@ -104,8 +108,25 @@ const styles = StyleSheet.create({
     width:'100%',
     height:'10%',
     backgroundColor:'#FFE194'
+  },
+  hogaBuyContent:{
+    width:'100%',
+    height:'40%',
+    backgroundColor:'#1B9C85'
+  },
+  hogaSellContent:{
+    width:'100%',
+    height:'40%',
+    backgroundColor:'#E8F6EF'
+  },
+  hogaBottomContent:{
+    width:'100%',
+    height:'10%',
+    backgroundColor:'#4C4C6D'
+  } 
+  
 
-  }
+
 });
 
 export default ModalPopup;
