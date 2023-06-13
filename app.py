@@ -1,7 +1,7 @@
 import re
 import mojito
 import json
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request,session
 from pymongo import MongoClient
 # from pykrx import stock
 import pandas as pd
@@ -13,6 +13,11 @@ from flask_socketio import SocketIO, emit
 # 개인 제작 모듈
 import callApiData.Mainpage_stock_data
 import callDBData.category_name_changer
+
+# Flask 애플리케이션을 생성하는 부분
+app = Flask(__name__)
+# 시크릿 키는 보안을 강화하기 위해 사용되는 값으로, 애플리케이션에서 사용되는 다양한 보안 기능에 필요
+app.secret_key = "nb1+d(7+2y1q0m*kig4+zxld$v00^7dr=nxqcjn5(fp@ul)yc@"
 
 f = open("./secret.key")
 lines = f.readlines()
@@ -26,8 +31,6 @@ broker = mojito.KoreaInvestment(api_key=key, api_secret=secret, acc_no=acc_no)
 client = MongoClient(
     'mongodb+srv://ChickenStock:1234@jiseop.g8czkiu.mongodb.net/')
 db = client['chicken_stock']
-
-app = Flask(__name__)
 
 # Flask-SocketIO  인스턴스 생성
 socketio = SocketIO(app, cors_allowed_origins="*")
@@ -111,6 +114,9 @@ def login_Check():
         else:
             returnValue['state'] = True
             returnValue['message'] = "정상"
+            print("정상")
+            print(request_data['id'])
+            session['user_id'] = request_data['id']
             return jsonify(returnValue)
     else:
         returnValue['state'] = False
@@ -152,7 +158,7 @@ def get_Mdata():
 def get_Ydata():
     data = broker.fetch_ohlcv("005930","Y")
     df = pd.DataFrame(data['output2'])
-     # 필요한 컬럼을 숫자로 변환
+    # 필요한 컬럼을 숫자로 변환
     df[['stck_clpr', 'stck_hgpr', 'stck_lwpr', 'stck_oprc', 'acml_vol', 'acml_tr_pbmn']] = df[['stck_clpr', 'stck_hgpr', 'stck_lwpr', 'stck_oprc', 'acml_vol', 'acml_tr_pbmn']].astype(float)
     
     # 날짜 컬럼 형식 변경
@@ -225,7 +231,12 @@ class news:
             
 @app.route('/news', methods=['GET'])
 def get_news_data():
-    url = 'https://search.naver.com/search.naver?where=news&sm=tab_opt&query=전기전자&nso_open=1'
+    user_id = session.get('user_id')
+    find_id = db.user_info.find_one({"id": user_id})
+    
+    stocks_name = find_id['choiceTwo'];
+    
+    url = f'https://search.naver.com/search.naver?where=news&sm=tab_opt&query={stocks_name}&nso_open=1'
     response = requests.get(url)
     html = response.text
 
