@@ -33,7 +33,6 @@ import { Button, Modal, StyleSheet, Text, TouchableOpacity, View, ModalProps } f
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import { ScreenStackHeaderBackButtonImage } from 'react-native-screens';
-import {Table,Row,Rows} from 'react-native-table-component'
 
 
 interface ModalPopupProps extends ModalProps{
@@ -42,10 +41,7 @@ interface ModalPopupProps extends ModalProps{
 
 
 const ModalPopup:React.FC<ModalPopupProps> = ({visible, onClose}) => {
-  const tableData = [
-    ['1','2']
-  ]
-
+ 
 
 
 
@@ -72,9 +68,7 @@ const ModalPopup:React.FC<ModalPopupProps> = ({visible, onClose}) => {
               </View>
               <View style={styles.hogaBuyContent}>
                 <View style={styles.hogaBuyBox1}>
-                  <Table>
-                    <Rows data={tableData}></Rows>
-                  </Table>
+                  
                 </View>
                 <View style={styles.hogaBuyBox2}></View>
               </View>
