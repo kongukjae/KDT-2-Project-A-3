@@ -6,6 +6,7 @@ import ComPonent3 from './component/ComPonent3';
 import ComPonent4 from './component/ComPonent4';
 
 const AnotherPage = () => {
+  console.log(company_name)
   return (
     <View style={styles.container}>
       <ComPonent1 />
