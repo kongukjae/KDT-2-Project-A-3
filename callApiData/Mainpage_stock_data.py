@@ -62,7 +62,8 @@ def Mainpage_stock_list(collection_name):
         value = {
             '현재가': temp['output']['stck_prpr'],
             '전일종가' : temp['output']['stck_sdpr'],
-            '등락' : (int(temp['output']['stck_prpr']) - int(temp['output']['stck_sdpr']))
+            '등락' : (int(temp['output']['stck_prpr']) - int(temp['output']['stck_sdpr'])),
+            '시가총액' : temp['output']['cpfn'],
         }
         company_Object.data[key] = value
     return company_Object

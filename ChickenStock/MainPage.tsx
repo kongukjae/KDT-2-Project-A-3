@@ -52,6 +52,8 @@ function Main_page(): JSX.Element {
 
   const dataArray = Object.entries(jsonData);
 
+  // 정렬 버튼 기능
+
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
