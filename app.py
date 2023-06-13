@@ -274,6 +274,10 @@ def main_page_init():
     init_data = callApiData.Mainpage_stock_data.Mainpage_stock_list(resData) # 각 종목의 시가총액 순 상위 16개 목록 추출
     return jsonify(init_data.to_dict()) # 직렬 화 후 main_page로 데이터 전달
 
+#구매 페이지에 호가를 눌렀을때 호가 정보를 받아오는 요청
+@app.route('/api/hoga', methods=['POST'])
+def get_hoga_data():
+
 
 if (__name__) == '__main__':
     app.run(host='0.0.0.0', port=5000)
