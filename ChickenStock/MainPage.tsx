@@ -26,6 +26,7 @@ function Main_page(): JSX.Element {
   const [dataArray, setDataArray] = useState<any[]>([]); // dataArray 상태와 업데이트 함수 선언
   const [selectedButton, setSelectedButton] = useState('시가총액'); // 버튼 색상 변경을 위한 상태 선언, 페이지 로드 시 시가총액을 선택한 것으로 표현
   const isDarkMode = useColorScheme() === 'dark';
+  // 메인 페이지 진입 시 서버에게 주식 리스트 데이터 요청하는 함수
   const stock_list = async () => {
     try {
       const response = await fetch('http://10.0.2.2:5000/api/main_page', {
@@ -36,11 +37,16 @@ function Main_page(): JSX.Element {
         body: JSON.stringify(userId),
       });
 
-      const data = await response.json();
-      console.log('응답받음');
-      console.log(data);
+      const data = await response.json(); // 서버로부터 json 형식으로 데이터를 응답받음
+      // 서버에서 시가총액 기준으로 정렬한 데이터를 보내주지만 json 형식은 순서를 보장하지 않기 때문에 순서가 뒤섞인다.
+      // 따라서 데이터를 sort() 메서드를 이용해 다시한번 시가총액 기준으로 정렬시킴
+      const dataArray = Object.entries(data).sort((a:any, b:any) => { // type 에러가 발생하므로 any 형식으로 지정해둠 [웨않뒈는고야...]
+        const marketCapA = parseInt(a[1]['시가총액']);  
+        const marketCapB = parseInt(b[1]['시가총액']);
+        return marketCapB - marketCapA; // 내림차순 정렬
+      });
       setJsonData(data);
-      setDataArray(Object.entries(data))
+      setDataArray(dataArray)
     } catch (error) {
       console.error(error);
     }
@@ -54,8 +60,7 @@ function Main_page(): JSX.Element {
   console.log(jsonData);
 
   // [ 정렬 버튼 기능 ]
-  // 현재가 기준 정렬
-  const dataArraySortByCurrentPrice = (standard:string) => {
+  const dataArraySortByCurrentPrice = (standard:string) => {  // 
     const sortDataArray = [...dataArray].slice().sort((a:any, b:any) => {
       const currentPriceA = parseInt(a[1][standard]);
       const currentPriceB = parseInt(b[1][standard]);
@@ -180,6 +185,7 @@ function Main_page(): JSX.Element {
               const company_data: any = item[1]; // up_down과 current_price에서 타입 에러가 발생하므로 any로 할당함
               const up_down = company_data['등락'];
               const current_price = company_data['현재가'];
+              const market_cap = company_data['시가총액'];
 
               return (
                 <TouchableHighlight key={index} style={styles.view}>
@@ -187,6 +193,7 @@ function Main_page(): JSX.Element {
                     <Text>{name_data}</Text>
                     <Text>등락 {up_down}</Text>
                     <Text>현재가 {current_price}</Text>
+                    <Text>시가총액 {market_cap}</Text>
                   </View>
                 </TouchableHighlight>
               );

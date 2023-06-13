@@ -24,6 +24,8 @@ def Mainpage_stock_list(collection_name):
     # 빈 배열 생성
     code_array = []
     name_array = []
+    trade_array = []
+    marketcap_array = []
     
     # 카운터 변수 생성
     counter = 0
@@ -51,10 +53,12 @@ def Mainpage_stock_list(collection_name):
                 counter = counter + 1
                 name_array.append(newSymbols['한글명'].iloc[i])
                 code_array.append(newSymbols['단축코드'].iloc[i])
+                trade_array.append(newSymbols['전일거래량'].iloc[i])
+                marketcap_array.append(newSymbols['시가총액'].iloc[i])
         else:
             break
-    
     company_Object = companyObject()
+    print(name_array)
 
     for i in range(len(code_array)):
         temp = broker.fetch_price(code_array[i])
@@ -63,7 +67,9 @@ def Mainpage_stock_list(collection_name):
             '현재가': temp['output']['stck_prpr'],
             '전일종가' : temp['output']['stck_sdpr'],
             '등락' : (int(temp['output']['stck_prpr']) - int(temp['output']['stck_sdpr'])),
-            '시가총액' : temp['output']['cpfn'],
+            '시가총액' : int(marketcap_array[i]),
+            '거래량' : int(trade_array[i]),
         }
         company_Object.data[key] = value
     return company_Object
+# print(Mainpage_stock_list('financial_company_list'))
