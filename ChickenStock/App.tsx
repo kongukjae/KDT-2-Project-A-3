@@ -50,7 +50,7 @@ const App: React.FC = () => {
   return (
     <AuthProvider>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="BuyPage">
+        <Stack.Navigator initialRouteName="LoginPage">
           <Stack.Screen
             name="ChoicePageOne"
             component={ChoicePageOne}

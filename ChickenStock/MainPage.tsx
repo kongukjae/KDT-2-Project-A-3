@@ -9,7 +9,6 @@ import {
   View,
   Image,
   TouchableHighlight,
-  Linking,
   ActivityIndicator,
 } from 'react-native';
 import {AuthContext} from './AllContext';
@@ -32,7 +31,7 @@ function Main_page(): JSX.Element {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify('종목데이터'),
+        body: JSON.stringify(userId),
       });
 
       const data = await response.json();
@@ -57,16 +56,9 @@ function Main_page(): JSX.Element {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
-  // 관련 기사 링크 페이지
-  const articleLinkPress = () => {
-    Linking.openURL('https://www.naver.com/');
-  };
-
   // 무한 스크롤 관련
   const [scrollPosition, setScrollPosition] = useState(0);
   const [viewCount, setViewCount] = useState(16);
-
-  const {userId} = useContext(AuthContext);
   const handleScroll = (event: any) => {
     const {layoutMeasurement, contentOffset, contentSize} = event.nativeEvent;
     // 무한스크롤 동작 조건: 화면상의 높이값 + 스크롤의 위치값 >= 페이지 전체 높이 - 50px 일 때 요소를 추가적으로 생성
@@ -83,6 +75,11 @@ function Main_page(): JSX.Element {
     }
     setScrollPosition(contentOffset.y);
   };
+
+  // 컨텍스트
+  const {userId} = useContext(AuthContext);
+  console.log('컨텍스트 테스트')
+  console.log(userId)
 
   const navigation = useNavigation<ChoicePageOneNavigationProp>();
 
