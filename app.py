@@ -9,7 +9,6 @@ from bs4 import BeautifulSoup
 import requests
 import pprint
 from flask_socketio import SocketIO, emit
-
 # 개인 제작 모듈
 import callApiData.Mainpage_stock_data
 import callDBData.category_name_changer
@@ -27,11 +26,10 @@ acc_no = lines[2].strip()
 f.close()
 broker = mojito.KoreaInvestment(api_key=key, api_secret=secret, acc_no=acc_no)
 
-
 client = MongoClient(
     'mongodb+srv://ChickenStock:1234@jiseop.g8czkiu.mongodb.net/')
 db = client['chicken_stock']
-
+# mojito1 = mojito()
 # Flask-SocketIO  인스턴스 생성
 socketio = SocketIO(app, cors_allowed_origins="*")
 
@@ -291,20 +289,29 @@ def main_page_init():
 #구매 페이지에 호가를 눌렀을때 호가 정보를 받아오는 요청
 @app.route('/api/hoga', methods=['GET'])
 def get_hoga_data():
-    url = "https://openapivts.koreainvestment.com:29443/uapi/domestic-stock/v1/quotations/inquire-asking-price-exp-ccn"
-    params={
-        "fid_cond_mrkt_div_code": "J",
-        "fid_input_iscd": "005930"
-    }  
-    hoga_data={}
+    # url = "https://openapivts.koreainvestment.com:29443/uapi/domestic-stock/v1/quotations/inquire-asking-price-exp-ccn"
+    # params={
+    #     "fid_cond_mrkt_div_code": "J",
+    #     "fid_input_iscd": "005930"
+    # }  
+    # hoga_data={}
 
-    response = requests.get(url,params=params)
-    if response.status_code == 200 :
-        hoga_data = response.json()
-        print(hoga_data)
-    else :
-        print("호가정보요청실패")
-    return jsonify(hoga_data)
+    # response = requests.get(url,params=params)
+    # if response.status_code == 200 :
+    #     hoga_data = response.json()
+    #     print(hoga_data)
+    # else :
+    #     print("호가정보요청실패")
+    # return jsonify(hoga_data)
+    
+    print(dir(broker))
+    # result = broker.get_hoga('005630')
+    # if result['status'] == 'success':
+    #     hoga_data = result['result']
+    # else:
+    #     print('호가 데이터 조회 실패')
+    return jsonify()
+
 
 if (__name__) == '__main__':
     app.run(host='0.0.0.0', port=5000)
