@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {LineChart, Grid, XAxis, YAxis} from 'react-native-svg-charts';
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import io from 'socket.io-client';
 // 서버에서 받아올 데이터의 타입을 정의
 interface StockData {
   stck_cntg_hour: string; // 날짜
@@ -18,22 +19,47 @@ const ComPonent2 = () => {
   const [monthData, setMonthData] = useState<StockData[]>([]);
   const [yearData, setYearData] = useState<StockData[]>([]);
 
+  console.log(dayData);
   console.log('여기는 month');
   console.log(monthData);
   console.log('여기는 무엇인가');
   console.log(yearData);
+  // 소켓 인스턴스 생성, 일종의 공용방
+  const socket = io('http://10.0.2.2:5000');
+
   // 1. 일간 차트 요청
+  // useEffect(() => {
+  //   fetch('http://10.0.2.2:5000/get_data')
+  //     .then(response => response.json())
+  //     .then((data: StockData[]) => {
+  //       console.log(
+  //         'day data stck_prpr:',
+  //         data.map(item => item.stck_prpr),
+  //       );
+  //       setDayData(data); // 받아온 데이터를 그대로 사용합니다.
+  //     });
+  // }, []);
   useEffect(() => {
-    fetch('http://10.0.2.2:5000/get_data')
-      .then(response => response.json())
-      .then((data: StockData[]) => {
-        console.log(
-          'day data stck_prpr:',
-          data.map(item => item.stck_prpr),
-        );
-        setDayData(data); // 받아온 데이터를 그대로 사용합니다.
-      });
+    socket.emit('get_data');
+
+    socket.on('data_response', (data: StockData[]) => {
+      console.log(
+        'day data stck_prpr:',
+        data.map(item => item.stck_prpr),
+      );
+      setDayData(data);
+      setData(data);
+      socket.emit('get_data');
+
+      console.log(data);
+      console.log('오는거여 마는거야');
+    });
+
+    return () => {
+      socket.off('data_response');
+    };
   }, []);
+
   //  2. 월간 차트 요청
   useEffect(() => {
     fetch('http://10.0.2.2:5000/get_Mdata')
@@ -77,7 +103,7 @@ const ComPonent2 = () => {
       return date;
     });
 
-    // Use a formatter to convert the timestamp back to a readable date
+    //
     const formatLabel = (value: number, _index: number) => {
       const date = new Date(value);
       return isMonthData

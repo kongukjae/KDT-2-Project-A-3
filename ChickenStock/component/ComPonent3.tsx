@@ -34,7 +34,9 @@ const ComPonent3 = () => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 40,
+    marginTop: 30,
+    padding: 50,
+    backgroundColor: 'pink',
   },
   text: {
     fontSize: 15,

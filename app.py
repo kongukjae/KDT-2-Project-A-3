@@ -10,7 +10,7 @@ import requests
 import callApiData.Mainpage_stock_data
 import pprint
 from flask_socketio import SocketIO, emit
-
+import random
 f = open("./secret.key")
 lines = f.readlines()
 key = lines[0].strip()
@@ -116,16 +116,17 @@ def login_Check():
 
 
 # 컴포넌트 2-1 실시간 주가 차트 데이터(일단위)
-@app.route('/get_data', methods=['GET'])
+# @app.route('/get_data', methods=['GET'])
+@socketio.on('get_data')
 def get_data():
 
-    data = broker._fetch_today_1m_ohlcv("005930", to="15:30:30")
+    data = broker._fetch_today_1m_ohlcv("001470", to="15:30:30")
     df = pd.DataFrame(data['output2'])
     df['stck_cntg_hour'] = pd.to_datetime(df['stck_cntg_hour'], format='%H%M%S').dt.strftime('%H:%M:%S')
     df[['stck_prpr', 'stck_oprc', 'stck_hgpr', 'stck_lwpr', 'cntg_vol', 'acml_tr_pbmn']] = df[['stck_prpr', 'stck_oprc', 'stck_hgpr', 'stck_lwpr', 'cntg_vol', 'acml_tr_pbmn']].astype(float)
-
-    return df.to_json(orient='records')
-
+     
+    emit('data_response', df.to_dict(orient='records'))
+    print(df.to_dict)
 
 # 컴포넌트 2-2 주가데이터(한달단위)
 @app.route('/get_Mdata', methods=['GET'])
@@ -200,7 +201,7 @@ def get_company_rate():
     output2 = data["output2"]
 
     combined_output = {"prdy_ctrt": output1["prdy_ctrt"], "stck_prpr": output2[0]["stck_prpr"]}
-
+    
     emit('changerate', combined_output)
 # @app.route('/changerate', methods=['GET'])
 # def get_company_rate():
