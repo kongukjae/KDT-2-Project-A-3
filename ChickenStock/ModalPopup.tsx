@@ -33,6 +33,7 @@ import { Button, Modal, StyleSheet, Text, TouchableOpacity, View, ModalProps } f
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import { ScreenStackHeaderBackButtonImage } from 'react-native-screens';
+import {Table,Row,Rows} from 'react-native-table-component'
 
 
 interface ModalPopupProps extends ModalProps{
@@ -41,7 +42,11 @@ interface ModalPopupProps extends ModalProps{
 
 
 const ModalPopup:React.FC<ModalPopupProps> = ({visible, onClose}) => {
-  
+  const tableData = [
+    ['1','2']
+  ]
+
+
 
 
   return (
@@ -66,14 +71,30 @@ const ModalPopup:React.FC<ModalPopupProps> = ({visible, onClose}) => {
                 </View>
               </View>
               <View style={styles.hogaBuyContent}>
-                <View style={styles.hogaBuyBox1}></View>
+                <View style={styles.hogaBuyBox1}>
+                  <Table>
+                    <Rows data={tableData}></Rows>
+                  </Table>
+                </View>
                 <View style={styles.hogaBuyBox2}></View>
               </View>
               <View style={styles.hogaSellContent}>
-                <View style={styles.hogaSellBox1}></View>
+                <View style={styles.hogaSellBox1}>
+                  
+                </View>
                 <View style={styles.hogaSellBox2}></View>
               </View>
-              <View style={styles.hogaBottomContent}></View>
+              <View style={styles.hogaBottomContent}>
+                <View style={styles.hogaBottomText}>
+                  <Text>1,704,940</Text>
+                </View>
+                <View style={styles.hogaBottomText}>
+                  <Text>-197,713</Text>
+                </View>
+                <View style={styles.hogaBottomText}>
+                  <Text>1,507,227</Text>
+                </View>
+              </View>
             </View>
             
 
@@ -138,7 +159,8 @@ const styles = StyleSheet.create({
   hogaBottomContent:{
     width:'100%',
     height:'5%',
-    backgroundColor:'#4C4C6D'
+    backgroundColor:'#4C4C6D',
+    flexDirection:'row'
   }, 
   hogaTopText:{
     flex:1,
@@ -166,6 +188,13 @@ const styles = StyleSheet.create({
     flex:2,
     borderWidth:1,
     borderColor:'black',
+  },
+  hogaBottomText:{
+    flex:1,
+    borderWidth:1,
+    borderColor:'black',
+    justifyContent:'center',
+    alignItems:'center'
   }
 
 });

@@ -24,6 +24,7 @@
     "react-native-svg": "^6.2.1||^7.0.3",
     "react-native-svg-charts": "^5.4.0",
     "react-native-swiper": "^1.6.0",
+    "react-native-table-component": "^1.2.2",
     "socket.io-client": "^4.6.2"
   },
   "devDependencies": {
@@ -34,6 +35,7 @@
     "@tsconfig/react-native": "^2.0.2",
     "@types/jest": "^29.2.1",
     "@types/react": "^18.0.24",
+    "@types/react-native-table-component": "^1.2.4",
     "@types/react-test-renderer": "^18.0.0",
     "babel-jest": "^29.2.1",
     "eslint": "^8.19.0",
