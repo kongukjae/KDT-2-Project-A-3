@@ -108,7 +108,12 @@ function Main_page(): JSX.Element {
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
       />
-      <ScrollView
+      {dataArray.length === 0 ? (
+        // 로딩 창 표시
+        <View style={styles.loading_window}>
+          <ActivityIndicator size="large" color="blue" />
+        </View>
+      ) : (<ScrollView
         contentInsetAdjustmentBehavior="automatic"
         scrollEventThrottle={2}>
         <View style={styles.header}>
@@ -171,12 +176,20 @@ function Main_page(): JSX.Element {
             })
           )}
         </View>
-      </ScrollView>
+      </ScrollView>)}
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  loading_window: {
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   infiniteScrollArea: {
     paddingHorizontal: 20,
     paddingVertical: 10,
