@@ -14,7 +14,9 @@ from flask_socketio import SocketIO, emit
 import callApiData.Mainpage_stock_data
 import callDBData.category_name_changer
 
+# Flask 애플리케이션을 생성하는 부분
 app = Flask(__name__)
+# 시크릿 키는 보안을 강화하기 위해 사용되는 값으로, 애플리케이션에서 사용되는 다양한 보안 기능에 필요
 app.secret_key = "nb1+d(7+2y1q0m*kig4+zxld$v00^7dr=nxqcjn5(fp@ul)yc@"
 
 f = open("./secret.key")
@@ -156,7 +158,7 @@ def get_Mdata():
 def get_Ydata():
     data = broker.fetch_ohlcv("005930","Y")
     df = pd.DataFrame(data['output2'])
-     # 필요한 컬럼을 숫자로 변환
+    # 필요한 컬럼을 숫자로 변환
     df[['stck_clpr', 'stck_hgpr', 'stck_lwpr', 'stck_oprc', 'acml_vol', 'acml_tr_pbmn']] = df[['stck_clpr', 'stck_hgpr', 'stck_lwpr', 'stck_oprc', 'acml_vol', 'acml_tr_pbmn']].astype(float)
     
     # 날짜 컬럼 형식 변경
