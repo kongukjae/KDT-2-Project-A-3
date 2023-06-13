@@ -1,7 +1,7 @@
 import re
 import mojito
 import json
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request,session
 from pymongo import MongoClient
 # from pykrx import stock
 import pandas as pd
@@ -13,6 +13,9 @@ from flask_socketio import SocketIO, emit
 # 개인 제작 모듈
 import callApiData.Mainpage_stock_data
 import callDBData.category_name_changer
+
+app = Flask(__name__)
+app.secret_key = "nb1+d(7+2y1q0m*kig4+zxld$v00^7dr=nxqcjn5(fp@ul)yc@"
 
 f = open("./secret.key")
 lines = f.readlines()
@@ -26,8 +29,6 @@ broker = mojito.KoreaInvestment(api_key=key, api_secret=secret, acc_no=acc_no)
 client = MongoClient(
     'mongodb+srv://ChickenStock:1234@jiseop.g8czkiu.mongodb.net/')
 db = client['chicken_stock']
-
-app = Flask(__name__)
 
 # Flask-SocketIO  인스턴스 생성
 socketio = SocketIO(app, cors_allowed_origins="*")
@@ -111,6 +112,9 @@ def login_Check():
         else:
             returnValue['state'] = True
             returnValue['message'] = "정상"
+            print("정상")
+            print(request_data['id'])
+            session['user_id'] = request_data['id']
             return jsonify(returnValue)
     else:
         returnValue['state'] = False
@@ -225,7 +229,12 @@ class news:
             
 @app.route('/news', methods=['GET'])
 def get_news_data():
-    url = 'https://search.naver.com/search.naver?where=news&sm=tab_opt&query=전기전자&nso_open=1'
+    user_id = session.get('user_id')
+    find_id = db.user_info.find_one({"id": user_id})
+    
+    stocks_name = find_id['choiceTwo'];
+    
+    url = f'https://search.naver.com/search.naver?where=news&sm=tab_opt&query={stocks_name}&nso_open=1'
     response = requests.get(url)
     html = response.text
 
