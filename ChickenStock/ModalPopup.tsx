@@ -51,10 +51,14 @@ const ModalPopup:React.FC<ModalPopupProps> = ({visible, onClose}) => {
             <TouchableOpacity style={styles.closeButton} onPress={onClose} activeOpacity={0.8}>
               <Text style={styles.closeButtonText}>X</Text>
             </TouchableOpacity>
-            <Text>Hello, Modal1!</Text>
-            <Text>Hello, Modal2!</Text>
-            <Text>Hello, Modal3!</Text>
-            <Text>Hello, Modal4!</Text>
+            <Text>호가 모달</Text>
+            <View style ={styles.hogaContainer}>
+              <View></View>
+              <View></View>
+              <View></View>
+              <View></View>
+            </View>
+            
 
           </TouchableOpacity>
         </TouchableOpacity>
@@ -93,6 +97,15 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
+  hogaContainer:{
+    flex:1
+  },
+  hogaTopContent:{
+    width:'100%',
+    height:'10%',
+    backgroundColor:'#FFE194'
+
+  }
 });
 
 export default ModalPopup;
