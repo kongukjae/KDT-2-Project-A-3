@@ -11,6 +11,8 @@ import callApiData.Mainpage_stock_data
 import pprint
 from flask_socketio import SocketIO, emit
 
+app = Flask(__name__)
+
 f = open("./secret.key")
 lines = f.readlines()
 key = lines[0].strip()
@@ -24,7 +26,6 @@ client = MongoClient(
     'mongodb+srv://ChickenStock:1234@jiseop.g8czkiu.mongodb.net/')
 db = client['chicken_stock']
 
-app = Flask(__name__)
 
 # Flask-SocketIO  인스턴스 생성
 socketio = SocketIO(app, cors_allowed_origins="*")
@@ -87,7 +88,7 @@ def login_Check():
     if not re.match(pattern, request_data['id']):  # 아이디 유효성 검사
         returnValue['state'] = False
         returnValue['message'] = "아이디는 영문자와 숫자만 입력 가능합니다"
-        return jsonify(returnValue)  # 클라언트에게 데이터를 반환.
+        return jsonify(returnValue)  # 클라이언트에게 데이터를 반환.
     elif request_data['id'] == "" or request_data['pw'] == "":  # 아이디와 비밀번호 공백 시
         returnValue['state'] = False
         returnValue['message'] = "아이디와 비밀번호 모두 입력해주세요."
@@ -222,7 +223,21 @@ class news:
             
 @app.route('/news', methods=['GET'])
 def get_news_data():
-    url = 'https://search.naver.com/search.naver?where=news&sm=tab_opt&query=전기전자&nso_open=1'
+    client = MongoClient(
+        "mongodb+srv://ChickenStock:1234@jiseop.g8czkiu.mongodb.net/")  # 데이터베이스 연결
+    db = client['chicken_stock']
+    
+    user_id = session.get('user_id')
+    # find_id = db.user_info.find_one({id: user_id})
+    print("session")
+    print(user_id)
+    stocks_name = ""
+    
+    # if find_id:
+    #     stocks_name = find_id.get('ChoiceTwo')
+    #     print(stocks_name)
+    
+    url = f'https://search.naver.com/search.naver?where=news&sm=tab_opt&query=금융&nso_open=1'
     response = requests.get(url)
     html = response.text
 
@@ -266,11 +281,11 @@ def main_page_init():
     print(request_data)
     collection = db['user_info']
     user_category = collection.find({ id: "aaa1234" }, { 'choiceTwo': 1, '_id': 0 })
-    print('user_category')
-    print(user_category)
-    testData = user_category[0]
-    print(testData)
-    pprint.pprint(testData)
+    # print('user_category')
+    # print(user_category)
+    # testData = user_category[0]
+    # print(testData)
+    # pprint.pprint(testData)
     reqData = 'elec_company_list' # DB에서 접속한 user의 관심 종목 값을 받아옴 / 현재는 임시로 전기.전자 입력
     init_data = callApiData.Mainpage_stock_data.Mainpage_stock_list(reqData) # 전기.전자 종목의 시가총액 순 상위 16개 목록 추출
     return jsonify(init_data.to_dict()) # 직렬 화 후 main_page로 데이터 전달
