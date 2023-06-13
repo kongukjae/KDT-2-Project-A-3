@@ -289,17 +289,17 @@ def get_hoga_data():
     url = "https://openapivts.koreainvestment.com:29443/uapi/domestic-stock/v1/quotations/inquire-asking-price-exp-ccn"
     params={
         "fid_cond_mrkt_div_code": "J",
-        "fid_input_iscd": "000660"
-    }
+        "fid_input_iscd": "005930"
+    }  
+    hoga_data={}
 
     response = requests.get(url,params=params)
-
     if response.status_code == 200 :
-        hoga_data = response.get_json()
-        print(hoda_data)
+        hoga_data = response.json()
+        print(hoga_data)
     else :
         print("호가정보요청실패")
-
+    return jsonify(hoga_data)
 
 if (__name__) == '__main__':
     app.run(host='0.0.0.0', port=5000)
