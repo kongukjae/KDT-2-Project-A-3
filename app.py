@@ -7,9 +7,12 @@ from pymongo import MongoClient
 import pandas as pd
 from bs4 import BeautifulSoup
 import requests
-import callApiData.Mainpage_stock_data
 import pprint
 from flask_socketio import SocketIO, emit
+
+# 개인 제작 모듈
+import callApiData.Mainpage_stock_data
+import callDBData.category_name_changer
 
 f = open("./secret.key")
 lines = f.readlines()
@@ -265,14 +268,10 @@ def main_page_init():
     print('받아온 데이터')
     print(request_data)
     collection = db['user_info']
-    user_category = collection.find({ id: "aaa1234" }, { 'choiceTwo': 1, '_id': 0 })
-    print('user_category')
-    print(user_category)
-    testData = user_category[0]
-    print(testData)
-    pprint.pprint(testData)
-    reqData = 'elec_company_list' # DB에서 접속한 user의 관심 종목 값을 받아옴 / 현재는 임시로 전기.전자 입력
-    init_data = callApiData.Mainpage_stock_data.Mainpage_stock_list(reqData) # 전기.전자 종목의 시가총액 순 상위 16개 목록 추출
+    document = collection.find_one({ "id" : "aaa1234" }, {"choiceTwo" : 1, "_id" : 0})
+    user_category = document['choiceTwo']
+    resData = callDBData.category_name_changer.name_change(user_category)
+    init_data = callApiData.Mainpage_stock_data.Mainpage_stock_list(resData) # 각 종목의 시가총액 순 상위 16개 목록 추출
     return jsonify(init_data.to_dict()) # 직렬 화 후 main_page로 데이터 전달
 
 
