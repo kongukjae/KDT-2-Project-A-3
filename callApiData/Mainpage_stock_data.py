@@ -46,7 +46,7 @@ def Mainpage_stock_list(collection_name):
     # 반복문을 통해 회사 이름이 DB에 있는 값일 경우 my_array 배열에 회사 이름을 추가
     # 카운터 변수를 이용하여 시가총액 순으로 내림차순 정렬된 리스트에서 상위 20개만 추출
     for i in range(len(newSymbols)):
-        if counter < 16:
+        if counter < 12:
             if newSymbols['한글명'].iloc[i] == find_company(newSymbols['한글명'].iloc[i]):
                 counter = counter + 1
                 name_array.append(newSymbols['한글명'].iloc[i])
@@ -65,6 +65,4 @@ def Mainpage_stock_list(collection_name):
             '등락' : (int(temp['output']['stck_prpr']) - int(temp['output']['stck_sdpr']))
         }
         company_Object.data[key] = value
-    
-    # print(company_Object.data)
     return company_Object

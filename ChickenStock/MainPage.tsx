@@ -108,7 +108,12 @@ function Main_page(): JSX.Element {
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
       />
-      <ScrollView
+      {dataArray.length === 0 ? (
+        // 로딩 창 표시
+        <View style={styles.loading_window}>
+          <ActivityIndicator size="large" color="blue" />
+        </View>
+      ) : (<ScrollView
         contentInsetAdjustmentBehavior="automatic"
         scrollEventThrottle={2}>
         <View style={styles.header}>
@@ -148,12 +153,7 @@ function Main_page(): JSX.Element {
           </TouchableHighlight>
         </View>
         <View style={styles.container}>
-          {dataArray.length === 0 ? (
-            // 로딩 창 표시
-            <ActivityIndicator size="large" color="blue" />
-          ) : (
-            // 데이터 표시
-            dataArray.map((item, index) => {
+          {dataArray.map((item, index) => {
               const name_data = item[0];
               const company_data: any = item[1]; // up_down과 current_price에서 타입 에러가 발생하므로 any로 할당함
               const up_down = company_data['등락'];
@@ -169,14 +169,22 @@ function Main_page(): JSX.Element {
                 </TouchableHighlight>
               );
             })
-          )}
+          }
         </View>
-      </ScrollView>
+      </ScrollView>)}
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  loading_window: {
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   infiniteScrollArea: {
     paddingHorizontal: 20,
     paddingVertical: 10,

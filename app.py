@@ -1,17 +1,21 @@
 import re
 import mojito
 import json
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request,session
 from pymongo import MongoClient
 # from pykrx import stock
 import pandas as pd
 from bs4 import BeautifulSoup
 import requests
-import callApiData.Mainpage_stock_data
 import pprint
 from flask_socketio import SocketIO, emit
 
+# 개인 제작 모듈
+import callApiData.Mainpage_stock_data
+import callDBData.category_name_changer
+
 app = Flask(__name__)
+app.secret_key = "nb1+d(7+2y1q0m*kig4+zxld$v00^7dr=nxqcjn5(fp@ul)yc@"
 
 f = open("./secret.key")
 lines = f.readlines()
@@ -25,7 +29,6 @@ broker = mojito.KoreaInvestment(api_key=key, api_secret=secret, acc_no=acc_no)
 client = MongoClient(
     'mongodb+srv://ChickenStock:1234@jiseop.g8czkiu.mongodb.net/')
 db = client['chicken_stock']
-
 
 # Flask-SocketIO  인스턴스 생성
 socketio = SocketIO(app, cors_allowed_origins="*")
@@ -88,7 +91,7 @@ def login_Check():
     if not re.match(pattern, request_data['id']):  # 아이디 유효성 검사
         returnValue['state'] = False
         returnValue['message'] = "아이디는 영문자와 숫자만 입력 가능합니다"
-        return jsonify(returnValue)  # 클라이언트에게 데이터를 반환.
+        return jsonify(returnValue)  # 클라언트에게 데이터를 반환.
     elif request_data['id'] == "" or request_data['pw'] == "":  # 아이디와 비밀번호 공백 시
         returnValue['state'] = False
         returnValue['message'] = "아이디와 비밀번호 모두 입력해주세요."
@@ -109,6 +112,9 @@ def login_Check():
         else:
             returnValue['state'] = True
             returnValue['message'] = "정상"
+            print("정상")
+            print(request_data['id'])
+            session['user_id'] = request_data['id']
             return jsonify(returnValue)
     else:
         returnValue['state'] = False
@@ -223,21 +229,12 @@ class news:
             
 @app.route('/news', methods=['GET'])
 def get_news_data():
-    client = MongoClient(
-        "mongodb+srv://ChickenStock:1234@jiseop.g8czkiu.mongodb.net/")  # 데이터베이스 연결
-    db = client['chicken_stock']
-    
     user_id = session.get('user_id')
-    # find_id = db.user_info.find_one({id: user_id})
-    print("session")
-    print(user_id)
-    stocks_name = ""
+    find_id = db.user_info.find_one({"id": user_id})
     
-    # if find_id:
-    #     stocks_name = find_id.get('ChoiceTwo')
-    #     print(stocks_name)
+    stocks_name = find_id['choiceTwo'];
     
-    url = f'https://search.naver.com/search.naver?where=news&sm=tab_opt&query=금융&nso_open=1'
+    url = f'https://search.naver.com/search.naver?where=news&sm=tab_opt&query={stocks_name}&nso_open=1'
     response = requests.get(url)
     html = response.text
 
@@ -280,14 +277,10 @@ def main_page_init():
     print('받아온 데이터')
     print(request_data)
     collection = db['user_info']
-    user_category = collection.find({ id: "aaa1234" }, { 'choiceTwo': 1, '_id': 0 })
-    # print('user_category')
-    # print(user_category)
-    # testData = user_category[0]
-    # print(testData)
-    # pprint.pprint(testData)
-    reqData = 'elec_company_list' # DB에서 접속한 user의 관심 종목 값을 받아옴 / 현재는 임시로 전기.전자 입력
-    init_data = callApiData.Mainpage_stock_data.Mainpage_stock_list(reqData) # 전기.전자 종목의 시가총액 순 상위 16개 목록 추출
+    document = collection.find_one({ "id" : "aaa1234" }, {"choiceTwo" : 1, "_id" : 0})
+    user_category = document['choiceTwo']
+    resData = callDBData.category_name_changer.name_change(user_category)
+    init_data = callApiData.Mainpage_stock_data.Mainpage_stock_list(resData) # 각 종목의 시가총액 순 상위 16개 목록 추출
     return jsonify(init_data.to_dict()) # 직렬 화 후 main_page로 데이터 전달
 
 
