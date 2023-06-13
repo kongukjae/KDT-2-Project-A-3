@@ -24,6 +24,8 @@ def Mainpage_stock_list(collection_name):
     # 빈 배열 생성
     code_array = []
     name_array = []
+    trade_array = []
+    marketcap_array = []
     
     # 카운터 변수 생성
     counter = 0
@@ -46,15 +48,17 @@ def Mainpage_stock_list(collection_name):
     # 반복문을 통해 회사 이름이 DB에 있는 값일 경우 my_array 배열에 회사 이름을 추가
     # 카운터 변수를 이용하여 시가총액 순으로 내림차순 정렬된 리스트에서 상위 20개만 추출
     for i in range(len(newSymbols)):
-        if counter < 16:
+        if counter < 12:
             if newSymbols['한글명'].iloc[i] == find_company(newSymbols['한글명'].iloc[i]):
                 counter = counter + 1
                 name_array.append(newSymbols['한글명'].iloc[i])
                 code_array.append(newSymbols['단축코드'].iloc[i])
+                trade_array.append(newSymbols['전일거래량'].iloc[i])
+                marketcap_array.append(newSymbols['시가총액'].iloc[i])
         else:
             break
-    
     company_Object = companyObject()
+    print(name_array)
 
     for i in range(len(code_array)):
         temp = broker.fetch_price(code_array[i])
@@ -62,9 +66,10 @@ def Mainpage_stock_list(collection_name):
         value = {
             '현재가': temp['output']['stck_prpr'],
             '전일종가' : temp['output']['stck_sdpr'],
-            '등락' : (int(temp['output']['stck_prpr']) - int(temp['output']['stck_sdpr']))
+            '등락' : (int(temp['output']['stck_prpr']) - int(temp['output']['stck_sdpr'])),
+            '시가총액' : int(marketcap_array[i]),
+            '거래량' : int(trade_array[i]),
         }
         company_Object.data[key] = value
-    
-    # print(company_Object.data)
     return company_Object
+# print(Mainpage_stock_list('financial_company_list'))

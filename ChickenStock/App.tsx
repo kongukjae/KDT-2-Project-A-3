@@ -38,7 +38,6 @@ type RootStackParamList = {
   LoginPage: undefined;
   BuyPage: undefined;
   SellPage: undefined;
-  TopMenuPage: undefined;
   MyPage: undefined;
   SlideComponent: undefined;
   ModalPopup: undefined;

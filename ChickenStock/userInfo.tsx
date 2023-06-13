@@ -154,7 +154,7 @@ export const ChoicePageTwo: React.FC = () => {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => handleChoice('음·식료품')}>
+            onPress={() => handleChoice('음식료품')}>
             <Text style={styles.text}>음·식료품</Text>
           </TouchableOpacity>
           <TouchableOpacity
