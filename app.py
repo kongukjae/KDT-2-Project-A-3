@@ -271,7 +271,7 @@ def main_page_init():
     document = collection.find_one({ "id" : "aaa1234" }, {"choiceTwo" : 1, "_id" : 0})
     user_category = document['choiceTwo']
     resData = callDBData.category_name_changer.name_change(user_category)
-    init_data = callApiData.Mainpage_stock_data.Mainpage_stock_list(resData) # 전기.전자 종목의 시가총액 순 상위 16개 목록 추출
+    init_data = callApiData.Mainpage_stock_data.Mainpage_stock_list(resData) # 각 종목의 시가총액 순 상위 16개 목록 추출
     return jsonify(init_data.to_dict()) # 직렬 화 후 main_page로 데이터 전달
 
 
