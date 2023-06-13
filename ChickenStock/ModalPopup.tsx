@@ -32,6 +32,7 @@ import React, { useState } from 'react';
 import { Button, Modal, StyleSheet, Text, TouchableOpacity, View, ModalProps } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
+import { ScreenStackHeaderBackButtonImage } from 'react-native-screens';
 
 
 interface ModalPopupProps extends ModalProps{
@@ -64,8 +65,14 @@ const ModalPopup:React.FC<ModalPopupProps> = ({visible, onClose}) => {
                   <Text>매수잔량</Text>
                 </View>
               </View>
-              <View style={styles.hogaBuyContent}></View>
-              <View style={styles.hogaSellContent}></View>
+              <View style={styles.hogaBuyContent}>
+                <View style={styles.hogaBuyBox1}></View>
+                <View style={styles.hogaBuyBox2}></View>
+              </View>
+              <View style={styles.hogaSellContent}>
+                <View style={styles.hogaSellBox1}></View>
+                <View style={styles.hogaSellBox2}></View>
+              </View>
               <View style={styles.hogaBottomContent}></View>
             </View>
             
@@ -119,12 +126,14 @@ const styles = StyleSheet.create({
   hogaBuyContent:{
     width:'100%',
     height:'45%',
-    backgroundColor:'#1B9C85'
+    backgroundColor:'#1B9C85',
+    flexDirection:'row'
   },
   hogaSellContent:{
     width:'100%',
     height:'45%',
-    backgroundColor:'#E8F6EF'
+    backgroundColor:'#E8F6EF',
+    flexDirection:'row'
   },
   hogaBottomContent:{
     width:'100%',
@@ -137,9 +146,27 @@ const styles = StyleSheet.create({
     borderColor:'black',
     justifyContent:'center',
     alignItems:'center'
-    
+  },
+  hogaBuyBox1:{
+    flex:2,
+    borderWidth:1,
+    borderColor:'black',
+  },
+  hogaBuyBox2:{
+    flex:1,
+    borderWidth:1,
+    borderColor:'black',
+  },
+  hogaSellBox1:{
+    flex:1,
+    borderWidth:1,
+    borderColor:'black',
+  },
+  hogaSellBox2:{
+    flex:2,
+    borderWidth:1,
+    borderColor:'black',
   }
-
 
 });
 
