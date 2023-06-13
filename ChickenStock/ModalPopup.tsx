@@ -54,9 +54,15 @@ const ModalPopup:React.FC<ModalPopupProps> = ({visible, onClose}) => {
             <Text>호가 모달</Text>
             <View style ={styles.hogaContainer}>
               <View style={styles.hogaTopContent}>
-                <View></View>
-                <View></View>
-                <View></View>
+                <View style={styles.hogaTopText}>
+                  <Text>매도잔량</Text>
+                </View>
+                <View style={styles.hogaTopText}>
+                  <Text>시간</Text>
+                </View>
+                <View style={styles.hogaTopText}>
+                  <Text>매수잔량</Text>
+                </View>
               </View>
               <View style={styles.hogaBuyContent}></View>
               <View style={styles.hogaSellContent}></View>
@@ -106,25 +112,33 @@ const styles = StyleSheet.create({
   },
   hogaTopContent:{
     width:'100%',
-    height:'10%',
-    backgroundColor:'#FFE194'
+    height:'5%',
+    backgroundColor:'#FFE194',
+    flexDirection:'row'
   },
   hogaBuyContent:{
     width:'100%',
-    height:'40%',
+    height:'45%',
     backgroundColor:'#1B9C85'
   },
   hogaSellContent:{
     width:'100%',
-    height:'40%',
+    height:'45%',
     backgroundColor:'#E8F6EF'
   },
   hogaBottomContent:{
     width:'100%',
-    height:'10%',
+    height:'5%',
     backgroundColor:'#4C4C6D'
-  } 
-  
+  }, 
+  hogaTopText:{
+    flex:1,
+    borderWidth:1,
+    borderColor:'black',
+    justifyContent:'center',
+    alignItems:'center'
+    
+  }
 
 
 });
