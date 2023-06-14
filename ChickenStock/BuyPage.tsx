@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {View, TouchableOpacity, Text, StyleSheet} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {useNavigation} from '@react-navigation/native';
-import ModalPopup from './ModalPopup';
+import HogaModal from './HogaModal';
 
 
 
@@ -192,7 +192,7 @@ const BuyPage = () => {
         <Text style={styles.title}>구매하기</Text>
         <TouchableOpacity style={styles.textBtn}>
           <Text style={styles.btnText} onPress={openModal}>호가</Text>
-          <ModalPopup visible={modal} onClose={closeModal}></ModalPopup>
+          <HogaModal visible={modal} onClose={closeModal}></HogaModal>
         </TouchableOpacity>
       </View>
       <View style={styles.calculateBox}>
