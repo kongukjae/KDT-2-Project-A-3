@@ -9,7 +9,6 @@ from bs4 import BeautifulSoup
 import requests
 import pprint
 from flask_socketio import SocketIO, emit
-
 # 개인 제작 모듈
 import callApiData.Mainpage_stock_data
 import callDBData.category_name_changer
@@ -27,11 +26,10 @@ acc_no = lines[2].strip()
 f.close()
 broker = mojito.KoreaInvestment(api_key=key, api_secret=secret, acc_no=acc_no)
 
-
 client = MongoClient(
     'mongodb+srv://ChickenStock:1234@jiseop.g8czkiu.mongodb.net/')
 db = client['chicken_stock']
-
+# mojito1 = mojito()
 # Flask-SocketIO  인스턴스 생성
 socketio = SocketIO(app, cors_allowed_origins="*")
 @app.route('/account', methods=['GET'])
@@ -297,6 +295,23 @@ def main_page_init():
     print(init_data)
     print(init_data.to_dict())
     return jsonify(init_data.to_dict()) # 직렬 화 후 main_page로 데이터 전달
+
+#구매 페이지에 호가를 눌렀을때 호가 정보를 받아오는 요청
+@app.route('/api/hoga', methods=['GET'])
+def get_hoga_data():
+    def get_approval(key, secret):
+       url = 'https://openapi.koreainvestment.com:9443' # 실전투자계좌
+       headers = {"content-type": "application/json"}
+       body = {"grant_type": "client_credentials",
+            "appkey": key,
+            "secretkey": secret}
+       PATH = "oauth2/Approval"
+       URL = f"{url}/{PATH}"
+       res = requests.post(URL, headers=headers, data=json.dumps(body))
+       approval_key = res.json()["approval_key"]
+       return approval_key
+    print(get_approval(key,secret))
+    return jsonify()
 
 
 if (__name__) == '__main__':
