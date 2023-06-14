@@ -105,20 +105,24 @@ function Main_page(): JSX.Element {
 
   const navigation = useNavigation<ChoicePageOneNavigationProp>();
 
+  // type AnotherScreenParams = {
+  //   company_name: string;
+  // };
+
   type RootStackParamList = {
     ChoicePageOne: {choice: string};
     ChoicePageTwo: {choice: string};
     ChoicePageThree: {choice: string};
     ChoicePageFour: {choice: string};
     MainPage: undefined;
-    Another: {company_name: string};
+    Another: {company_name: string},
   };
 
   type ChoicePageOneNavigationProp = StackNavigationProp<
     RootStackParamList,
-    'ChoicePageTwo'
+    'Another'
   >;
-  type ChoicePageOneRouteProp = RouteProp<RootStackParamList, 'ChoicePageTwo'>;
+  // type ChoicePageOneRouteProp = RouteProp<RootStackParamList, 'ChoicePageTwo'>;
 
   // 상세 페이지로 이동 / 누른 회사 이름을 인자로 전달
   const stockChoice = (company_name: string) => {
