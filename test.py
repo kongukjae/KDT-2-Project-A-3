@@ -155,7 +155,7 @@ async def connect():
     async with websockets.connect(url, ping_interval=30) as websocket:
 
         for senddata in senddata_list:
-            await websocket.send(senddata)
+            await websocket.send(senddata) # 소켓에 헤더 정보를 담아 데이터를 보냄
             time.sleep(0.5)
             print(f"Input Command is :{senddata}")
 
@@ -169,6 +169,7 @@ async def connect():
 
                 if data[0] == '0':
                     recvstr = data.split('|')  # 수신데이터가 실데이터 이전은 '|'로 나뉘어져있어 split
+                    print(recvstr)
                     trid0 = recvstr[1]
 
                     if trid0 == "H0STASP0":  # 주식호가tr 일경우의 처리 단계
