@@ -14,7 +14,7 @@ const ComPonent1 = () => {
   });
 
   useEffect(() => {
-    fetch('http://10.0.2.2:5000/companydetail')
+    fetch('http://10.0.2.2:5001/companydetail')
       .then(response => response.json())
       .then(data => {
         setCompany(data);
@@ -24,7 +24,7 @@ const ComPonent1 = () => {
       .catch(error => console.error(error));
 
     // 1.socket instance 생성, 서버와 연결되는 소켓 인스턴스를 생성한다.
-    const socket = io('http://10.0.2.2:5000');
+    const socket = io('http://10.0.2.2:5001');
 
     socket.emit('request_company_rate');
     // socket 이벤트 리스너

@@ -11,7 +11,7 @@ const ComPonent3 = () => {
   });
 
   useEffect(() => {
-    fetch('http://10.0.2.2:5000/companyupdown')
+    fetch('http://10.0.2.2:5001/companyupdown')
       .then(response => response.json())
       .then(data => {
         setCompany(data);
@@ -34,15 +34,16 @@ const ComPonent3 = () => {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 30,
-    padding: 50,
-    backgroundColor: 'red',
+    marginTop: 20,
+    padding: 30,
+    backgroundColor: 'pink',
   },
   text: {
-    fontSize: 15,
+    fontSize: 20,
+    padding: 5,
   },
   priceContainer: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     justifyContent: 'space-between',
   },
 });

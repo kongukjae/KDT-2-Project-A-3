@@ -1,7 +1,7 @@
 import re
 import mojito
 import json
-from flask import Flask, jsonify, request,session
+from flask import Flask, jsonify, request, session
 from pymongo import MongoClient
 # from pykrx import stock
 import pandas as pd
@@ -32,13 +32,16 @@ db = client['chicken_stock']
 # mojito1 = mojito()
 # Flask-SocketIO  인스턴스 생성
 socketio = SocketIO(app, cors_allowed_origins="*")
+
+
 @app.route('/account', methods=['GET'])
 def account():
-    result = db.user_info.find_one({'account':5000000})
+    result = db.user_info.find_one({'account': 5000000})
     # ObjectId를 문자열로 변환
     result['_id'] = str(result['_id'])
     print(result)
     return jsonify(result)
+
 
 @app.route('/api/data', methods=['GET'])
 @app.route('/signup', methods=['POST'])
@@ -133,42 +136,54 @@ def get_data():
 
     data = broker._fetch_today_1m_ohlcv("328380", to="15:30:30")
     df = pd.DataFrame(data['output2'])
-    df['stck_cntg_hour'] = pd.to_datetime(df['stck_cntg_hour'], format='%H%M%S').dt.strftime('%H:%M:%S')
-    df[['stck_prpr', 'stck_oprc', 'stck_hgpr', 'stck_lwpr', 'cntg_vol', 'acml_tr_pbmn']] = df[['stck_prpr', 'stck_oprc', 'stck_hgpr', 'stck_lwpr', 'cntg_vol', 'acml_tr_pbmn']].astype(float)
-     
+    df['stck_cntg_hour'] = pd.to_datetime(
+        df['stck_cntg_hour'], format='%H%M%S').dt.strftime('%H:%M:%S')
+    df[['stck_prpr', 'stck_oprc', 'stck_hgpr', 'stck_lwpr', 'cntg_vol', 'acml_tr_pbmn']] = df[[
+        'stck_prpr', 'stck_oprc', 'stck_hgpr', 'stck_lwpr', 'cntg_vol', 'acml_tr_pbmn']].astype(float)
+
     emit('data_response', df.to_dict(orient='records'))
     print(df.to_dict)
 
 # 컴포넌트 2-2 주가데이터(한달단위)
+
+
 @app.route('/get_Mdata', methods=['GET'])
 def get_Mdata():
-    data = broker.fetch_ohlcv_domestic("005930","M","20220608")
+    data = broker.fetch_ohlcv_domestic("005930", "M", "20220608")
     df = pd.DataFrame(data['output2'])
 
     # 필요한 컬럼을 숫자로 변환
-    df[['stck_clpr', 'stck_hgpr', 'stck_lwpr', 'stck_oprc', 'acml_vol', 'acml_tr_pbmn']] = df[['stck_clpr', 'stck_hgpr', 'stck_lwpr', 'stck_oprc', 'acml_vol', 'acml_tr_pbmn']].astype(float)
-    
+    df[['stck_clpr', 'stck_hgpr', 'stck_lwpr', 'stck_oprc', 'acml_vol', 'acml_tr_pbmn']] = df[[
+        'stck_clpr', 'stck_hgpr', 'stck_lwpr', 'stck_oprc', 'acml_vol', 'acml_tr_pbmn']].astype(float)
+
     # 날짜 컬럼 형식 변경
-    df['stck_bsop_date'] = pd.to_datetime(df['stck_bsop_date'], format='%Y%m%d')
+    df['stck_bsop_date'] = pd.to_datetime(
+        df['stck_bsop_date'], format='%Y%m%d')
 
     # 필요한 정보만 포함된 json 데이터로 변환
-    chart_data = df[['stck_bsop_date', 'stck_oprc', 'stck_hgpr', 'stck_lwpr', 'stck_clpr', 'acml_vol']].to_dict(orient='records')
+    chart_data = df[['stck_bsop_date', 'stck_oprc', 'stck_hgpr',
+                     'stck_lwpr', 'stck_clpr', 'acml_vol']].to_dict(orient='records')
 
     return jsonify(chart_data)
 
 # 컴포넌트 2-3 주가데이터(연단위),
+
+
 @app.route('/get_Ydata', methods=['GET'])
 def get_Ydata():
-    data = broker.fetch_ohlcv("005930","Y")
+    data = broker.fetch_ohlcv("005930", "Y")
     df = pd.DataFrame(data['output2'])
     # 필요한 컬럼을 숫자로 변환
-    df[['stck_clpr', 'stck_hgpr', 'stck_lwpr', 'stck_oprc', 'acml_vol', 'acml_tr_pbmn']] = df[['stck_clpr', 'stck_hgpr', 'stck_lwpr', 'stck_oprc', 'acml_vol', 'acml_tr_pbmn']].astype(float)
-    
+    df[['stck_clpr', 'stck_hgpr', 'stck_lwpr', 'stck_oprc', 'acml_vol', 'acml_tr_pbmn']] = df[[
+        'stck_clpr', 'stck_hgpr', 'stck_lwpr', 'stck_oprc', 'acml_vol', 'acml_tr_pbmn']].astype(float)
+
     # 날짜 컬럼 형식 변경
-    df['stck_bsop_date'] = pd.to_datetime(df['stck_bsop_date'], format='%Y%m%d')
+    df['stck_bsop_date'] = pd.to_datetime(
+        df['stck_bsop_date'], format='%Y%m%d')
 
     # 필요한 정보만 포함된 json 데이터로 변환
-    chart_data = df[['stck_bsop_date', 'stck_oprc', 'stck_hgpr', 'stck_lwpr', 'stck_clpr', 'acml_vol']].to_dict(orient='records')
+    chart_data = df[['stck_bsop_date', 'stck_oprc', 'stck_hgpr',
+                     'stck_lwpr', 'stck_clpr', 'acml_vol']].to_dict(orient='records')
 
     return jsonify(chart_data)
 
@@ -199,20 +214,22 @@ def get_company_updown():
         '현재가': company_price['output']['stck_prpr'],
         '시가총액': company_price['output']['cpfn_cnnm'],
     }
-
+    print(company_infof)
     return jsonify(company_infof)
+    
 
 # 컴포넌트 1-2 기업 등락률, 가격
 # 실시간 주식 등락률,현재가격 API에서 제공되는 것을 가져다 씀
 @socketio.on('request_company_rate')
 def get_company_rate():
-    data = broker._fetch_today_1m_ohlcv("005930",to="15:30:30")
+    data = broker._fetch_today_1m_ohlcv("005930", to="15:30:30")
 
     output1 = data["output1"]
     output2 = data["output2"]
 
-    combined_output = {"prdy_ctrt": output1["prdy_ctrt"], "stck_prpr": output2[0]["stck_prpr"]}
-    
+    combined_output = {
+        "prdy_ctrt": output1["prdy_ctrt"], "stck_prpr": output2[0]["stck_prpr"]}
+
     emit('changerate', combined_output)
 # @app.route('/changerate', methods=['GET'])
 # def get_company_rate():
@@ -226,12 +243,15 @@ def get_company_rate():
 #     return jsonify(combined_output)
 
 #! 크롤링할 웹 페이지 URL
+
+
 class news:
-        def __init__(self, title, detail, link):
-            self.title = title
-            self.detail = detail
-            self.link = link
-            
+    def __init__(self, title, detail, link):
+        self.title = title
+        self.detail = detail
+        self.link = link
+
+
 @app.route('/news', methods=['GET'])
 def get_news_data():
     # 로그인할 때 저장한 아이디를 세션으로 사용
@@ -239,7 +259,7 @@ def get_news_data():
     # 연결된 db에서 id가 로그인 한 id와 같은 데이터를 db에서 찾음
     find_id = db.user_info.find_one({"id": user_id})
     # 찾은 데이터 중에서 choiceTwo(관심종목)을 가져옴
-    stocks_name = find_id['choiceTwo'];
+    stocks_name = find_id['choiceTwo']
     # url의 파라미터로 관심종목을 받음
     url = f'https://search.naver.com/search.naver?where=news&sm=tab_opt&query={stocks_name}&nso_open=1'
     response = requests.get(url)
@@ -266,13 +286,11 @@ def get_news_data():
     for a_tag in titles:
         link_array.append(a_tag['href'])
 
-                
     news_object = news(title_array, detail_array, link_array)
 
-    #* 비 ASCII 문자를 유니코드로 유지하도록 ensure_ascii값을 false로 설정
-    #? news_object 인스턴스의 속성들을 딕셔너리 형태로 반환
+    # * 비 ASCII 문자를 유니코드로 유지하도록 ensure_ascii값을 false로 설정
+    # ? news_object 인스턴스의 속성들을 딕셔너리 형태로 반환
     json_news = json.dumps(news_object.__dict__, ensure_ascii=False)
-    
 
     return jsonify(json_news)
 
@@ -280,36 +298,40 @@ def get_news_data():
 # 메인 페이지에 주식 목록 데이터
 @app.route('/api/main_page', methods=['POST'])
 def main_page_init():
-    request_data = request.get_json() #user_id를 받아와서 id를 통해 DB 데이터에 접근 할 예정
+    request_data = request.get_json()  # user_id를 받아와서 id를 통해 DB 데이터에 접근 할 예정
     print('받아온 데이터')
     print(request_data)
     collection = db['user_info']
-    document = collection.find_one({ "id" : "aaa1234" }, {"choiceTwo" : 1, "_id" : 0})
+    document = collection.find_one(
+        {"id": "aaa1234"}, {"choiceTwo": 1, "_id": 0})
     user_category = document['choiceTwo']
     resData = callDBData.category_name_changer.name_change(user_category)
-    init_data = callApiData.Mainpage_stock_data.Mainpage_stock_list(resData) # 각 종목의 시가총액 순 상위 16개 목록 추출
+    init_data = callApiData.Mainpage_stock_data.Mainpage_stock_list(
+        resData)  # 각 종목의 시가총액 순 상위 16개 목록 추출
     print('데이터 전달')
     print(init_data)
     print(init_data.to_dict())
-    return jsonify(init_data.to_dict()) # 직렬 화 후 main_page로 데이터 전달
+    return jsonify(init_data.to_dict())  # 직렬 화 후 main_page로 데이터 전달
 
-#구매 페이지에 호가를 눌렀을때 호가 정보를 받아오는 요청
+# 구매 페이지에 호가를 눌렀을때 호가 정보를 받아오는 요청
+
+
 @app.route('/api/hoga', methods=['GET'])
 def get_hoga_data():
     def get_approval(key, secret):
-       url = 'https://openapi.koreainvestment.com:9443' # 실전투자계좌
-       headers = {"content-type": "application/json"}
-       body = {"grant_type": "client_credentials",
-            "appkey": key,
-            "secretkey": secret}
-       PATH = "oauth2/Approval"
-       URL = f"{url}/{PATH}"
-       res = requests.post(URL, headers=headers, data=json.dumps(body))
-       approval_key = res.json()["approval_key"]
-       return approval_key
-    print(get_approval(key,secret))
+        url = 'https://openapi.koreainvestment.com:9443'  # 실전투자계좌
+        headers = {"content-type": "application/json"}
+        body = {"grant_type": "client_credentials",
+                "appkey": key,
+                "secretkey": secret}
+        PATH = "oauth2/Approval"
+        URL = f"{url}/{PATH}"
+        res = requests.post(URL, headers=headers, data=json.dumps(body))
+        approval_key = res.json()["approval_key"]
+        return approval_key
+    print(get_approval(key, secret))
     return jsonify()
 
 
 if (__name__) == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5001)

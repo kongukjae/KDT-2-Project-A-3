@@ -28,16 +28,17 @@ broker = mojito.KoreaInvestment(api_key=key, api_secret=secret, acc_no=acc_no)
 
 
 
-
-data = broker._fetch_today_1m_ohlcv('005930',to="15:30:30")
-# dir(broker)
-# pprint.pprint(dir(broker))
-
+data = broker.fetch_ohlcv("005930", "Y")
 df = pd.DataFrame(data['output2'])
-# 15:30:00
-df['stck_cntg_hour'] = pd.to_datetime(df['stck_cntg_hour'], format='%H%M%S').dt.strftime('%H:%M:%S')
+    # 필요한 컬럼을 숫자로 변환
+df[['stck_clpr', 'stck_hgpr', 'stck_lwpr', 'stck_oprc', 'acml_vol', 'acml_tr_pbmn']] = df[[
+        'stck_clpr', 'stck_hgpr', 'stck_lwpr', 'stck_oprc', 'acml_vol', 'acml_tr_pbmn']].astype(float)
 
-df[['stck_prpr', 'stck_oprc', 'stck_hgpr', 'stck_lwpr', 'cntg_vol', 'acml_tr_pbmn']] = df[['stck_prpr', 'stck_oprc', 'stck_hgpr', 'stck_lwpr', 'cntg_vol', 'acml_tr_pbmn']].astype(float)
+    # 날짜 컬럼 형식 변경
+df['stck_bsop_date'] = pd.to_datetime(
+        df['stck_bsop_date'], format='%Y%m%d')
 
-df.to_dict(orient='records')
-pprint.pprint(df.to_dict(orient='records'))
+    # 필요한 정보만 포함된 json 데이터로 변환
+chart_data = df[['stck_bsop_date', 'stck_oprc', 'stck_hgpr',
+                     'stck_lwpr', 'stck_clpr', 'acml_vol']].to_dict(orient='records')
+print(chart_data)
