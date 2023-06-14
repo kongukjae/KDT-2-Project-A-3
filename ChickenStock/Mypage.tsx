@@ -22,24 +22,46 @@ import axios from 'axios';
 
 const MyPage = () => {
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch('http://10.0.2.2:5000/account');
-        if(response.ok){
-          const data = await response.json();
-          console.log('서버 연결 완료')
-          console.log(data); // 예시: 응답 데이터를 콘솔에 출력
-        }else {
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await fetch('http://10.0.2.2:5000/account');
+  //       if(response.ok){
+  //         const data = await response.json();
+  //         console.log('서버 연결 완료')
+  //         console.log(data); // 예시: 응답 데이터를 콘솔에 출력
+  //       }else {
+  //       throw new Error('서버 응답이 실패하였습니다.');
+  //     }
+  //       // 서버 응답 처리
+  //     } catch (error) {
+  //       // 에러 처리
+  //       console.error(error);
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, []);
+  const [data, setData] = useState({});
+
+  // 데이터 가져오는 비동기 함수
+  const fetchData = async () => {
+    try {
+      const response = await fetch('http://10.0.2.2:5000/account');
+      if (response.ok) {
+        const jsonData = await response.json();
+        setData(jsonData);
+        console.log('서버 연결 완료');
+        console.log(jsonData);
+      } else {
         throw new Error('서버 응답이 실패하였습니다.');
       }
-        // 서버 응답 처리
-      } catch (error) {
-        // 에러 처리
-        console.error(error);
-      }
-    };
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
+  useEffect(() => {
     fetchData();
   }, []);
 
@@ -53,9 +75,11 @@ const MyPage = () => {
       <View>
         <TopMenuPage></TopMenuPage>
       </View>
-      <View style={styles.myMoneyCss}>
-
-      </View>
+      {Object.keys(data).length !== 0 &&(
+        <View style={styles.myMoneyCss}>
+          <Text>{data.id}</Text>
+        </View>
+      )}
       <View style={styles.myInterestCss}>
         <Text>본인 관심사</Text>
       </View>
