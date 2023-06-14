@@ -288,29 +288,42 @@ def main_page_init():
     return jsonify(init_data.to_dict()) # 직렬 화 후 main_page로 데이터 전달
 
 #구매 페이지에 호가를 눌렀을때 호가 정보를 받아오는 요청
-@app.route('/api/hoga', methods=['POST'])
+@app.route('/api/hoga', methods=['GET'])
 def get_hoga_data():
-    url = "ws://ops.koreainvestment.com:31000/tryitout/H0STASP0"
-    header={"content-type": "application/json"}
-    body = {"grant_type": "client_credentials",
-            "appkey": key,
-            "secretkey": secret}
+    # url = "ws://ops.koreainvestment.com:31000/tryitout/H0STASP0"
+    # header={"content-type": "application/json"}
+    # body = {"grant_type": "client_credentials",
+    #         "appkey": key,
+    #         "secretkey": secret}
 
-    response = requests.POST(url,header=header, data=json.dumps(body))
+    # response = requests.POST(url,header=header, data=json.dumps(body))
+    # if response.status_code == 200 :
+    #     hoga_data = response.json()
+    #     print(hoga_data)
+    # else :
+    #     print("호가정보요청실패")
+    # return jsonify(hoga_data)
+    
+    # result = broker.get_hoga('005630')
+    # if result['status'] == 'success':
+    #     hoga_data = result['result']
+    # else:
+    #     print('호가 데이터 조회 실패')
+    # return jsonify()
+    url = "https://openapivts.koreainvestment.com:29443/uapi/domestic-stock/v1/quotations/inquire-asking-price-exp-ccn"
+    headers={
+        "fid_cond_mrkt_div_code": "J",
+        "fid_input_iscd": "000660"
+    }
+
+    response = requests.get(url,headers=headers)
+
     if response.status_code == 200 :
-        hoga_data = response.json()
-        print(hoga_data)
+        hoga_data = response.get_json()
+        print(hoda_data)
     else :
         print("호가정보요청실패")
-    return jsonify(hoga_data)
-    
-    result = broker.get_hoga('005630')
-    if result['status'] == 'success':
-        hoga_data = result['result']
-    else:
-        print('호가 데이터 조회 실패')
     return jsonify()
-
 
 if (__name__) == '__main__':
     app.run(host='0.0.0.0', port=5000)

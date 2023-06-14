@@ -112,9 +112,9 @@ const BuyPage = () => {
       try {
         const response = await fetch('http://10.0.2.2:5000/api/hoga', {
           method: 'GET',
-          // headers: {
-          //   'Content-Type': 'application/json',
-          // },
+          headers: {
+            'Content-Type': 'application/json',
+          },
           // body: JSON.stringify({}), // 플라스크로 데이터를 담아 요청을 보냄
         });
   
