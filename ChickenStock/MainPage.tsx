@@ -138,7 +138,12 @@ function Main_page(): JSX.Element {
       {dataArray.length === 0 ? (
         // 로딩 창 표시
         <View style={styles.loading_window}>
-          <ActivityIndicator size="large" color="blue" />
+          <Image 
+          source={require('./image/logo.png')} 
+          style={styles.LogoImage}
+          />
+          <Text style={styles.loadingText}>Loading...</Text>
+          <ActivityIndicator size="large" color="#E8F6EF" />
         </View>
       ) : (<ScrollView
         contentInsetAdjustmentBehavior="automatic"
@@ -210,14 +215,19 @@ function Main_page(): JSX.Element {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create({ 
   loading_window: {
     width: '100%',
     height: '100%',
     display: 'flex',
-    flexDirection: 'row',
+    flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#1B9C85'
+  },
+  loadingText: {
+    fontSize: 40,
+    fontWeight: '700'
   },
   infiniteScrollArea: {
     paddingHorizontal: 20,
@@ -260,6 +270,10 @@ const styles = StyleSheet.create({
   logo: {
     width: 80,
     height: 80,
+  },
+  LogoImage: {
+    width: 200,
+    height: 200,
   },
   flex_row: {
     display: 'flex',
