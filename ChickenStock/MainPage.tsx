@@ -105,23 +105,28 @@ function Main_page(): JSX.Element {
 
   const navigation = useNavigation<ChoicePageOneNavigationProp>();
 
+  // type AnotherScreenParams = {
+  //   company_name: string;
+  // };
+
   type RootStackParamList = {
     ChoicePageOne: {choice: string};
     ChoicePageTwo: {choice: string};
     ChoicePageThree: {choice: string};
     ChoicePageFour: {choice: string};
     MainPage: undefined;
-    Another: undefined;
+    Another: {company_name: string},
   };
 
   type ChoicePageOneNavigationProp = StackNavigationProp<
     RootStackParamList,
-    'ChoicePageTwo'
+    'Another'
   >;
-  type ChoicePageOneRouteProp = RouteProp<RootStackParamList, 'ChoicePageTwo'>;
+  // type ChoicePageOneRouteProp = RouteProp<RootStackParamList, 'ChoicePageTwo'>;
 
-  const handleLocation = () => {
-    navigation.navigate('Another');
+  // 상세 페이지로 이동 / 누른 회사 이름을 인자로 전달
+  const stockChoice = (company_name: string) => {
+    navigation.navigate('Another', {company_name});
   };
 
   return (
@@ -193,7 +198,7 @@ function Main_page(): JSX.Element {
               const market_cap = company_data['시가총액'];
 
               return (
-                <TouchableHighlight key={index} style={styles.view}>
+                <TouchableHighlight key={index} style={styles.view} onPress={() => {stockChoice(name_data)}}>
                   <View>
                     <Text>{name_data}</Text>
                     <Text>등락 {up_down}</Text>
