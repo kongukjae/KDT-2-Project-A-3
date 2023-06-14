@@ -59,9 +59,6 @@ def register():
 @app.route('/checkId', methods=['POST'])
 def checkId():
     request_data = request.get_json()
-    client = MongoClient(
-        "mongodb+srv://ChickenStock:1234@jiseop.g8czkiu.mongodb.net/")
-    db = client['chicken_stock']
     returnValue = {}
     print('아이디 서버 연결')
     if db.user_info.find_one({'id': request_data["id"]}) == None:
