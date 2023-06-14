@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
   container: {
     marginTop: 30,
     padding: 50,
-    backgroundColor: 'pink',
+    backgroundColor: 'red',
   },
   text: {
     fontSize: 15,

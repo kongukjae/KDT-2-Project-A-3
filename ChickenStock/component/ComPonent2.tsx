@@ -4,7 +4,7 @@ import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import io from 'socket.io-client';
 // 서버에서 받아올 데이터의 타입을 정의
 interface StockData {
-  stck_cntg_hour: string; // 날짜
+  stck_cntg_hour: string; // 시간
   stck_bsop_date: string; // 주간,월간 날짜
   stck_clpr: number; //주간,월간 종가
   stck_oprc: number; // 시가
@@ -93,12 +93,19 @@ const ComPonent2 = () => {
         setYearData(modifiedData.reverse());
       });
   }, []);
-  const renderChart = (data: StockData[], title: string) => {
-    const isMonthData = data[0]?.stck_bsop_date != null;
 
+  const renderChart = (data: StockData[], title: string) => {
+    const isDailyData = data.some(item =>
+      item.hasOwnProperty('stck_cntg_hour'),
+    );
+    console.log(data);
+    console.log('여기는 데이트가 무엇일까');
+
+    // 배열을 순회, true 이면 hour(일간)를 dateStr에 할당
+    // 그렇지 않다면, bsop_date를 할당
     const xData = data.map(item => {
-      const dateStr = isMonthData ? item.stck_bsop_date : item.stck_cntg_hour;
-      // Convert the date string to a number (milliseconds since 1970)
+      const dateStr = isDailyData ? item.stck_cntg_hour : item.stck_bsop_date;
+
       const date = new Date(dateStr).getTime();
       return date;
     });
@@ -106,20 +113,20 @@ const ComPonent2 = () => {
     //
     const formatLabel = (value: number, _index: number) => {
       const date = new Date(value);
-      return isMonthData
-        ? date.toLocaleDateString().slice(0, 7)
-        : date.getHours();
+      return isDailyData
+        ? date.getHours()
+        : date.toLocaleDateString().slice(0, 3);
     };
 
     return (
-      <View style={{height: 220, flexDirection: 'row'}}>
+      <View style={{height: 220, flexDirection: 'row', backgroundColor: 'red'}}>
         <Text>{title}</Text>
         <YAxis
           data={data.map(item => item.stck_prpr)}
           contentInset={{top: 10, bottom: 10}}
           svg={{
             fill: 'black',
-            fontSize: 11,
+            fontSize: 10,
           }}
           numberOfTicks={10}
           formatLabel={(value: number) => `${value}원`}
@@ -128,12 +135,12 @@ const ComPonent2 = () => {
           <LineChart
             style={{flex: 1}}
             data={data.map(item => item.stck_prpr)}
-            svg={{stroke: '#1B9C85'}}
+            svg={{stroke: '#1B9C85', strokeWidth: '7px'}}
             contentInset={{top: 10, bottom: 10}}>
             <Grid />
           </LineChart>
           <XAxis
-            style={{marginHorizontal: -10}}
+            style={{marginHorizontal: -350}}
             data={xData}
             formatLabel={formatLabel}
             contentInset={{left: 10, right: 10}}

@@ -129,7 +129,7 @@ def login_Check():
 @socketio.on('get_data')
 def get_data():
 
-    data = broker._fetch_today_1m_ohlcv("001470", to="15:30:30")
+    data = broker._fetch_today_1m_ohlcv("328380", to="15:30:30")
     df = pd.DataFrame(data['output2'])
     df['stck_cntg_hour'] = pd.to_datetime(df['stck_cntg_hour'], format='%H%M%S').dt.strftime('%H:%M:%S')
     df[['stck_prpr', 'stck_oprc', 'stck_hgpr', 'stck_lwpr', 'cntg_vol', 'acml_tr_pbmn']] = df[['stck_prpr', 'stck_oprc', 'stck_hgpr', 'stck_lwpr', 'cntg_vol', 'acml_tr_pbmn']].astype(float)
@@ -154,7 +154,7 @@ def get_Mdata():
 
     return jsonify(chart_data)
 
-# 컴포넌트 2-3 주가데이터(연단위)
+# 컴포넌트 2-3 주가데이터(연단위),
 @app.route('/get_Ydata', methods=['GET'])
 def get_Ydata():
     data = broker.fetch_ohlcv("005930","Y")

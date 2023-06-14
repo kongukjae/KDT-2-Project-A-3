@@ -79,6 +79,7 @@ const styles1 = StyleSheet.create({
   priceContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    backgroundColor: 'pink',
   },
 });
 // 기업이름, 한글명
