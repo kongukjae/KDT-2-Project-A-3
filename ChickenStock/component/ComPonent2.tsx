@@ -13,6 +13,7 @@ interface StockData {
   stck_prpr: number; // 종가
   cntg_vol: number; // 거래량
 }
+
 const ComPonent2 = () => {
   const [data, setData] = useState<StockData[]>([]);
   const [dayData, setDayData] = useState<StockData[]>([]);
@@ -94,32 +95,81 @@ const ComPonent2 = () => {
       });
   }, []);
 
+  const getXData = (item: StockData, isDailyData: boolean): string => {
+    if (isDailyData) {
+      // 일간 데이터일 경우 'HH:MM:SS' 형태의 시간 문자열을 반환
+      return item.stck_cntg_hour;
+    } else {
+      // 월간, 년간 데이터일 경우 'YYYY-MM-DD' 형태의 날짜 문자열을 반환
+      const date = item.stck_bsop_date;
+      return `${date.slice(0, 4)}-${date.slice(4, 6)}-${date.slice(10, 8)}`;
+    }
+  };
+
   const renderChart = (data: StockData[], title: string) => {
+    // 데이터가 없으면 아무것도 그리지 않는다.
+    if (!data || data.length === 0) {
+      return null;
+    }
     const isDailyData = data.some(item =>
       item.hasOwnProperty('stck_cntg_hour'),
     );
+    const xData: string[] = data.map(item => getXData(item, isDailyData));
     console.log(data);
     console.log('여기는 데이트가 무엇일까');
 
+    // 일단 임시방편, 지속적인 0의 출력으로 강제로 나오게 함
+    // const xData = data.map(item => {
+    //   const dateStr = isDailyData ? item.stck_cntg_hour : item.stck_bsop_date;
+    //   const date = new Date(`2023-06-14T${dateStr}Z`).getTime();
+    //   console.log(dateStr); // 원시적인 방법으로 dateStr 값을 출력
+
+    //   return {
+    //     dateStr, // dateStr 값을 직접 반환
+    //     date,
+    //   };
+    // });
+
+    // console.log(xData);
+
     // 배열을 순회, true 이면 hour(일간)를 dateStr에 할당
     // 그렇지 않다면, bsop_date를 할당
-    const xData = data.map(item => {
-      const dateStr = isDailyData ? item.stck_cntg_hour : item.stck_bsop_date;
+    // const xData = data.map(item => {
+    //   console.log(item.stck_cntg_hour);
+    //   console.log(item.stck_bsop_date);
+    //   console.log(item);
+    //   const dateStr = isDailyData
+    //     ? `2023-06-14T${item.stck_cntg_hour}Z`
+    //     : `${item.stck_bsop_date.slice(0, 4)}-${item.stck_bsop_date.slice(
+    //         4,
+    //         6,
+    //       )}-${item.stck_bsop_date.slice(6, 8)}T00:00:00Z`;
+    //   const date = new Date(`2023-06-14T${dateStr}Z`).getTime();
+    //   console.log(dateStr);
+    //   console.log(date);
+    //   console.log(new Date(date).toUTCString());
+    //   console.log(new Date(date).toString());
+    //   console.log('여기는무엇인가');
 
-      const date = new Date(dateStr).getTime();
-      return date;
-    });
+    //   return date;
+    // });
+    // console.log(xData);
 
-    //
-    const formatLabel = (value: number, _index: number) => {
-      const date = new Date(value);
-      return isDailyData
-        ? date.getHours()
-        : date.toLocaleDateString().slice(0, 3);
-    };
+    // X축 라벨을 포맷하는 함수, 주어진 타임스탬프의 값을 받아서 문자열로 반환, 대상은 isDailyData
+    // const formatLabel = (value: number, _index: number) => {
+    //   const date = new Date(value);
+    //   const formattedLabel = isDailyData
+    //     ? `${date.getUTCHours()}:${date.getUTCMinutes()}:${date.getUTCSeconds()}` // UTC 기준으로 시간 가져오기
+    //     : `${date.getUTCFullYear()}-${
+    //         date.getUTCMonth() + 1
+    //       }-${date.getUTCDate()}`; // 날짜 가져오기 (YYYY-MM-DD 형식)
+    //   console.log(formattedLabel); // 로그 출력
+    //   return formattedLabel;
+    // };
 
     return (
-      <View style={{height: 220, flexDirection: 'row', backgroundColor: 'red'}}>
+      <View
+        style={{height: 220, flexDirection: 'row', backgroundColor: 'gray'}}>
         <Text>{title}</Text>
         <YAxis
           data={data.map(item => item.stck_prpr)}
@@ -142,7 +192,7 @@ const ComPonent2 = () => {
           <XAxis
             style={{marginHorizontal: -350}}
             data={xData}
-            formatLabel={formatLabel}
+            // formatLabel={formatLabel}
             contentInset={{left: 10, right: 10}}
             svg={{fontSize: 10, fill: 'black'}}
           />

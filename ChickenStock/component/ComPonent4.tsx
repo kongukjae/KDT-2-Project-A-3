@@ -19,16 +19,17 @@ type AnotherPageNavigationProp = StackNavigationProp<
   'BuyPage',
   'SellPage'
 >;
-
+//  수정필요
 // AnotherPage에서 전달 받는 데이터의 속성 지정
-type Component4Props = {
-  company_name: string;
-};
+// type Component4Props = {
+//   company_name: string;
+// };
 
 // Component4에게 Component4Props라는 속성을 주고 변수를 전달받아 사용함
-const Component4: React.FC<Component4Props> = ({ company_name }) => {
-  console.log('컴포넌트4')
-  console.log(company_name)
+// const Component4: React.FC<Component4Props> = ({ company_name }) => {
+const Component4 = () => {
+  console.log('컴포넌트4');
+  // console.log(company_name)
   const navigation = useNavigation<AnotherPageNavigationProp>();
 
   const handleLocationMain = () => {
