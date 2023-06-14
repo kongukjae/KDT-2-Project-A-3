@@ -11,6 +11,7 @@ export default function SignUpPage() {
   const [name, setName] = useState('');
   const [bank, setBank] = useState('');
   const [number, setNumber] = useState('');
+  const [count, setCount] = useState(0);
 
   const data = {
     id,
@@ -39,7 +40,7 @@ export default function SignUpPage() {
     'ChoicePageTwo'
   >;
   type ChoicePageOneRouteProp = RouteProp<RootStackParamList, 'ChoicePageTwo'>;
-  let changeState = 0;
+  // let changeState = 0;
   // 중복 확인
   const checkId = () => {
     fetch('http://10.0.2.2:5000/checkId', {
@@ -74,7 +75,8 @@ export default function SignUpPage() {
               '안내', '사용 가능한 ID입니다'
             )
           }
-          changeState++;
+          setCount(count+1);
+          // console.log('중복확인 후' + changeState)
           // Alert.alert('알림', '사용 가능한 ID입니다');
           // 회원가입 데이터 전송
         } else if (responseData.state === 'taken') {
@@ -89,7 +91,6 @@ export default function SignUpPage() {
   // 회원가입 데이터 전송
 
   const sendSignUpData = () => {
-
 
     const validatePassword = () => {
       const passwordRegex =
@@ -119,10 +120,10 @@ export default function SignUpPage() {
       Alert.alert('경고', '계좌번호는 숫자 10자리로 입력해주세요');
       return;
     }
-    console.log('전송 전 '+changeState)
+    // console.log('전송 전 '+changeState)
 
-    if ((changeState % 2) === 1) {
-      console.log(changeState)
+    if ((count % 2) === 1) {
+      // console.log(changeState)
       fetch('http://10.0.2.2:5000/signup', {
         method: 'POST',
         headers: {
@@ -135,7 +136,7 @@ export default function SignUpPage() {
             console.log('회원가입 데이터 전송 성공');
             console.log(JSON.stringify(data));
             navigation.navigate('ChoicePageOne'); // ChoicePageOne으로 이동
-            changeState = 0;
+            setCount(0);
           } else {
             console.error('회원가입 데이터 전송 실패');
           }
@@ -143,7 +144,7 @@ export default function SignUpPage() {
         .catch(error => {
           console.error('데이터 전송 실패', error);
         });
-    }else if ((changeState % 2) === 0){
+    }else if ((count % 2) === 0){
       Alert.alert(
         '경고',
         '아아디 중복 확인 해주세요',
