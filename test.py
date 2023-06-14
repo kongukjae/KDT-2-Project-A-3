@@ -110,8 +110,8 @@ def stockhoka_domestic(data):
 
 async def connect():
 
-    g_appkey = "앱키를 입력하세요"
-    g_appsceret = 
+    g_appkey = key
+    g_appsceret = secret
     g_approval_key = get_approval(g_appkey, g_appsceret)
     print("approval_key [%s]" % (g_approval_key))
 
@@ -248,47 +248,47 @@ async def connect():
                 #         stocksigningnotice_overseafut(recvstr[3], aes_key, aes_iv)
                 #         time.sleep(0.2)
 
-                # else:
+                else:
 
-                #     jsonObject = json.loads(data)
-                #     trid = jsonObject["header"]["tr_id"]
+                    jsonObject = json.loads(data)
+                    trid = jsonObject["header"]["tr_id"]
 
-                #     if trid != "PINGPONG":
-                #         rt_cd = jsonObject["body"]["rt_cd"]
+                    if trid != "PINGPONG":
+                        rt_cd = jsonObject["body"]["rt_cd"]
 
-                #         if rt_cd == '1':  # 에러일 경우 처리
+                        if rt_cd == '1':  # 에러일 경우 처리
 
-                #             if jsonObject["body"]["msg1"] != 'ALREADY IN SUBSCRIBE':
-                #                 print("### ERROR RETURN CODE [ %s ][ %s ] MSG [ %s ]" % (jsonObject["header"]["tr_key"], rt_cd, jsonObject["body"]["msg1"]))
-                #             break
+                            if jsonObject["body"]["msg1"] != 'ALREADY IN SUBSCRIBE':
+                                print("### ERROR RETURN CODE [ %s ][ %s ] MSG [ %s ]" % (jsonObject["header"]["tr_key"], rt_cd, jsonObject["body"]["msg1"]))
+                            break
 
-                #         elif rt_cd == '0':  # 정상일 경우 처리
-                #             print("### RETURN CODE [ %s ][ %s ] MSG [ %s ]" % (jsonObject["header"]["tr_key"], rt_cd, jsonObject["body"]["msg1"]))
+                        elif rt_cd == '0':  # 정상일 경우 처리
+                            print("### RETURN CODE [ %s ][ %s ] MSG [ %s ]" % (jsonObject["header"]["tr_key"], rt_cd, jsonObject["body"]["msg1"]))
 
-                #             # 체결통보 처리를 위한 AES256 KEY, IV 처리 단계
-                #             if trid == "H0STCNI0" or trid == "H0STCNI9": # 국내주식
-                #                 aes_key = jsonObject["body"]["output"]["key"]
-                #                 aes_iv = jsonObject["body"]["output"]["iv"]
-                #                 print("### TRID [%s] KEY[%s] IV[%s]" % (trid, aes_key, aes_iv))
+                            # 체결통보 처리를 위한 AES256 KEY, IV 처리 단계
+                            if trid == "H0STCNI0" or trid == "H0STCNI9": # 국내주식
+                                aes_key = jsonObject["body"]["output"]["key"]
+                                aes_iv = jsonObject["body"]["output"]["iv"]
+                                print("### TRID [%s] KEY[%s] IV[%s]" % (trid, aes_key, aes_iv))
 
-                #             elif trid == "H0GSCNI0": # 해외주식
-                #                 aes_key = jsonObject["body"]["output"]["key"]
-                #                 aes_iv = jsonObject["body"]["output"]["iv"]
-                #                 print("### TRID [%s] KEY[%s] IV[%s]" % (trid, aes_key, aes_iv))
+                            elif trid == "H0GSCNI0": # 해외주식
+                                aes_key = jsonObject["body"]["output"]["key"]
+                                aes_iv = jsonObject["body"]["output"]["iv"]
+                                print("### TRID [%s] KEY[%s] IV[%s]" % (trid, aes_key, aes_iv))
 
-                #             elif trid == "H0IFCNI0": # 국내선물옵션
-                #                 aes_key = jsonObject["body"]["output"]["key"]
-                #                 aes_iv = jsonObject["body"]["output"]["iv"]
-                #                 print("### TRID [%s] KEY[%s] IV[%s]" % (trid, aes_key, aes_iv))
+                            elif trid == "H0IFCNI0": # 국내선물옵션
+                                aes_key = jsonObject["body"]["output"]["key"]
+                                aes_iv = jsonObject["body"]["output"]["iv"]
+                                print("### TRID [%s] KEY[%s] IV[%s]" % (trid, aes_key, aes_iv))
 
-                #             elif trid == "HDFFF2C0": # 해외선물옵션
-                #                 aes_key = jsonObject["body"]["output"]["key"]
-                #                 aes_iv = jsonObject["body"]["output"]["iv"]
-                #                 print("### TRID [%s] KEY[%s] IV[%s]" % (trid, aes_key, aes_iv))  
+                            elif trid == "HDFFF2C0": # 해외선물옵션
+                                aes_key = jsonObject["body"]["output"]["key"]
+                                aes_iv = jsonObject["body"]["output"]["iv"]
+                                print("### TRID [%s] KEY[%s] IV[%s]" % (trid, aes_key, aes_iv))  
 
-                #     elif trid == "PINGPONG":
-                #         print("### RECV [PINGPONG] [%s]" % (data))
-                #         print("### SEND [PINGPONG] [%s]" % (data))
+                    elif trid == "PINGPONG":
+                        print("### RECV [PINGPONG] [%s]" % (data))
+                        print("### SEND [PINGPONG] [%s]" % (data))
 
             except websockets.ConnectionClosed:
                 continue
