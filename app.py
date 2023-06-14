@@ -32,6 +32,13 @@ db = client['chicken_stock']
 # mojito1 = mojito()
 # Flask-SocketIO  인스턴스 생성
 socketio = SocketIO(app, cors_allowed_origins="*")
+@app.route('/account', methods=['GET'])
+def account():
+    result = db.user_info.find_one({'account':5000000})
+    # ObjectId를 문자열로 변환
+    result['_id'] = str(result['_id'])
+    print(result)
+    return jsonify(result)
 
 @app.route('/api/data', methods=['GET'])
 @app.route('/signup', methods=['POST'])
@@ -50,9 +57,6 @@ def register():
 @app.route('/checkId', methods=['POST'])
 def checkId():
     request_data = request.get_json()
-    client = MongoClient(
-        "mongodb+srv://ChickenStock:1234@jiseop.g8czkiu.mongodb.net/")
-    db = client['chicken_stock']
     returnValue = {}
     print('아이디 서버 연결')
     if db.user_info.find_one({'id': request_data["id"]}) == None:
@@ -230,11 +234,13 @@ class news:
             
 @app.route('/news', methods=['GET'])
 def get_news_data():
+    # 로그인할 때 저장한 아이디를 세션으로 사용
     user_id = session.get('user_id')
+    # 연결된 db에서 id가 로그인 한 id와 같은 데이터를 db에서 찾음
     find_id = db.user_info.find_one({"id": user_id})
-    
+    # 찾은 데이터 중에서 choiceTwo(관심종목)을 가져옴
     stocks_name = find_id['choiceTwo'];
-    
+    # url의 파라미터로 관심종목을 받음
     url = f'https://search.naver.com/search.naver?where=news&sm=tab_opt&query={stocks_name}&nso_open=1'
     response = requests.get(url)
     html = response.text

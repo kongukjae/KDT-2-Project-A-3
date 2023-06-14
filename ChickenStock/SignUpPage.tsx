@@ -11,6 +11,7 @@ export default function SignUpPage() {
   const [name, setName] = useState('');
   const [bank, setBank] = useState('');
   const [number, setNumber] = useState('');
+  const [count, setCount] = useState(0);
 
   const data = {
     id,
@@ -18,15 +19,16 @@ export default function SignUpPage() {
     name,
     bank,
     number,
+    account : 5000000
   };
 
   const navigation = useNavigation<ChoicePageOneNavigationProp>();
 
   type RootStackParamList = {
     ChoicePageOne: undefined;
-    ChoicePageTwo: {choice: string};
-    ChoicePageThree: {choice: string};
-    ChoicePageFour: {choice: string};
+    ChoicePageTwo: { choice: string };
+    ChoicePageThree: { choice: string };
+    ChoicePageFour: { choice: string };
     MainPage: undefined;
     Another: undefined;
     SignUpPage: undefined;
@@ -38,15 +40,15 @@ export default function SignUpPage() {
     'ChoicePageTwo'
   >;
   type ChoicePageOneRouteProp = RouteProp<RootStackParamList, 'ChoicePageTwo'>;
-  let changeState = 0;
+  // let changeState = 0;
   // 중복 확인
   const checkId = () => {
-    fetch('http://192.168.100.140:5000/checkId', {
+    fetch('http://10.0.2.2:5000/checkId', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({id: data.id}),
+      body: JSON.stringify({ id: data.id }),
     })
       .then(response => {
         if (response.ok) {
@@ -58,8 +60,24 @@ export default function SignUpPage() {
       .then(responseData => {
         if (responseData.state === 'available') {
           console.log('아이디 사용 가능');
-          changeState++;
-          Alert.alert('알림', '사용 가능한 ID입니다');
+          const validateId = () => {
+            const idRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9]+$/;
+            return id.length >= 4 && idRegex.test(id);
+          };
+          if (!validateId()) {
+            Alert.alert(
+              '경고',
+              '아이디는 4자리 이상, 영문, 숫자를 포함하여 입력해주세요.',
+            );
+            // return;
+          } else {
+            Alert.alert(
+              '안내', '사용 가능한 ID입니다'
+            )
+          }
+          setCount(count+1);
+          // console.log('중복확인 후' + changeState)
+          // Alert.alert('알림', '사용 가능한 ID입니다');
           // 회원가입 데이터 전송
         } else if (responseData.state === 'taken') {
           console.log('아이디 이미 사용 중');
@@ -70,14 +88,9 @@ export default function SignUpPage() {
         console.error('중복확인 실패', error);
       });
   };
-
   // 회원가입 데이터 전송
 
   const sendSignUpData = () => {
-    const validateId = () => {
-      const idRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9]+$/;
-      return id.length >= 4 && idRegex.test(id);
-    };
 
     const validatePassword = () => {
       const passwordRegex =
@@ -95,14 +108,6 @@ export default function SignUpPage() {
       return;
     }
 
-    if (!validateId()) {
-      Alert.alert(
-        '경고',
-        '아이디는 4자리 이상, 영문, 숫자를 포함하여 입력해주세요.',
-      );
-      return;
-    }
-
     if (!validatePassword()) {
       Alert.alert(
         '경고',
@@ -115,8 +120,11 @@ export default function SignUpPage() {
       Alert.alert('경고', '계좌번호는 숫자 10자리로 입력해주세요');
       return;
     }
-    if (changeState % 2 === 1) {
-      fetch('http://192.168.100.140:5000/signup', {
+    // console.log('전송 전 '+changeState)
+
+    if ((count % 2) === 1) {
+      // console.log(changeState)
+      fetch('http://10.0.2.2:5000/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -128,6 +136,7 @@ export default function SignUpPage() {
             console.log('회원가입 데이터 전송 성공');
             console.log(JSON.stringify(data));
             navigation.navigate('ChoicePageOne'); // ChoicePageOne으로 이동
+            setCount(0);
           } else {
             console.error('회원가입 데이터 전송 실패');
           }
@@ -135,9 +144,12 @@ export default function SignUpPage() {
         .catch(error => {
           console.error('데이터 전송 실패', error);
         });
-    } else {
-      Alert.alert('경고', '아이디 중복확인 해주세요');
-    }
+    }else if ((count % 2) === 0){
+      Alert.alert(
+        '경고',
+        '아아디 중복 확인 해주세요',
+      );
+    } 
   };
   return (
     <View style={styles.container}>

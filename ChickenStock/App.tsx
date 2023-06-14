@@ -32,7 +32,7 @@ type RootStackParamList = {
   ChoicePageThree: undefined;
   ChoicePageFour: undefined;
   MainPage: undefined;
-  Another: undefined;
+  Another: {company_name: string};
   SignUpPage: undefined;
   LoginPage: undefined;
   BuyPage: undefined;
@@ -47,7 +47,7 @@ const App: React.FC = () => {
   return (
     <AuthProvider>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="BuyPage">
+        <Stack.Navigator initialRouteName="SignUpPage">
           <Stack.Screen
             name="ChoicePageOne"
             component={ChoicePageOne}
