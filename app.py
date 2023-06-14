@@ -34,6 +34,13 @@ db = client['chicken_stock']
 
 # Flask-SocketIO  인스턴스 생성
 socketio = SocketIO(app, cors_allowed_origins="*")
+@app.route('/account', methods=['GET'])
+def account():
+    result = db.user_info.find_one({'account':5000000})
+    # ObjectId를 문자열로 변환
+    result['_id'] = str(result['_id'])
+    print(result)
+    return jsonify(result)
 
 @app.route('/api/data', methods=['GET'])
 @app.route('/signup', methods=['POST'])
