@@ -1,33 +1,4 @@
 
-
-// import React, { useState } from 'react';
-// import { Button, Modal, Text, View } from 'react-native';
-
-// const ModalPopup = () => {
-//   const [modalVisible, setModalVisible] = useState(false);
-
-//   const openModal = () => {
-//     setModalVisible(true);
-//   };
-
-//   const closeModal = () => {
-//     setModalVisible(false);
-//   };
-
-//   return (
-//     <View>
-//       <Button title="Open Modal" onPress={openModal} />
-//       <Modal visible={modalVisible} animationType="slide">
-//         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-//           <Text>Hello, Modal!</Text>
-//           <Button title="Close" onPress={closeModal} />
-//         </View>
-//       </Modal>
-//     </View>
-//   );
-// };
-
-// export default ModalPopup;
 import React, { useState } from 'react';
 import { Button, Modal, StyleSheet, Text, TouchableOpacity, View, ModalProps } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
@@ -35,12 +6,12 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import { ScreenStackHeaderBackButtonImage } from 'react-native-screens';
 
 
-interface ModalPopupProps extends ModalProps{
+interface HogaModalProps extends ModalProps{
   onClose: () => void;
 }
 
 
-const ModalPopup:React.FC<ModalPopupProps> = ({visible, onClose}) => {
+const HogaModal:React.FC<HogaModalProps> = ({visible, onClose}) => {
   
   return (
       <Modal visible={visible} transparent={true}>
@@ -266,5 +237,5 @@ const styles = StyleSheet.create({
 
 });
 
-export default ModalPopup;
+export default HogaModal;
 
