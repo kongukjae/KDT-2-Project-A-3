@@ -7,6 +7,7 @@ import {
   Image,
   Text,
   Alert,
+  TouchableOpacity,
 } from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -19,18 +20,27 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     paddingHorizontal: 16, //수평 비율 조절 하는 거 인듯?
-    backgroundColor: '#FFE194',
+    backgroundColor: '#1B9C85',
+  },
+  logoTextContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 100
+  },
+  logoText: {
+    color: '#FFE194',
+    fontSize: 50,
+    fontFamily: 'BagelFatOne-Regular'
   },
   input: {
     height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 16,
+    borderColor: '#E8F6EF',
+    borderRadius: 10,
+    marginBottom: 10,
     paddingHorizontal: 8,
-    backgroundColor: 'white',
+    backgroundColor: '#FFE194',
   },
   LogoTag: {
-    flex: 0.5,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -41,6 +51,25 @@ const styles = StyleSheet.create({
   signUp: {
     alignItems: 'flex-end',
     marginTop: 10,
+  },
+  signupText: {
+    fontSize: 15,
+    color: '#E8F6EF',
+    fontWeight: '500'
+  },
+  btnBox: {
+    backgroundColor: '#E8F6EF',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 10,
+    width: '100%',
+    height: 80,
+  },
+  btnText: {
+    height: '60%',
+    color: '#1B9C85',
+    fontSize: 30,
+    fontFamily: 'BagelFatOne-Regular'
   },
 });
 
@@ -98,7 +127,10 @@ const LoginPage = () => {
   return (
     <View style={styles.container}>
       <View style={styles.LogoTag}>
-        <Image source={require('./image/logo.jpg')} style={styles.LogoImage} />
+        <Image source={require('./image/logo.png')} style={styles.LogoImage} />
+      </View>
+      <View style={styles.logoTextContainer}>
+        <Text style={styles.logoText}>Chicken Stock</Text>
       </View>
       <TextInput
         style={styles.input}
@@ -113,9 +145,11 @@ const LoginPage = () => {
         onChangeText={setPassword}
         secureTextEntry // 패스워드타입
         />
-      <Button onPress={postData}title="Login" />
+      <TouchableOpacity style={styles.btnBox} onPress={postData}>
+        <Text style={styles.btnText}>Login</Text>
+      </TouchableOpacity>
       <View style={styles.signUp} >
-      <Text onPress={() => {
+      <Text style={styles.signupText} onPress={() => {
         navigation.navigate('SignUpPage')
         }}>Sign up</Text>
       </View>

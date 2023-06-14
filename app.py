@@ -1,13 +1,23 @@
 import re
 import mojito
 import json
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request,session
 from pymongo import MongoClient
 # from pykrx import stock
 import pandas as pd
 from bs4 import BeautifulSoup
 import requests
+import pprint
+from flask_socketio import SocketIO, emit
+
+# 개인 제작 모듈
 import callApiData.Mainpage_stock_data
+import callDBData.category_name_changer
+
+# Flask 애플리케이션을 생성하는 부분
+app = Flask(__name__)
+# 시크릿 키는 보안을 강화하기 위해 사용되는 값으로, 애플리케이션에서 사용되는 다양한 보안 기능에 필요
+app.secret_key = "nb1+d(7+2y1q0m*kig4+zxld$v00^7dr=nxqcjn5(fp@ul)yc@"
 
 f = open("./secret.key")
 lines = f.readlines()
@@ -22,8 +32,8 @@ client = MongoClient(
     'mongodb+srv://ChickenStock:1234@jiseop.g8czkiu.mongodb.net/')
 db = client['chicken_stock']
 
-app = Flask(__name__)
-
+# Flask-SocketIO  인스턴스 생성
+socketio = SocketIO(app, cors_allowed_origins="*")
 @app.route('/account', methods=['GET'])
 def account():
     result = db.user_info.find_one({'account':5000000})
@@ -111,6 +121,9 @@ def login_Check():
         else:
             returnValue['state'] = True
             returnValue['message'] = "정상"
+            print("정상")
+            print(request_data['id'])
+            session['user_id'] = request_data['id']
             return jsonify(returnValue)
     else:
         returnValue['state'] = False
@@ -119,16 +132,17 @@ def login_Check():
 
 
 # 컴포넌트 2-1 실시간 주가 차트 데이터(일단위)
-@app.route('/get_data', methods=['GET'])
+# @app.route('/get_data', methods=['GET'])
+@socketio.on('get_data')
 def get_data():
 
-    data = broker._fetch_today_1m_ohlcv("005930", to="15:30:30")
+    data = broker._fetch_today_1m_ohlcv("001470", to="15:30:30")
     df = pd.DataFrame(data['output2'])
     df['stck_cntg_hour'] = pd.to_datetime(df['stck_cntg_hour'], format='%H%M%S').dt.strftime('%H:%M:%S')
     df[['stck_prpr', 'stck_oprc', 'stck_hgpr', 'stck_lwpr', 'cntg_vol', 'acml_tr_pbmn']] = df[['stck_prpr', 'stck_oprc', 'stck_hgpr', 'stck_lwpr', 'cntg_vol', 'acml_tr_pbmn']].astype(float)
-
-    return df.to_json(orient='records')
-
+     
+    emit('data_response', df.to_dict(orient='records'))
+    print(df.to_dict)
 
 # 컴포넌트 2-2 주가데이터(한달단위)
 @app.route('/get_Mdata', methods=['GET'])
@@ -152,7 +166,7 @@ def get_Mdata():
 def get_Ydata():
     data = broker.fetch_ohlcv("005930","Y")
     df = pd.DataFrame(data['output2'])
-     # 필요한 컬럼을 숫자로 변환
+    # 필요한 컬럼을 숫자로 변환
     df[['stck_clpr', 'stck_hgpr', 'stck_lwpr', 'stck_oprc', 'acml_vol', 'acml_tr_pbmn']] = df[['stck_clpr', 'stck_hgpr', 'stck_lwpr', 'stck_oprc', 'acml_vol', 'acml_tr_pbmn']].astype(float)
     
     # 날짜 컬럼 형식 변경
@@ -162,9 +176,9 @@ def get_Ydata():
     chart_data = df[['stck_bsop_date', 'stck_oprc', 'stck_hgpr', 'stck_lwpr', 'stck_clpr', 'acml_vol']].to_dict(orient='records')
 
     return jsonify(chart_data)
-# # 컴포넌트 1-3
 
 
+# 컴포넌트 1-1 기업 이름, 코드
 @app.route('/companydetail', methods=['GET'])
 def get_company_data():
 
@@ -175,7 +189,7 @@ def get_company_data():
 
     return jsonify(company_info)
 
-
+# 컴포넌트3 기업 상세 정보
 @app.route('/companyupdown', methods=['GET'])
 def get_company_updown():
 
@@ -193,18 +207,28 @@ def get_company_updown():
 
     return jsonify(company_infof)
 
-
+# 컴포넌트 1-2 기업 등락률, 가격
 # 실시간 주식 등락률,현재가격 API에서 제공되는 것을 가져다 씀
-@app.route('/changerate', methods=['GET'])
+@socketio.on('request_company_rate')
 def get_company_rate():
-    data=broker._fetch_today_1m_ohlcv("005930",to="15:30:30")
+    data = broker._fetch_today_1m_ohlcv("005930",to="15:30:30")
 
     output1 = data["output1"]
     output2 = data["output2"]
 
     combined_output = {"prdy_ctrt": output1["prdy_ctrt"], "stck_prpr": output2[0]["stck_prpr"]}
+    
+    emit('changerate', combined_output)
+# @app.route('/changerate', methods=['GET'])
+# def get_company_rate():
+#     data=broker._fetch_today_1m_ohlcv("005930",to="15:30:30")
 
-    return jsonify(combined_output)
+#     output1 = data["output1"]
+#     output2 = data["output2"]
+
+#     combined_output = {"prdy_ctrt": output1["prdy_ctrt"], "stck_prpr": output2[0]["stck_prpr"]}
+
+#     return jsonify(combined_output)
 
 #! 크롤링할 웹 페이지 URL
 class news:
@@ -215,7 +239,12 @@ class news:
             
 @app.route('/news', methods=['GET'])
 def get_news_data():
-    url = 'https://search.naver.com/search.naver?where=news&sm=tab_opt&query=전기전자&nso_open=1'
+    user_id = session.get('user_id')
+    find_id = db.user_info.find_one({"id": user_id})
+    
+    stocks_name = find_id['choiceTwo'];
+    
+    url = f'https://search.naver.com/search.naver?where=news&sm=tab_opt&query={stocks_name}&nso_open=1'
     response = requests.get(url)
     html = response.text
 
@@ -255,9 +284,18 @@ def get_news_data():
 @app.route('/api/main_page', methods=['POST'])
 def main_page_init():
     request_data = request.get_json() #user_id를 받아와서 id를 통해 DB 데이터에 접근 할 예정
-    reqData = 'elec_company_list' # DB에서 접속한 user의 관심 종목 값을 받아옴 / 현재는 임시로 전기.전자 입력
-    init_data = callApiData.Mainpage_stock_data.Mainpage_stock_list(reqData) # 전기.전자 종목의 시가총액 순 상위 16개 목록 추출
+    print('받아온 데이터')
+    print(request_data)
+    collection = db['user_info']
+    document = collection.find_one({ "id" : "aaa1234" }, {"choiceTwo" : 1, "_id" : 0})
+    user_category = document['choiceTwo']
+    resData = callDBData.category_name_changer.name_change(user_category)
+    init_data = callApiData.Mainpage_stock_data.Mainpage_stock_list(resData) # 각 종목의 시가총액 순 상위 16개 목록 추출
+    print('데이터 전달')
+    print(init_data)
+    print(init_data.to_dict())
     return jsonify(init_data.to_dict()) # 직렬 화 후 main_page로 데이터 전달
+
 
 if (__name__) == '__main__':
     app.run(host='0.0.0.0', port=5000)
