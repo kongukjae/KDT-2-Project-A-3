@@ -103,7 +103,11 @@ function Main_page(): JSX.Element {
   console.log('컨텍스트 테스트')
   console.log(userId)
 
-  const navigation = useNavigation<ChoicePageOneNavigationProp>();
+  const navigation = useNavigation<MainPageNavigationProp>();
+
+  // type AnotherScreenParams = {
+  //   company_name: string;
+  // };
 
   type RootStackParamList = {
     ChoicePageOne: {choice: string};
@@ -111,17 +115,18 @@ function Main_page(): JSX.Element {
     ChoicePageThree: {choice: string};
     ChoicePageFour: {choice: string};
     MainPage: undefined;
-    Another: undefined;
+    Another: {company_name: string},
   };
 
-  type ChoicePageOneNavigationProp = StackNavigationProp<
+  type MainPageNavigationProp = StackNavigationProp<
     RootStackParamList,
-    'ChoicePageTwo'
+    'Another'
   >;
-  type ChoicePageOneRouteProp = RouteProp<RootStackParamList, 'ChoicePageTwo'>;
+  // type ChoicePageOneRouteProp = RouteProp<RootStackParamList, 'ChoicePageTwo'>;
 
-  const handleLocation = () => {
-    navigation.navigate('Another');
+  // 상세 페이지로 이동 / 누른 회사 이름을 인자로 전달
+  const stockChoice = (company_name: string) => {
+    navigation.navigate('Another', {company_name});
   };
 
   return (
@@ -133,7 +138,12 @@ function Main_page(): JSX.Element {
       {dataArray.length === 0 ? (
         // 로딩 창 표시
         <View style={styles.loading_window}>
-          <ActivityIndicator size="large" color="blue" />
+          <Image 
+          source={require('./image/logo.png')} 
+          style={styles.LogoImage}
+          />
+          <Text style={styles.loadingText}>Loading...</Text>
+          <ActivityIndicator size="large" color="#E8F6EF" />
         </View>
       ) : (<ScrollView
         contentInsetAdjustmentBehavior="automatic"
@@ -188,7 +198,7 @@ function Main_page(): JSX.Element {
               const market_cap = company_data['시가총액'];
 
               return (
-                <TouchableHighlight key={index} style={styles.view}>
+                <TouchableHighlight key={index} style={styles.view} onPress={() => {stockChoice(name_data)}}>
                   <View>
                     <Text>{name_data}</Text>
                     <Text>등락 {up_down}</Text>
@@ -205,14 +215,19 @@ function Main_page(): JSX.Element {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create({ 
   loading_window: {
     width: '100%',
     height: '100%',
     display: 'flex',
-    flexDirection: 'row',
+    flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#1B9C85'
+  },
+  loadingText: {
+    fontSize: 40,
+    fontWeight: '700'
   },
   infiniteScrollArea: {
     paddingHorizontal: 20,
@@ -255,6 +270,10 @@ const styles = StyleSheet.create({
   logo: {
     width: 80,
     height: 80,
+  },
+  LogoImage: {
+    width: 200,
+    height: 200,
   },
   flex_row: {
     display: 'flex',
