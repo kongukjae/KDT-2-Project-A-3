@@ -121,30 +121,7 @@ async def connect():
     # 원하는 호출을 [tr_type, tr_id, tr_key] 순서대로 리스트 만들기
     
     ### 1. 국내주식 호가, 체결가, 체결통보 ###
-    # code_list = [['1','H0STASP0','005930'],['1','H0STCNT0','005930'],['1','H0STCNI0','HTS ID를 입력하세요']]
-    
-    ### 2-1. 해외주식(미국) 호가, 체결가, 체결통보 ###
-    # code_list = [['1','HDFSASP0','DNASAAPL'],['1','HDFSCNT0','DNASAAPL'],['1','H0GSCNI0','HTS ID를 입력하세요']]
-    
-    ### 2-2.해외주식(아시아) 호가, 체결가, 체결통보 ###
-    # code_list = [['1','HDFSASP1','DHKS00003'],['1','HDFSCNT0','DHKS00003'],['1','H0GSCNI0','HTS ID를 입력하세요']]
-    
-    ### 3. 국내선물옵션 호가, 체결가, 체결통보 ###
-    # code_list = [['1','H0IFASP0','101S12'],['1','H0IFCNT0','101S12'], # 선물호가, 체결가
-    #              ['1','H0IOASP0','201S12315'],['1','H0IOCNT0','201S12322'], # 옵션호가, 체결가
-    #              ['1','H0IFCNI0','HTS ID를 입력하세요']] # 선물옵션체결통보
-    
-    ### 4. 해외선물옵션 호가, 체결가, 체결통보 ###
-    # code_list = [['1','HDFFF020','FCAZ22'],['1','HDFFF010','FCAZ22'], # 해외선물 체결가, 호가
-    #              ['1','HDFFF020','OESH23 C3900'],['1','HDFFF010','OESH23 C3900'], # 해외옵션 체결가, 호가
-    #              ['1','HDFFF2C0','HTS ID를 입력하세요']] # 해외선물옵션 체결통보
-    
-    ### 1+2+3+4. 국내주식, 해외주식(미국), 해외주식(아시아), 국내선물옵션, 해외선물옵션 호가, 체결가, 체결통보 ###
-    code_list = [['1','H0STASP0','005930'],['1','H0STCNT0','005930'],['1','H0STCNI0','HTS ID를 입력하세요'],
-                 ['1','HDFSASP0','DNASAAPL'],['1','HDFSCNT0','DNASAAPL'],['1','H0GSCNI0','HTS ID를 입력하세요'],
-                 ['1','HDFSASP1','DHKS00003'],['1','HDFSCNT0','DHKS00003'],['1','H0GSCNI0','HTS ID를 입력하세요'],
-                 ['1','H0IFASP0','101S12'],['1','H0IFCNT0','101S12'],['1','H0IOASP0','201S12315'],['1','H0IOCNT0','201S12322'], ['1','H0IFCNI0','HTS ID를 입력하세요'],
-                 ['1','HDFFF020','FCAZ22'],['1','HDFFF010','FCAZ22'],['1','HDFFF020','OESH23 C3900'],['1','HDFFF010','OESH23 C3900'],['1','HDFFF2C0','HTS ID를 입력하세요']]
+    code_list = [['1','H0STASP0','005930'],['1','H0STASP0','000660']]
     
     senddata_list=[]
     
@@ -165,92 +142,21 @@ async def connect():
 
                 data = await websocket.recv()
                 time.sleep(0.5)
-                # print(f"Recev Command is :{data}")  # 정제되지 않은 Request / Response 출력
-
+                '''print(data) = 0|H0STASP0|001|005930^120755^0^71500^71600^71700^71800^71900^72000^72100^72200^72300^72400^71400^71300^71200^71100^71000^70900^70800^70700^70600^70500^224894^232186^146088^104734^149529^164939^70009^113786^95478^118801^255687^363921^204942^342566^471139^207546^245925^295307^144386^423045^1420444^2954464^0^0^0^0^326405^-72000^5^-100.00^7504606^1^1^0^0^0'''
                 if data[0] == '0':
                     recvstr = data.split('|')  # 수신데이터가 실데이터 이전은 '|'로 나뉘어져있어 split
-                    print(recvstr)
+                    '''print(recvstr)= ['0', 'H0STASP0', '001', '005930^120923^0^71500^71600^71700^71800^71900^72000^72100^72200^72300^72400^71400^71300^71200^71100^71000^70900^70800^70700^70600^70500^316971^141594^146084^103902^149534^165163^69998^113809^95480^118806^225349^364223^205646^342696^471272^207113^245930^295257^144344^423147^1421341^2924977^0^0^0^0^326405^-72000^5^-100.00^7510219^0^0^0^0^0']'''
                     trid0 = recvstr[1]
 
                     if trid0 == "H0STASP0":  # 주식호가tr 일경우의 처리 단계
                         print("#### 주식호가 ####")
                         stockhoka_domestic(recvstr[3])
                         time.sleep(0.2)
+                    else: 
+                        print('호가 데이터가 아닌 다른 데이터 유입')
 # ------
-                #     elif trid0 == "H0STCNT0":  # 주식체결 데이터 처리
-                #         print("#### 주식체결 ####")
-                #         stockspurchase_domestic(data_cnt, recvstr[3])
-                #         time.sleep(0.2)
-
-                #     elif trid0 == "HDFSASP0":  # 해외주식호가tr 일경우의 처리 단계
-                #         print("#### 해외(미국)주식호가 ####")
-                #         stockhoka_overseas(recvstr[3])
-                #         time.sleep(0.2)
-
-                #     elif trid0 == "HDFSASP1":  # 해외주식호가tr 일경우의 처리 단계
-                #         print("#### 해외(아시아)주식호가 ####")
-                #         stockhoka_overseas(recvstr[3])
-                #         time.sleep(0.2)
-
-                #     elif trid0 == "HDFSCNT0":  # 해외주식체결 데이터 처리
-                #         print("#### 해외주식체결 ####")
-                #         stockspurchase_overseas(data_cnt, recvstr[3])
-                #         time.sleep(0.2)
-
-                #     elif trid0 == "H0IFASP0":  # 지수선물호가 tr 일경우의 처리 단계
-                #         print("#### 지수선물호가 ####")
-                #         stockhoka_futs(recvstr[3])
-                #         time.sleep(0.2)
-
-                #     elif trid0 == "H0IFCNT0":  # 지수선물체결 데이터 처리
-                #         print("#### 지수선물체결 ####")
-                #         stockspurchase_futs(data_cnt, recvstr[3])
-                #         time.sleep(0.2)
-
-                #     elif trid0 == "H0IOASP0":  # 지수옵션호가 tr 일경우의 처리 단계
-                #         print("#### 지수옵션호가 ####")
-                #         stockhoka_optn(recvstr[3])
-                #         time.sleep(0.2)
-
-                #     elif trid0 == "H0IOCNT0":  # 지수옵션체결 데이터 처리
-                #         print("#### 지수옵션체결 ####")
-                #         stockspurchase_optn(data_cnt, recvstr[3])
-                #         time.sleep(0.2)
-
-                #     elif trid0 == "HDFFF010":  # 해외선물옵션호가 tr 일경우의 처리 단계
-                #         print("#### 해외선물옵션호가 ####")
-                #         stockhoka_overseafut(recvstr[3])
-                #         time.sleep(0.2)
-
-                #     elif trid0 == "HDFFF020":  # 해외선물옵션체결 데이터 처리
-                #         print("#### 해외선물옵션체결 ####")
-                #         data_cnt = int(recvstr[2])  # 체결데이터 개수
-                #         stockspurchase_overseafut(data_cnt, recvstr[3])
-                #         time.sleep(0.2)
-
-                # elif data[0] == '1':
-
-                #     recvstr = data.split('|')  # 수신데이터가 실데이터 이전은 '|'로 나뉘어져있어 split
-                #     trid0 = recvstr[1]
-
-                #     if trid0 == "H0STCNI0" or trid0 == "H0STCNI9":  # 주실체결 통보 처리
-                #         stocksigningnotice_domestic(recvstr[3], aes_key, aes_iv)
-                #         time.sleep(0.2)
-
-                #     elif trid0 == "H0GSCNI0":  # 해외주실체결 통보 처리
-                #         stocksigningnotice_overseas(recvstr[3], aes_key, aes_iv)
-                #         time.sleep(0.2)
-
-                #     elif trid0 == "H0IFCNI0":  # 지수선물옵션체결 통보 처리
-                #         stocksigningnotice_futsoptn(recvstr[3], aes_key, aes_iv)
-                #         time.sleep(0.2)
-
-                #     elif trid0 == "HDFFF2C0":  # 해외선물옵션체결 통보 처리
-                #         stocksigningnotice_overseafut(recvstr[3], aes_key, aes_iv)
-                #         time.sleep(0.2)
-
+                #    
                 else:
-
                     jsonObject = json.loads(data)
                     trid = jsonObject["header"]["tr_id"]
 
@@ -272,20 +178,6 @@ async def connect():
                                 aes_iv = jsonObject["body"]["output"]["iv"]
                                 print("### TRID [%s] KEY[%s] IV[%s]" % (trid, aes_key, aes_iv))
 
-                            elif trid == "H0GSCNI0": # 해외주식
-                                aes_key = jsonObject["body"]["output"]["key"]
-                                aes_iv = jsonObject["body"]["output"]["iv"]
-                                print("### TRID [%s] KEY[%s] IV[%s]" % (trid, aes_key, aes_iv))
-
-                            elif trid == "H0IFCNI0": # 국내선물옵션
-                                aes_key = jsonObject["body"]["output"]["key"]
-                                aes_iv = jsonObject["body"]["output"]["iv"]
-                                print("### TRID [%s] KEY[%s] IV[%s]" % (trid, aes_key, aes_iv))
-
-                            elif trid == "HDFFF2C0": # 해외선물옵션
-                                aes_key = jsonObject["body"]["output"]["key"]
-                                aes_iv = jsonObject["body"]["output"]["iv"]
-                                print("### TRID [%s] KEY[%s] IV[%s]" % (trid, aes_key, aes_iv))  
 
                     elif trid == "PINGPONG":
                         print("### RECV [PINGPONG] [%s]" % (data))
