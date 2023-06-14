@@ -28,10 +28,11 @@ const ComPonent2 = () => {
   console.log('여기는 년');
   console.log(yearData);
   console.log('여기는 년');
-  // 소켓 인스턴스 생성, 일종의 공용방
-  const socket = io('http://10.0.2.2:5001');
 
   useEffect(() => {
+    // 소켓 인스턴스 생성, 일종의 공용방
+    const socket = io('http://10.0.2.2:5000');
+
     socket.emit('get_data');
 
     socket.on('data_response', (data: StockData[]) => {
@@ -54,7 +55,7 @@ const ComPonent2 = () => {
 
   //  2. 월간 차트 요청
   useEffect(() => {
-    fetch('http://10.0.2.2:5001/get_Mdata')
+    fetch('http://10.0.2.2:5000/get_Mdata')
       .then(response => response.json())
       .then((data: StockData[]) => {
         // 원래의 데이터에 stck_prpr 값이 없으므로 stck_clpr 값을 사용하도록 수정
@@ -71,7 +72,7 @@ const ComPonent2 = () => {
   }, []);
   // 3. 연간 차트 요청
   useEffect(() => {
-    fetch('http://10.0.2.2:5001/get_Ydata')
+    fetch('http://10.0.2.2:5000/get_Ydata')
       .then(response => response.json())
       .then((data: StockData[]) => {
         const modifiedData = data.map(item => ({
@@ -79,7 +80,7 @@ const ComPonent2 = () => {
           stck_prpr: item.stck_clpr,
         }));
         console.log(
-          'modified YEAR data stck_prpr:',
+          '수정된 YEAR data stck_prpr:',
           modifiedData.map(item => item.stck_prpr).reverse(),
         );
         setYearData(modifiedData.reverse());

@@ -11,7 +11,7 @@ const ComPonent3 = () => {
   });
 
   useEffect(() => {
-    fetch('http://10.0.2.2:5001/companyupdown')
+    fetch('http://10.0.2.2:5000/companyupdown')
       .then(response => response.json())
       .then(data => {
         setCompany(data);
@@ -21,11 +21,11 @@ const ComPonent3 = () => {
   }, []);
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>시가: {upAndDown['시가']}</Text>
-      <Text style={styles.text}>오늘최고가: {upAndDown['오늘최고가']}</Text>
+      <Text style={styles.text}>시가: {upAndDown['시가']}원</Text>
+      <Text style={styles.text}>오늘최고가: {upAndDown['오늘최고가']}원</Text>
       <View style={styles.priceContainer}>
-        <Text style={styles.text}>오늘최저가: {upAndDown['오늘최저가']}</Text>
-        <Text style={styles.text}>현재가: {upAndDown['현재가']}</Text>
+        <Text style={styles.text}>오늘최저가: {upAndDown['오늘최저가']}원</Text>
+        <Text style={styles.text}>현재가: {upAndDown['현재가']}원</Text>
         <Text style={styles.text}>시가총액: {upAndDown['시가총액']}</Text>
       </View>
     </View>
