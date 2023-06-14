@@ -15,7 +15,7 @@ const AnotherPage = () => {
       <ComPonent1 />
       <ComPonent2 />
       <ComPonent3 />
-      <ComPonent4 />
+      <ComPonent4 company_name={company_name}/> {/* ComPonent4에 company_name을 전달 */}
     </View>
   );
 };

@@ -103,7 +103,7 @@ function Main_page(): JSX.Element {
   console.log('컨텍스트 테스트')
   console.log(userId)
 
-  const navigation = useNavigation<ChoicePageOneNavigationProp>();
+  const navigation = useNavigation<MainPageNavigationProp>();
 
   // type AnotherScreenParams = {
   //   company_name: string;
@@ -118,7 +118,7 @@ function Main_page(): JSX.Element {
     Another: {company_name: string},
   };
 
-  type ChoicePageOneNavigationProp = StackNavigationProp<
+  type MainPageNavigationProp = StackNavigationProp<
     RootStackParamList,
     'Another'
   >;
