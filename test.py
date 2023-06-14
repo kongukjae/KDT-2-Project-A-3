@@ -27,17 +27,17 @@ f.close()
 
 ### 함수 정의 ###
 
-# AES256 DECODE
-def aes_cbc_base64_dec(key, iv, cipher_text):
-    """
-    :param key:  str type AES256 secret key value
-    :param iv: str type AES256 Initialize Vector
-    :param cipher_text: Base64 encoded AES256 str
-    :return: Base64-AES256 decodec str
-    """
-    ##AES 암호화 알고리즘을 사용하여 암호화된 데이터를 복호화
-    cipher = AES.new(key.encode('utf-8'), AES.MODE_CBC, iv.encode('utf-8'))  ##AES 객체 생성 (CBC mode 사용)
-    return bytes.decode(unpad(cipher.decrypt(b64decode(cipher_text)), AES.block_size)) ## cipher_test -> 64byte decoding -> 복호화(decrypt) -> unpad(패딩제거) 
+# # AES256 DECODE
+# def aes_cbc_base64_dec(key, iv, cipher_text):
+#     """
+#     :param key:  str type AES256 secret key value
+#     :param iv: str type AES256 Initialize Vector
+#     :param cipher_text: Base64 encoded AES256 str
+#     :return: Base64-AES256 decodec str
+#     """
+#     ##AES 암호화 알고리즘을 사용하여 암호화된 데이터를 복호화
+#     cipher = AES.new(key.encode('utf-8'), AES.MODE_CBC, iv.encode('utf-8'))  ##AES 객체 생성 (CBC mode 사용)
+#     return bytes.decode(unpad(cipher.decrypt(b64decode(cipher_text)), AES.block_size)) ## cipher_test -> 64byte decoding -> 복호화(decrypt) -> unpad(패딩제거) 
 
 
 # 웹소켓 접속키 발급
@@ -132,7 +132,7 @@ async def connect():
     async with websockets.connect(url, ping_interval=30) as websocket:
 
         for senddata in senddata_list:
-            await websocket.send(senddata) # 소켓에 헤더 정보를 담아 데이터를 보냄
+            await websocket.send(senddata) # 소켓에 헤더 정보를 담아 w데이터를 보냄
             time.sleep(0.5)
             print(f"Input Command is :{senddata}")
 
