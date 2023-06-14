@@ -58,7 +58,7 @@ def Mainpage_stock_list(collection_name):
         else:
             break
     company_Object = companyObject()
-    print(name_array)
+    # print(name_array)
 
     for i in range(len(code_array)):
         temp = broker.fetch_price(code_array[i])

@@ -313,14 +313,14 @@ def main_page_init():
     print(request_data)
     collection = db['user_info']
     document = collection.find_one(
-        {"id": "aaa1234"}, {"choiceTwo": 1, "_id": 0})
+        {"id": user_id}, {"choiceTwo": 1, "_id": 0})
     user_category = document['choiceTwo']
     resData = callDBData.category_name_changer.name_change(user_category)
     init_data = callApiData.Mainpage_stock_data.Mainpage_stock_list(
         resData)  # 각 종목의 시가총액 순 상위 16개 목록 추출
     print('데이터 전달')
-    print(init_data)
-    print(init_data.to_dict())
+    # print(init_data)
+    # print(init_data.to_dict())
     return jsonify(init_data.to_dict())  # 직렬 화 후 main_page로 데이터 전달
 
 # 구매 페이지에 호가를 눌렀을때 호가 정보를 받아오는 요청
