@@ -290,8 +290,8 @@ def main_page_init():
 #구매 페이지에 호가를 눌렀을때 호가 정보를 받아오는 요청
 @app.route('/api/hoga', methods=['GET'])
 def get_hoga_data():
-    def get_approval(key, secret):
-       url = 'https://openapi.koreainvestment.com:9443' # 실전투자계좌
+    def get_approval(key, secret): #실시간 소켓 통신에 필요한 웹소켓 접속 key 값 받기
+       url = 'https://openapi.koreainvestment.com:9443' 
        headers = {"content-type": "application/json"}
        body = {"grant_type": "client_credentials",
             "appkey": key,
@@ -301,7 +301,26 @@ def get_hoga_data():
        res = requests.post(URL, headers=headers, data=json.dumps(body))
        approval_key = res.json()["approval_key"]
        return approval_key
-    print(get_approval(key,secret))
+
+    def get_hoga():
+        url = 'ws://ops.koreainvestment.com:31000'
+        PATH = 'tryitout/H0STCNT0'
+        URL = f"{url}{PATH}"
+        headers = {  
+                  "approval_key": get_approval(key,secret),
+                  "custtype":"P",
+                  "tr_type":"1",
+                  "content-type":"utf-8"
+        }
+        body= {"input":{
+                       "tr_id":"H0STCNT0",
+                       "tr_key":"005930"
+                  }
+        }
+        res= requests.post(URL,headers=headers, data=json.dumps(body))
+        return res
+    print(get_hoga())
+    
     return jsonify()
 
 
