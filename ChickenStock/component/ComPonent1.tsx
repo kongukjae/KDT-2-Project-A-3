@@ -18,11 +18,12 @@ const ComPonent1 = () => {
       .then(response => response.json())
       .then(data => {
         setCompany(data);
+
         console.log(data);
       })
       .catch(error => console.error(error));
 
-    // socket instance 생성
+    // 1.socket instance 생성, 서버와 연결되는 소켓 인스턴스를 생성한다.
     const socket = io('http://10.0.2.2:5000');
 
     socket.emit('request_company_rate');
@@ -30,6 +31,8 @@ const ComPonent1 = () => {
     socket.on('changerate', data => {
       setChangeRate(data);
       console.log(data);
+      console.log('뜸북장이여 어디여');
+      socket.emit('request_company_rate');
     });
 
     return () => {
@@ -45,7 +48,18 @@ const ComPonent1 = () => {
         <Text style={styles2.text}>기업이름: {company['한글명']}</Text>
         <Text style={styles3.text}>단축코드: {company['단축코드']}</Text>
         <View style={styles1.priceContainer}>
-          <Text style={redblue.text}>등락률: {changeRate['prdy_ctrt']} </Text>
+          <Text
+            style={[
+              redblue.text,
+              {
+                color:
+                  parseFloat(changeRate['prdy_ctrt'] as string) < 0
+                    ? 'blue'
+                    : 'red',
+              },
+            ]}>
+            등락률: {changeRate['prdy_ctrt']}
+          </Text>
           <Text style={styles1.text}>기준가: {changeRate['stck_prpr']}</Text>
         </View>
       </View>

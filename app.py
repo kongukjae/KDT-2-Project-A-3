@@ -123,16 +123,17 @@ def login_Check():
 
 
 # 컴포넌트 2-1 실시간 주가 차트 데이터(일단위)
-@app.route('/get_data', methods=['GET'])
+# @app.route('/get_data', methods=['GET'])
+@socketio.on('get_data')
 def get_data():
 
-    data = broker._fetch_today_1m_ohlcv("005930", to="15:30:30")
+    data = broker._fetch_today_1m_ohlcv("001470", to="15:30:30")
     df = pd.DataFrame(data['output2'])
     df['stck_cntg_hour'] = pd.to_datetime(df['stck_cntg_hour'], format='%H%M%S').dt.strftime('%H:%M:%S')
     df[['stck_prpr', 'stck_oprc', 'stck_hgpr', 'stck_lwpr', 'cntg_vol', 'acml_tr_pbmn']] = df[['stck_prpr', 'stck_oprc', 'stck_hgpr', 'stck_lwpr', 'cntg_vol', 'acml_tr_pbmn']].astype(float)
-
-    return df.to_json(orient='records')
-
+     
+    emit('data_response', df.to_dict(orient='records'))
+    print(df.to_dict)
 
 # 컴포넌트 2-2 주가데이터(한달단위)
 @app.route('/get_Mdata', methods=['GET'])
@@ -166,9 +167,9 @@ def get_Ydata():
     chart_data = df[['stck_bsop_date', 'stck_oprc', 'stck_hgpr', 'stck_lwpr', 'stck_clpr', 'acml_vol']].to_dict(orient='records')
 
     return jsonify(chart_data)
-# # 컴포넌트 1-3
 
 
+# 컴포넌트 1-1 기업 이름, 코드
 @app.route('/companydetail', methods=['GET'])
 def get_company_data():
 
@@ -179,7 +180,7 @@ def get_company_data():
 
     return jsonify(company_info)
 
-
+# 컴포넌트3 기업 상세 정보
 @app.route('/companyupdown', methods=['GET'])
 def get_company_updown():
 
@@ -197,7 +198,7 @@ def get_company_updown():
 
     return jsonify(company_infof)
 
-
+# 컴포넌트 1-2 기업 등락률, 가격
 # 실시간 주식 등락률,현재가격 API에서 제공되는 것을 가져다 씀
 @socketio.on('request_company_rate')
 def get_company_rate():
@@ -207,7 +208,7 @@ def get_company_rate():
     output2 = data["output2"]
 
     combined_output = {"prdy_ctrt": output1["prdy_ctrt"], "stck_prpr": output2[0]["stck_prpr"]}
-
+    
     emit('changerate', combined_output)
 # @app.route('/changerate', methods=['GET'])
 # def get_company_rate():
@@ -287,29 +288,27 @@ def main_page_init():
     return jsonify(init_data.to_dict()) # 직렬 화 후 main_page로 데이터 전달
 
 #구매 페이지에 호가를 눌렀을때 호가 정보를 받아오는 요청
-@app.route('/api/hoga', methods=['GET'])
+@app.route('/api/hoga', methods=['POST'])
 def get_hoga_data():
-    # url = "https://openapivts.koreainvestment.com:29443/uapi/domestic-stock/v1/quotations/inquire-asking-price-exp-ccn"
-    # params={
-    #     "fid_cond_mrkt_div_code": "J",
-    #     "fid_input_iscd": "005930"
-    # }  
-    # hoga_data={}
+    url = "ws://ops.koreainvestment.com:31000/tryitout/H0STASP0"
+    header={"content-type": "application/json"}
+    body = {"grant_type": "client_credentials",
+            "appkey": key,
+            "secretkey": secret}
 
-    # response = requests.get(url,params=params)
-    # if response.status_code == 200 :
-    #     hoga_data = response.json()
-    #     print(hoga_data)
-    # else :
-    #     print("호가정보요청실패")
-    # return jsonify(hoga_data)
+    response = requests.POST(url,header=header, data=json.dumps(body))
+    if response.status_code == 200 :
+        hoga_data = response.json()
+        print(hoga_data)
+    else :
+        print("호가정보요청실패")
+    return jsonify(hoga_data)
     
-    print(dir(broker))
-    # result = broker.get_hoga('005630')
-    # if result['status'] == 'success':
-    #     hoga_data = result['result']
-    # else:
-    #     print('호가 데이터 조회 실패')
+    result = broker.get_hoga('005630')
+    if result['status'] == 'success':
+        hoga_data = result['result']
+    else:
+        print('호가 데이터 조회 실패')
     return jsonify()
 
 
