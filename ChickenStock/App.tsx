@@ -47,7 +47,7 @@ const App: React.FC = () => {
   return (
     <AuthProvider>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="SignUpPage">
+        <Stack.Navigator initialRouteName="MyPage">
           <Stack.Screen
             name="ChoicePageOne"
             component={ChoicePageOne}

@@ -24,6 +24,13 @@ db = client['chicken_stock']
 
 app = Flask(__name__)
 
+@app.route('/account', methods=['GET'])
+def account():
+    result = db.user_info.find_one({'account':5000000})
+    # ObjectId를 문자열로 변환
+    result['_id'] = str(result['_id'])
+    print(result)
+    return jsonify(result)
 
 @app.route('/api/data', methods=['GET'])
 @app.route('/signup', methods=['POST'])
@@ -34,7 +41,6 @@ def register():
 
     collection = db['user_info']
     collection.insert_one(data)
-    # collection.insert_one(5000000)
     print('회원가입 데이터 저장')
 
     return '데이터 저장 완료'
