@@ -13,7 +13,7 @@ from flask_socketio import SocketIO, emit
 import callApiData.Mainpage_stock_data
 import callDBData.category_name_changer
 import time
-import asyncio
+
 import json
 import websockets
 
@@ -24,6 +24,7 @@ from base64 import b64decode
 app = Flask(__name__)
 # 시크릿 키는 보안을 강화하기 위해 사용되는 값으로, 애플리케이션에서 사용되는 다양한 보안 기능에 필요
 app.secret_key = "nb1+d(7+2y1q0m*kig4+zxld$v00^7dr=nxqcjn5(fp@ul)yc@"
+
 
 f = open("./secret.key")
 lines = f.readlines()
@@ -38,7 +39,7 @@ client = MongoClient(
 db = client['chicken_stock']
 # mojito1 = mojito()
 # Flask-SocketIO  인스턴스 생성
-socketio = SocketIO(app, cors_allowed_origins="*")
+socketio = SocketIO(app, cors_allowed_origins="*",async_mode="gevent")
 @app.route('/account', methods=['GET'])
 def account():
     result = db.user_info.find_one({'account':5000000})
@@ -301,7 +302,8 @@ def main_page_init():
     return jsonify(init_data.to_dict()) # 직렬 화 후 main_page로 데이터 전달
 
 #구매 페이지에 호가를 눌렀을때 호가 정보를 받아오는 요청
-@app.route('/api/hoga', methods=['GET'])
+@socketio.on('hoga_data')
+@app.route('/api/hoga', methods=['POST'])
 def get_hoga_data():
     def get_approval(key, secret):
     # url = https://openapivts.koreainvestment.com:29443' # 모의투자계좌     
@@ -361,7 +363,6 @@ def get_hoga_data():
         print("누적거래량             [%s]" % (recvvalue[53]))
         print("주식매매 구분코드      [%s]" % (recvvalue[58]))
     async def connect():
-
         g_appkey = key
         g_appsceret = secret
         g_approval_key = get_approval(g_appkey, g_appsceret)
@@ -441,10 +442,9 @@ def get_hoga_data():
                 except websockets.ConnectionClosed:
                     continue
 
-    return jsonify()
+    socketio.start_background_task(connect)
     # 비동기로 서버에 접속한다.
-    asyncio.get_event_loop().run_until_complete(connect())
-    asyncio.get_event_loop().close()
+    return jsonify('a')
 
 if (__name__) == '__main__':
     app.run(host='0.0.0.0', port=5000)
