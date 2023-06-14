@@ -288,22 +288,20 @@ def get_news_data():
 # 메인 페이지에 주식 목록 데이터
 @app.route('/api/main_page', methods=['POST'])
 def main_page_init():
-    request_data = request.get_json() #user_id를 받아와서 id를 통해 DB 데이터에 접근 할 예정
-    print('받아온 데이터')
-    print(request_data)
+    user_id = session.get('user_id')
+    print('user_id', user_id)
     collection = db['user_info']
-    document = collection.find_one({ "id" : "aaa1234" }, {"choiceTwo" : 1, "_id" : 0})
+    document = collection.find_one({ "id" : user_id }, {"choiceTwo" : 1, "_id" : 0})
     user_category = document['choiceTwo']
     resData = callDBData.category_name_changer.name_change(user_category)
     init_data = callApiData.Mainpage_stock_data.Mainpage_stock_list(resData) # 각 종목의 시가총액 순 상위 16개 목록 추출
     print('데이터 전달')
-    print(init_data)
-    print(init_data.to_dict())
+    # print(init_data)
+    # print(init_data.to_dict())
     return jsonify(init_data.to_dict()) # 직렬 화 후 main_page로 데이터 전달
 
 #구매 페이지에 호가를 눌렀을때 호가 정보를 받아오는 요청
 @socketio.on('hoga_data')
-@app.route('/api/hoga')
 def get_hoga_data():
     def get_approval(key, secret):
     # url = https://openapivts.koreainvestment.com:29443' # 모의투자계좌     
@@ -443,9 +441,9 @@ def get_hoga_data():
                 except websockets.ConnectionClosed:
                     continue
 
-    socketio.start_background_task(connect)
     emit('return_hoga',"a")
     # 비동기로 서버에 접속한다.
 
 if (__name__) == '__main__':
-    socketio.run(app, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
+    socketio.run(app, host='0.0.0.0', port=5000)
