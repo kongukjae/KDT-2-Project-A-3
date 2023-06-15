@@ -116,6 +116,8 @@ const BuyPage = () => {
     setModal(true);
     const socket = io('http://10.0.2.2:5000');
     socket.emit('get_hoga')
+      
+    console.log('soket 요청 갔다')
     socket.on('get_hogaFromServer',data=>{
       console.log(data)
       console.log('서버로부터 소켓 데이터 통신 완료')
