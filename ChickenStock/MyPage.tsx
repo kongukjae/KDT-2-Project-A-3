@@ -16,13 +16,13 @@ import {
 import {RouteProp, useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import TopMenuPage from './TopMenuPage';
-import mongoose from 'mongoose';
-import { MongoClient, WithId } from 'mongodb';
-import axios from 'axios';
+// import mongoose from 'mongoose';
+// import { MongoClient, WithId } from 'mongodb';
+// import axios from 'axios';
 
 const MyPage = () => {
  
-  const [data, setData] = useState({});
+  const [data, setData] = useState<any>({});
 
   // 데이터 가져오는 비동기 함수
   const fetchData = async () => {
@@ -45,6 +45,12 @@ const MyPage = () => {
     fetchData();
   }, []);
 
+  console.log("data", data)
+  console.log("type")
+  console.log(typeof(data))
+
+  
+
   const interest = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
   const enter = ['기업 명', '현재가', '등락', '보유 수량', '평가 금액'];
   const transaction = ['구매', '판매', '미채결'];
@@ -55,7 +61,7 @@ const MyPage = () => {
       <View>
         <TopMenuPage></TopMenuPage>
       </View>
-      {Object.keys(data).length !== 0 &&(
+      {Object.keys(data).length !== 0 && (
         <View style={styles.myMoneyCss}>
           <Text>은행 : {data.bank}  계좌 잔액 : {data.account}</Text>
           {/* <Text></Text> */}
