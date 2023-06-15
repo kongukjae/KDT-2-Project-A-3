@@ -18,7 +18,7 @@ import {
 
 import {RouteProp, useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {io, Socket} from 'socket.io-client'
+import {io, Socket} from 'socket.io-client';
 
 type RootStackParamList = {
   ChoicePageOne: undefined;
@@ -41,29 +41,65 @@ type ChoicePageOneRouteProp = RouteProp<RootStackParamList, 'ChoicePageTwo'>;
 const TopMenuPage = () => {
   const navigation = useNavigation<ChoicePageOneNavigationProp>();
   const [modalVisible, setModalVisible] = useState(false);
+  console.log("test" ,modalVisible)
   const [message, setMessage] = useState('');
+  const [messages, setMessages] = useState<string[]>([]);
 
-  const socket = io('http://10.0.2.2:5000');
+  // useEffect(() => {
+  //   const socket = io('http://10.0.2.2:5000');
+  //   if (modalVisible) {
+  //     return () => {
+  //       socket.emit('modalOpen');
+  //       socket.on('clientConnect', () => {
+  //         console.log('연결됨');
+  //         console.log("on", modalVisible);
+  //       });
+  //     }
+      
+  //   } else {
+  //     return () => {
+  //       socket.emit('modalClose');
+  //       socket.disconnect();
+  //       socket.off('clientConnect');
+  //       console.log('연결 끊어짐');
+  //       console.log("off", modalVisible);
+  //     }
+      
+  //   }
+  // }, [modalVisible]);
 
   useEffect(() => {
+    let socket = io('http://10.0.2.2:5000', {
+      transports: ['websocket'], // WebSocket 전송 방식 사용
+    });
+  
     if (modalVisible) {
-      socket.emit('modalOpen');
+      socket.connect();
       socket.on('clientConnect', () => {
         console.log('연결됨');
+        console.log("on", modalVisible);
       });
+  
+      return () => {
+        socket.disconnect();
+        console.log('연결 끊어짐');
+        console.log("off", modalVisible);
+      };
     } else {
-      socket.emit('modalClose');
-      socket.off('clientConnect');
-      console.log('연결 끊어짐')
+      socket.disconnect();
+      console.log('연결 끊어짐');
+      console.log("off", modalVisible);
     }
   }, [modalVisible]);
 
   const openModal = () => {
     setModalVisible(true);
+    console.log("change1", modalVisible)
   };
 
   const closeModal = () => {
     setModalVisible(false);
+    console.log("change2", modalVisible)
   };
 
   const handleOverlayPress = () => {
@@ -78,6 +114,10 @@ const TopMenuPage = () => {
   const handleSend = () => {
     // 메시지 전송 로직을 추가할 수 있습니다.
     console.log('Sending message:', message);
+
+    setMessages(prevMessages => [...prevMessages, message]);
+
+    setMessage('');
   };
 
   return (
@@ -101,7 +141,7 @@ const TopMenuPage = () => {
         </TouchableOpacity>
       </View>
       <View>
-      <Modal
+        <Modal
           visible={modalVisible}
           transparent={true}
           onRequestClose={closeModal}>
@@ -114,10 +154,18 @@ const TopMenuPage = () => {
                     style={styles.closeButton}>
                     <Text style={styles.closeButtonText}>X</Text>
                   </TouchableOpacity>
+                  <Text style={styles.chatTitle}>
+                    주식 용어에 대해서 물어보세요!
+                  </Text>
                   <View style={styles.chatContainer}>
                     <ScrollView
                       contentContainerStyle={styles.chatContent}
                       showsVerticalScrollIndicator={false}>
+                      {messages.map((msg, index) => (
+                        <Text key={index} style={styles.chatBox}>
+                          {msg}
+                        </Text>
+                      ))}
                     </ScrollView>
                     <View style={styles.inputContainer}>
                       <TextInput
@@ -170,6 +218,8 @@ const styles = StyleSheet.create({
     height: '80%',
     padding: 16,
     borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   closeButton: {
     alignSelf: 'flex-end',
@@ -179,19 +229,36 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16,
   },
+  chatTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#4C4C6D',
+  },
   chatContainer: {
     flex: 1,
   },
   chatContent: {
+    alignItems: 'flex-end',
+    marginBottom: 10,
     flexGrow: 1,
     paddingBottom: 8,
+  },
+  chatBox: {
+    minWidth: 50,
+    marginTop: 10,
+    borderColor: '#1B9C85',
+    borderWidth: 2,
+    borderRadius: 5,
+    textAlign: 'center',
+    fontSize: 15,
+    color: 'black',
   },
   inputContainer: {
     flexDirection: 'row',
     marginTop: 8,
   },
   input: {
-    flex: 1,
+    width: 200,
     height: 40,
     borderWidth: 1,
     borderRadius: 4,
@@ -209,7 +276,6 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
   },
-
 });
 
 export default TopMenuPage;

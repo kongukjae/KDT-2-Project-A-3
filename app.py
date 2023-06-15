@@ -318,6 +318,7 @@ def get_hoga_data():
 @socketio.on('modalOpen')
 def modal_open():
     # 클라이언트가 소켓에 연결되었을 때 실행되는 로직을 작성합니다.
+    
     print('Client connected')
     emit('clientConnect');
 
