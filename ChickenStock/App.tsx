@@ -32,7 +32,7 @@ type RootStackParamList = {
   ChoicePageThree: undefined;
   ChoicePageFour: undefined;
   MainPage: undefined;
-  Another: {company_name: string};
+  Another: {company_name: string, company_code: string};
   SignUpPage: undefined;
   LoginPage: undefined;
   BuyPage: undefined;

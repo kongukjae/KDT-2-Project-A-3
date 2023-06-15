@@ -12,11 +12,16 @@ from flask_socketio import SocketIO, emit
 # 개인 제작 모듈
 import callApiData.Mainpage_stock_data
 import callDBData.category_name_changer
+# bardapi
+import bardapi
+import os
 
 # Flask 애플리케이션을 생성하는 부분
 app = Flask(__name__)
 # 시크릿 키는 보안을 강화하기 위해 사용되는 값으로, 애플리케이션에서 사용되는 다양한 보안 기능에 필요
 app.secret_key = "nb1+d(7+2y1q0m*kig4+zxld$v00^7dr=nxqcjn5(fp@ul)yc@"
+
+os.environ['_BARD_API_KEY']="XQiP6_UOiNfmRxuQisZJYU3HJ8ou4gWiEtJHEK2YpJQhzjebXfozrSN1phM02G415pc2UQ."
 
 f = open("./secret.key")
 lines = f.readlines()
@@ -48,6 +53,7 @@ def account():
         return jsonify(result)
     else:
         return jsonify({'error': 'Invalid login_id'})  # 유효하지 않은 로그인 아이디인 경우
+
 
 
 @app.route('/api/data', methods=['GET'])
@@ -141,7 +147,7 @@ def login_Check():
 @socketio.on('get_data')
 def get_data():
 
-    data = broker._fetch_today_1m_ohlcv("001470", to="15:30:30")
+    data = broker._fetch_today_1m_ohlcv("328380", to="15:30:30")
     df = pd.DataFrame(data['output2'])
     df['stck_cntg_hour'] = pd.to_datetime(
         df['stck_cntg_hour'], format='%H%M%S').dt.strftime('%H:%M:%S')
@@ -223,8 +229,9 @@ def get_company_updown():
         '현재가': company_price['output']['stck_prpr'],
         '시가총액': company_price['output']['cpfn_cnnm'],
     }
-
+    print(company_infof)
     return jsonify(company_infof)
+    
 
 # 컴포넌트 1-2 기업 등락률, 가격
 # 실시간 주식 등락률,현재가격 API에서 제공되는 것을 가져다 씀
@@ -339,6 +346,20 @@ def get_hoga_data():
     print(get_approval(key, secret))
     return jsonify()
 
+#! 챗봇 API
+@socketio.on('modalOpen')
+def modal_open():
+    # 클라이언트가 소켓에 연결되었을 때 실행되는 로직을 작성합니다.
+    
+    print('Client connected')
+    emit('clientConnect');
+
+@socketio.on('modalClose')
+def handle_disconnect():
+    # 클라이언트가 소켓 연결을 끊었을 때 실행되는 로직을 작성합니다.
+    print('Client disconnected')
+    emit('clientDisconnect');
 
 if (__name__) == '__main__':
     app.run(host='0.0.0.0', port=5000)
+    socketio.run(app, host='0.0.0.0', port=5000)

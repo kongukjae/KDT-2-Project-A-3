@@ -2,7 +2,14 @@ import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import io from 'socket.io-client'; // socket.io-client import
 
-const ComPonent1 = () => {
+type Component1Props = {
+  company_name: string;
+  company_code: string;
+};
+
+const ComPonent1: React.FC<Component1Props> = ({ company_name, company_code }) => {
+  console.log('com1')
+  console.log(company_name, company_code)
   const [company, setCompany] = useState({
     한글명: '',
     단축코드: '',
@@ -60,7 +67,7 @@ const ComPonent1 = () => {
             ]}>
             등락률: {changeRate['prdy_ctrt']}
           </Text>
-          <Text style={styles1.text}>기준가: {changeRate['stck_prpr']}</Text>
+          <Text style={styles1.text}>현재가: {changeRate['stck_prpr']}</Text>
         </View>
       </View>
     </View>
@@ -79,6 +86,7 @@ const styles1 = StyleSheet.create({
   priceContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    backgroundColor: 'pink',
   },
 });
 // 기업이름, 한글명
