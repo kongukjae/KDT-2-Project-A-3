@@ -19,9 +19,12 @@ interface StockData {
   stck_prpr: number; // 종가
   cntg_vol: number; // 거래량
 }
-const ComPonent2: React.FC<Component2Props> = ({ company_name, company_code }) => {
-  console.log('com2')
-  console.log(company_name, company_code)
+const ComPonent2: React.FC<Component2Props> = ({
+  company_name,
+  company_code,
+}) => {
+  console.log('com2');
+  console.log(company_name, company_code);
   const [data, setData] = useState<StockData[]>([]);
   const [dayData, setDayData] = useState<StockData[]>([]);
   const [monthData, setMonthData] = useState<StockData[]>([]);
@@ -43,14 +46,14 @@ const ComPonent2: React.FC<Component2Props> = ({ company_name, company_code }) =
     // 소켓 인스턴스 생성, 일종의 공용방
     const socket = io('http://10.0.2.2:5000');
 
-    socket.emit('get_data');
+    socket.emit('get_data', {company_code});
     socket.on('data_response', (data: StockData[]) => {
       console.log(
         'day data stck_prpr:',
         data.map(item => item.stck_prpr),
       );
       setDayData(data.reverse());
-      socket.emit('get_data');
+      socket.emit('get_data', {company_code});
       if (currentChart === 'day') {
         setData(data);
       }
@@ -62,12 +65,14 @@ const ComPonent2: React.FC<Component2Props> = ({ company_name, company_code }) =
 
     return () => {
       socket.off('data_response');
+      socket.disconnect();
+      console.log('소켓이 진짜로 꺼졌습니다.');
     };
   }, [currentChart]);
 
   //  2. 월간 차트 요청
   useEffect(() => {
-    fetch('http://10.0.2.2:5000/get_Mdata')
+    fetch(`http://10.0.2.2:5000/get_Mdata/${company_code}`)
       .then(response => response.json())
       .then((data: StockData[]) => {
         // 원래의 데이터에 stck_prpr 값이 없으므로 stck_clpr 값을 사용하도록 수정
@@ -87,7 +92,7 @@ const ComPonent2: React.FC<Component2Props> = ({ company_name, company_code }) =
   }, [currentChart]);
   // 3. 연간 차트 요청
   useEffect(() => {
-    fetch('http://10.0.2.2:5000/get_Ydata')
+    fetch(`http://10.0.2.2:5000/get_Ydata/${company_code}`)
       .then(response => response.json())
       .then((data: StockData[]) => {
         const modifiedData = data.map(item => ({

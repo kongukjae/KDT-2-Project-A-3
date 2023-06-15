@@ -7,9 +7,12 @@ type Component1Props = {
   company_code: string;
 };
 
-const ComPonent1: React.FC<Component1Props> = ({ company_name, company_code }) => {
-  console.log('com1')
-  console.log(company_name, company_code)
+const ComPonent1: React.FC<Component1Props> = ({
+  company_name,
+  company_code,
+}) => {
+  console.log('com1');
+  console.log(company_name, company_code); //305020
   const [company, setCompany] = useState({
     한글명: '',
     단축코드: '',
@@ -21,7 +24,7 @@ const ComPonent1: React.FC<Component1Props> = ({ company_name, company_code }) =
   });
 
   useEffect(() => {
-    fetch('http://10.0.2.2:5000/companydetail')
+    fetch(`http://10.0.2.2:5000/companydetail/${company_name}`)
       .then(response => response.json())
       .then(data => {
         setCompany(data);
@@ -33,16 +36,17 @@ const ComPonent1: React.FC<Component1Props> = ({ company_name, company_code }) =
     // 1.socket instance 생성, 서버와 연결되는 소켓 인스턴스를 생성한다.
     const socket = io('http://10.0.2.2:5000');
 
-    socket.emit('request_company_rate');
+    socket.emit('request_company_rate', {company_code});
     // socket 이벤트 리스너
     socket.on('changerate', data => {
       setChangeRate(data);
       console.log(data);
       console.log('뜸북장이여 어디여');
-      socket.emit('request_company_rate');
+      socket.emit('request_company_rate', {company_code});
     });
 
     return () => {
+      console.log('소켓이 꺼졌습니다.');
       socket.off('changerate');
       socket.disconnect();
     };
