@@ -454,8 +454,7 @@ def get_hoga_data():
 
 
     # 비동기로 서버에 접속한다.
-    asyncio.get_event_loop().run_until_complete(connect())
-    asyncio.get_event_loop().close()
+    socketio.start_background_task(connect)
     emit('get_hogaFromServer','서버가 소켓 데이터 줌')
 
 

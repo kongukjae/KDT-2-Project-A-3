@@ -114,13 +114,16 @@ const BuyPage = () => {
 
   const openModal=()=>{
     setModal(true);
-    fetch('http://10.0.2.2:5000/api/hoga')
-    .then(response => response.json())
-    .then(data => {
-      console.log(data);
+    const socket = io('http://10.0.2.2:5000');
+    socket.emit('get_hoga')
+    socket.on('get_hogaFromServer',data=>{
+      console.log(data)
+      console.log('서버로부터 소켓 데이터 통신 완료')
+      socket.emit('get_hoga')
     })
-    .catch(error => console.error(error));
-  };
+  }
+
+
   const closeModal=()=>{
     setModal(false);
   }
