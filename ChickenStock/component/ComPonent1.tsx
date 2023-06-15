@@ -2,7 +2,14 @@ import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import io from 'socket.io-client'; // socket.io-client import
 
-const ComPonent1 = () => {
+type Component1Props = {
+  company_name: string;
+  company_code: string;
+};
+
+const ComPonent1: React.FC<Component1Props> = ({ company_name, company_code }) => {
+  console.log('com1')
+  console.log(company_name, company_code)
   const [company, setCompany] = useState({
     한글명: '',
     단축코드: '',
