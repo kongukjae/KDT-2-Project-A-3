@@ -308,12 +308,9 @@ def get_news_data():
 # 메인 페이지에 주식 목록 데이터
 @app.route('/api/main_page', methods=['POST'])
 def main_page_init():
-    request_data = request.get_json()  # user_id를 받아와서 id를 통해 DB 데이터에 접근 할 예정
-    print('받아온 데이터')
-    print(request_data)
+    user_id = session.get('user_id')
     collection = db['user_info']
-    document = collection.find_one(
-        {"id": user_id}, {"choiceTwo": 1, "_id": 0})
+    document = collection.find_one({"id": user_id}, {"choiceTwo": 1, "_id": 0})
     user_category = document['choiceTwo']
     resData = callDBData.category_name_changer.name_change(user_category)
     init_data = callApiData.Mainpage_stock_data.Mainpage_stock_list(
