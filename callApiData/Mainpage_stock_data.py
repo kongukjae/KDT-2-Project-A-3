@@ -46,9 +46,9 @@ def Mainpage_stock_list(collection_name):
     newSymbols = symbols.sort_values(by='시가총액', ascending=False) # # sort_values() 메서드를 이용해서 API로 받아온 데이터를 특정 기준(지금은 시가총액, 내림차순)으로 정렬
 
     # 반복문을 통해 회사 이름이 DB에 있는 값일 경우 my_array 배열에 회사 이름을 추가
-    # 카운터 변수를 이용하여 시가총액 순으로 내림차순 정렬된 리스트에서 상위 20개만 추출
+    # 카운터 변수를 이용하여 시가총액 순으로 내림차순 정렬된 리스트에서 상위 10개만 추출
     for i in range(len(newSymbols)):
-        if counter < 12:
+        if counter < 10:
             if newSymbols['한글명'].iloc[i] == find_company(newSymbols['한글명'].iloc[i]):
                 counter = counter + 1
                 name_array.append(newSymbols['한글명'].iloc[i])
@@ -58,7 +58,7 @@ def Mainpage_stock_list(collection_name):
         else:
             break
     company_Object = companyObject()
-    print(name_array)
+    # print(name_array)
 
     for i in range(len(code_array)):
         temp = broker.fetch_price(code_array[i])

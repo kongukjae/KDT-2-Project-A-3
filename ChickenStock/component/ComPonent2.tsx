@@ -19,6 +19,9 @@ const ComPonent2 = () => {
   const [dayData, setDayData] = useState<StockData[]>([]);
   const [monthData, setMonthData] = useState<StockData[]>([]);
   const [yearData, setYearData] = useState<StockData[]>([]);
+  const [currentChart, setCurrentChart] = useState<'day' | 'month' | 'year'>(
+    'day',
+  );
   console.log('여기는 일간');
   console.log(dayData);
   console.log('여기는 일간');
@@ -40,8 +43,11 @@ const ComPonent2 = () => {
         'day data stck_prpr:',
         data.map(item => item.stck_prpr),
       );
-      setDayData(data);
-      setData(data);
+      setDayData(data.reverse());
+      if (currentChart === 'day') {
+        setData(data);
+      }
+      // setData(data);
       socket.emit('get_data');
 
       console.log(data);
@@ -67,9 +73,12 @@ const ComPonent2 = () => {
           'modified month data stck_prpr:',
           modifiedData.map(item => item.stck_prpr).reverse(),
         );
-        setMonthData(modifiedData.reverse());
+        // setMonthData(modifiedData.reverse());
+        if (currentChart === 'month') {
+          setData(modifiedData);
+        }
       });
-  }, []);
+  }, [currentChart]);
   // 3. 연간 차트 요청
   useEffect(() => {
     fetch('http://10.0.2.2:5000/get_Ydata')
@@ -83,9 +92,12 @@ const ComPonent2 = () => {
           '수정된 YEAR data stck_prpr:',
           modifiedData.map(item => item.stck_prpr).reverse(),
         );
-        setYearData(modifiedData.reverse());
+        // setYearData(modifiedData.reverse());
+        if (currentChart === 'year') {
+          setData(modifiedData);
+        }
       });
-  }, []);
+  }, [currentChart]);
 
   const renderChart = (data: StockData[], title: string) => {
     // 데이터가 없으면 아무것도 그리지 않는다.
@@ -164,19 +176,19 @@ const ComPonent2 = () => {
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => setData(dayData)}>
+          onPress={() => setCurrentChart('day')}>
           <Text style={styles.buttonText}>일별 데이터 보기</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.button}
-          onPress={() => setData(monthData)}>
+          onPress={() => setCurrentChart('month')}>
           <Text style={styles.buttonText}>월별 데이터 보기</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.button}
-          onPress={() => setData(yearData)}>
+          onPress={() => setCurrentChart('year')}>
           <Text style={styles.buttonText}>년 데이터 보기</Text>
         </TouchableOpacity>
       </View>

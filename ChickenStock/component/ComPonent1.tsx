@@ -60,7 +60,7 @@ const ComPonent1 = () => {
             ]}>
             등락률: {changeRate['prdy_ctrt']}
           </Text>
-          <Text style={styles1.text}>기준가: {changeRate['stck_prpr']}</Text>
+          <Text style={styles1.text}>현재가: {changeRate['stck_prpr']}</Text>
         </View>
       </View>
     </View>

@@ -36,11 +36,19 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 
 @app.route('/account', methods=['GET'])
 def account():
-    result = db.user_info.find_one({'account': 5000000})
-    # ObjectId를 문자열로 변환
-    result['_id'] = str(result['_id'])
+    login_id = session.get('user_id')  # 로그인한 아이디를 세션을 사용하여 저장
+    print(login_id)
+    # 연결된 db에서 id가 로그인 한 id와 같은 데이터를 db에서 찾음
+    result = db.user_info.find_one({'id': login_id})
     print(result)
-    return jsonify(result)
+    if result:
+        # ObjectId를 문자열로 변환
+        result['_id'] = str(result['_id'])
+        print(result)
+        return jsonify(result)
+    else:
+        return jsonify({'error': 'Invalid login_id'})  # 유효하지 않은 로그인 아이디인 경우
+
 
 
 @app.route('/api/data', methods=['GET'])
@@ -166,7 +174,7 @@ def get_Mdata():
 
     return jsonify(chart_data)
 
-# 컴포넌트 2-3 주가데이터(연단위),
+# 컴포넌트 2-3 주가데이터(연단위)
 
 
 @app.route('/get_Ydata', methods=['GET'])
@@ -200,6 +208,8 @@ def get_company_data():
     return jsonify(company_info)
 
 # 컴포넌트3 기업 상세 정보
+
+
 @app.route('/companyupdown', methods=['GET'])
 def get_company_updown():
 
@@ -220,6 +230,8 @@ def get_company_updown():
 
 # 컴포넌트 1-2 기업 등락률, 가격
 # 실시간 주식 등락률,현재가격 API에서 제공되는 것을 가져다 씀
+
+
 @socketio.on('request_company_rate')
 def get_company_rate():
     data = broker._fetch_today_1m_ohlcv("005930", to="15:30:30")
@@ -298,19 +310,16 @@ def get_news_data():
 # 메인 페이지에 주식 목록 데이터
 @app.route('/api/main_page', methods=['POST'])
 def main_page_init():
-    request_data = request.get_json()  # user_id를 받아와서 id를 통해 DB 데이터에 접근 할 예정
-    print('받아온 데이터')
-    print(request_data)
+    user_id = session.get('user_id')
     collection = db['user_info']
-    document = collection.find_one(
-        {"id": "aaa1234"}, {"choiceTwo": 1, "_id": 0})
+    document = collection.find_one({"id": user_id}, {"choiceTwo": 1, "_id": 0})
     user_category = document['choiceTwo']
     resData = callDBData.category_name_changer.name_change(user_category)
     init_data = callApiData.Mainpage_stock_data.Mainpage_stock_list(
         resData)  # 각 종목의 시가총액 순 상위 16개 목록 추출
     print('데이터 전달')
-    print(init_data)
-    print(init_data.to_dict())
+    # print(init_data)
+    # print(init_data.to_dict())
     return jsonify(init_data.to_dict())  # 직렬 화 후 main_page로 데이터 전달
 
 # 구매 페이지에 호가를 눌렀을때 호가 정보를 받아오는 요청
