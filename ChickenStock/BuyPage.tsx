@@ -112,20 +112,21 @@ const BuyPage = () => {
   const [price, setPrice] = useState('');
   const [selectedInput, setSelectedInput] = useState('');
   const [modal,setModal] = useState(false)
-  const socket = io('http://10.0.2.2:5000');      
 
-  useEffect(()=>{
-    socket.on('connect', () => {
-      console.log('Connected to server');
-    });    
-  })
+  // useEffect(()=>{
+  //   socket.on('connect', () => {
+  //     console.log('Connected to server');
+  //   });    
+  // })
 
   const openModal=()=>{
     setModal(true);
-    socket.emit('get_hoga_data')
+    const socket = io('http://10.0.2.2:5000');      // 소켓 켜는 코드
+    socket.connect()
+    socket.emit('start')
     console.log('soket 요청 갔다')
 
-    socket.on('get_hogaFromServer',data=>{
+    socket.on('end',data=>{
       console.log(data)
       console.log('서버로부터 소켓 데이터 통신 완료')
     })
