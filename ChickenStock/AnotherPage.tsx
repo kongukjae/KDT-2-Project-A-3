@@ -8,16 +8,16 @@ import {useRoute} from '@react-navigation/native';
 
 const AnotherPage = () => {
   const route = useRoute();
-  // const { company_name } = route.params as { company_name: string };
-  // console.log(company_name)
+  const { company_name } = route.params as { company_name: string };
+  const { company_code } = route.params as { company_code: string }
+  console.log(company_name)
+  console.log(company_code)
   return (
     <View style={styles.container}>
-      <ComPonent1 />
-      <ComPonent2 />
-      <ComPonent3 />
-      <ComPonent4 />
-
-      {/* <ComPonent4 company_name={company_name}/> ComPonent4에 company_name을 전달 */}
+      <ComPonent1 company_name={company_name} company_code={company_code}/>
+      <ComPonent2 company_name={company_name} company_code={company_code}/>
+      <ComPonent3 company_name={company_name} company_code={company_code}/>
+      <ComPonent4 company_name={company_name} company_code={company_code}/>
     </View>
   );
 };

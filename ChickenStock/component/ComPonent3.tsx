@@ -1,7 +1,14 @@
 import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 
-const ComPonent3 = () => {
+type Component2Props = {
+  company_name: string;
+  company_code: string;
+};
+
+const ComPonent3: React.FC<Component2Props> = ({ company_name, company_code }) => {
+  console.log('com3')
+  console.log(company_name, company_code)
   const [upAndDown, setCompany] = useState({
     시가: '',
     오늘최고가: '',
