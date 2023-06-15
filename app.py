@@ -302,7 +302,7 @@ def main_page_init():
     return jsonify(init_data.to_dict()) # 직렬 화 후 main_page로 데이터 전달
 
 #구매 페이지에 호가를 눌렀을때 호가 정보를 받아오는 요청
-@app.route('/api/hoga', methods=['GET'])
+@socketio.on('get_hoga')
 def get_hoga_data():
     def get_approval(key, secret):
         # url = https://openapivts.koreainvestment.com:29443' # 모의투자계좌     
@@ -315,6 +315,8 @@ def get_hoga_data():
         URL = f"{url}/{PATH}"
         res = requests.post(URL, headers=headers, data=json.dumps(body))
         approval_key = res.json()["approval_key"]
+        emit('get_hogaFromServer','서버가 소켓 데이터 줌')
+
         return approval_key
 
     ### 1. 국내주식 ###
@@ -368,7 +370,7 @@ def get_hoga_data():
 
 
 
-
+ 
     async def connect():
 
         g_appkey = key
@@ -395,6 +397,7 @@ def get_hoga_data():
         #websockets.connect() 함수를 호출하여 url에 지정된 주소로 웹소켓 연결을 수립합니다. ping_interval은 30초마다 핑(ping) 메시지를 보내는 간격을 나타내는 매개변수입니다.
         # as websocket 구문은 웹소켓 연결 객체를 websocket 변수에 할당합니다. 이를 통해 웹소켓 연결을 조작하고 데이터를 송수신할 수 있습니다.
         # async with 블록 내부의 코드는 웹소켓 연결이 활성화된 상태에서 실행됩니다. 이 블록 안에서 비동기 작업을 수행할 수 있습니다.     
+
         async with websockets.connect(url, ping_interval=30) as websocket:
 
             for senddata in senddata_list:
