@@ -15,6 +15,7 @@ import callDBData.category_name_changer
 # bardapi
 import bardapi
 import os
+import logging
 
 # Flask 애플리케이션을 생성하는 부분
 app = Flask(__name__)
@@ -38,6 +39,12 @@ db = client['chicken_stock']
 # Flask-SocketIO  인스턴스 생성
 socketio = SocketIO(app, cors_allowed_origins="*")
 
+logger = logging.getLogger('socketio')  # SocketIO 로거 생성
+logger.setLevel(logging.DEBUG)  # 로그 레벨을 DEBUG로 설정
+
+stream_handler = logging.StreamHandler()  # 콘솔 핸들러 생성
+stream_handler.setLevel(logging.DEBUG)  # 핸들러의 로그 레벨을 DEBUG로 설정
+logger.addHandler(stream_handler)  # 핸들러를 로거에 추가
 
 @app.route('/account', methods=['GET'])
 def account():
@@ -379,18 +386,26 @@ def buy():
     return jsonify(data)
 
 #! 챗봇 API
-@socketio.on('modalOpen')
-def modal_open():
-    # 클라이언트가 소켓에 연결되었을 때 실행되는 로직을 작성합니다.
-    
-    print('Client connected')
-    emit('clientConnect');
 
-@socketio.on('modalClose')
-def handle_disconnect():
-    # 클라이언트가 소켓 연결을 끊었을 때 실행되는 로직을 작성합니다.
-    print('Client disconnected')
-    emit('clientDisconnect');
+ 
+
+
+# @socketio.on('modalOpen')
+# def modal_open():
+#     # 클라이언트가 소켓에 연결되었을 때 실행되는 로직을 작성합니다.
+    
+#     logger.debug('Client connected')  # 로그 기록
+#     emit('clientConnect');
+    
+@socketio.on('message')  # 수정된 부분
+def handle_message(message):
+    print("받음")
+    print('Received message:', message)
+    bard_question = f'주식이나 투자에서 {message} 짧게 한 문장으로 얘기해줘'
+    bard_answer = bardapi.core.Bard().get_answer(bard_question)
+    # 메시지 처리 로직을 추가할 수 있습니다.
+    # 필요에 따라 클라이언트에 응답 메시지를 보낼 수도 있습니다.
+    emit('response', bard_answer)
 
 if (__name__) == '__main__':
     app.run(host='0.0.0.0', port=5000)
