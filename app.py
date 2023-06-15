@@ -40,7 +40,7 @@ client = MongoClient(
 db = client['chicken_stock']
 # mojito1 = mojito()
 # Flask-SocketIO  인스턴스 생성
-socketio = SocketIO(app, cors_allowed_origins="*",async_mode='gevent')
+socketio = SocketIO(app, cors_allowed_origins="*")
 @app.route('/account', methods=['GET'])
 def account():
     result = db.user_info.find_one({'account':5000000})
@@ -315,7 +315,6 @@ def get_hoga_data():
         URL = f"{url}/{PATH}"
         res = requests.post(URL, headers=headers, data=json.dumps(body))
         approval_key = res.json()["approval_key"]
-        emit('get_hogaFromServer','서버가 소켓 데이터 줌')
 
         return approval_key
 
@@ -457,6 +456,8 @@ def get_hoga_data():
     # 비동기로 서버에 접속한다.
     asyncio.get_event_loop().run_until_complete(connect())
     asyncio.get_event_loop().close()
+    emit('get_hogaFromServer','서버가 소켓 데이터 줌')
+
 
 if (__name__) == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
