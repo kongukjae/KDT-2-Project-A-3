@@ -13,6 +13,7 @@ from flask_socketio import SocketIO, emit
 import callApiData.Mainpage_stock_data
 import callDBData.category_name_changer
 import time
+import asyncio
 
 import json
 import websockets
@@ -301,7 +302,7 @@ def main_page_init():
     return jsonify(init_data.to_dict()) # 직렬 화 후 main_page로 데이터 전달
 
 #구매 페이지에 호가를 눌렀을때 호가 정보를 받아오는 요청
-@socketio.on('hoga_data')
+@app.route('/api/hoga', methods=['GET'])
 def get_hoga_data():
     def get_approval(key, secret):
         # url = https://openapivts.koreainvestment.com:29443' # 모의투자계좌     
@@ -456,3 +457,4 @@ def get_hoga_data():
 
 if (__name__) == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
+    socketio.run(app, host='0.0.0.0', port=5000)

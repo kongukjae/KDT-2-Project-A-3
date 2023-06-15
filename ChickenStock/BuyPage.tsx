@@ -102,6 +102,9 @@ const styles = StyleSheet.create({
   },
 });
 
+
+
+
 const BuyPage = () => {
   const [quantity, setQuantity] = useState('');
   const [price, setPrice] = useState('');
@@ -111,11 +114,12 @@ const BuyPage = () => {
 
   const openModal=()=>{
     setModal(true);
-    socket.emit('hoga_data')
-    socket.on('return_hoga', data => {
-    console.log(data);
-    console.log('뜸북장이여 어디여');
-    });  
+    fetch('http://10.0.2.2:5000/api/hoga')
+    .then(response => response.json())
+    .then(data => {
+      console.log(data);
+    })
+    .catch(error => console.error(error));
   };
   const closeModal=()=>{
     setModal(false);
