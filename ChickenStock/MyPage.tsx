@@ -21,7 +21,7 @@ import { MongoClient, WithId } from 'mongodb';
 import axios from 'axios';
 
 const MyPage = () => {
-
+ 
   const [data, setData] = useState({});
 
   // 데이터 가져오는 비동기 함수
@@ -57,7 +57,8 @@ const MyPage = () => {
       </View>
       {Object.keys(data).length !== 0 &&(
         <View style={styles.myMoneyCss}>
-          <Text>{data.account}</Text>
+          <Text>은행 : {data.bank}  계좌 잔액 : {data.account}</Text>
+          {/* <Text></Text> */}
         </View>
       )}
       <View style={styles.myInterestCss}>
