@@ -37,18 +37,17 @@ const ComPonent2 = () => {
     const socket = io('http://10.0.2.2:5000');
 
     socket.emit('get_data');
-
     socket.on('data_response', (data: StockData[]) => {
       console.log(
         'day data stck_prpr:',
         data.map(item => item.stck_prpr),
       );
       setDayData(data.reverse());
+      socket.emit('get_data');
       if (currentChart === 'day') {
         setData(data);
       }
       // setData(data);
-      socket.emit('get_data');
 
       console.log(data);
       console.log('오는거여 마는거야');
@@ -57,7 +56,7 @@ const ComPonent2 = () => {
     return () => {
       socket.off('data_response');
     };
-  }, []);
+  }, [currentChart]);
 
   //  2. 월간 차트 요청
   useEffect(() => {
@@ -73,7 +72,7 @@ const ComPonent2 = () => {
           'modified month data stck_prpr:',
           modifiedData.map(item => item.stck_prpr).reverse(),
         );
-        // setMonthData(modifiedData.reverse());
+        setMonthData(modifiedData.reverse());
         if (currentChart === 'month') {
           setData(modifiedData);
         }
@@ -92,7 +91,7 @@ const ComPonent2 = () => {
           '수정된 YEAR data stck_prpr:',
           modifiedData.map(item => item.stck_prpr).reverse(),
         );
-        // setYearData(modifiedData.reverse());
+        setYearData(modifiedData.reverse());
         if (currentChart === 'year') {
           setData(modifiedData);
         }

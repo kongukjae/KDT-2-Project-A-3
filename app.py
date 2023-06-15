@@ -234,7 +234,7 @@ def get_company_updown():
 
 @socketio.on('request_company_rate')
 def get_company_rate():
-    data = broker._fetch_today_1m_ohlcv("005930", to="15:30:30")
+    data = broker._fetch_today_1m_ohlcv("005930", to="15:30:00")
 
     output1 = data["output1"]
     output2 = data["output2"]
