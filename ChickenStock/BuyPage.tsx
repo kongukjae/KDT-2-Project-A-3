@@ -125,7 +125,7 @@ const BuyPage = () => {
     socket.connect()
     socket.emit('start')
     console.log('soket 요청 갔다')
-
+    
     socket.on('end',data=>{
       console.log(data)
       console.log('서버로부터 소켓 데이터 통신 완료')
@@ -135,8 +135,8 @@ const BuyPage = () => {
 
   const closeModal=()=>{
     setModal(false);
-    socket.off('get_hogaFromServer');
-    socket.disconnect();
+    // socket.off('get_hogaFromServer');
+    // socket.disconnect();
     console.log('서버꺼짐')
   }
 

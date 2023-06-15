@@ -13,6 +13,8 @@ import pprint
 from flask_socketio import SocketIO, emit
 # 개인 제작 모듈
 
+import logging
+
 import json
 
 from base64 import b64decode
@@ -29,12 +31,17 @@ acc_no = lines[2].strip()
 f.close()
 broker = mojito.KoreaInvestment(api_key=key, api_secret=secret, acc_no=acc_no)
 socketio = SocketIO(app, cors_allowed_origins="*")
+logger = logging.getLogger('socketio')  # SocketIO 로거 생성
+logger.setLevel(logging.DEBUG)  # 로그 레벨을 DEBUG로 설정
+stream_handler = logging.StreamHandler()  # 콘솔 핸들러 생성
+stream_handler.setLevel(logging.DEBUG)  # 핸들러의 로그 레벨을 DEBUG로 설정
+logger.addHandler(stream_handler)  # 핸들러를 로거에 추가
 
 
 ### 함수 정의 ###
 @socketio.on('start')
 def send_front():
-    print("요청왔다")
+    logger.debug('Client connected')  # 로그 기록
     send_data = "data"
     emit('end',send_data)
 
