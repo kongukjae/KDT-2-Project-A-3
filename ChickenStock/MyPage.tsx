@@ -22,7 +22,7 @@ import axios from 'axios';
 
 const MyPage = () => {
  
-  const [data, setData] = useState({});
+  const [data, setData] = useState<any>({});
 
   // 데이터 가져오는 비동기 함수
   const fetchData = async () => {

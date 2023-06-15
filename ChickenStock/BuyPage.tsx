@@ -105,6 +105,24 @@ const BuyPage = () => {
   const [price, setPrice] = useState('');
   const [selectedInput, setSelectedInput] = useState('');
   const [modal,setModal] = useState(false)
+  // const [totalPrice, settotalPrice] = useState('');
+
+  // const buy = () =>{
+  //   fetch('http://10.0.2.2:5000/buy', {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify({ id: data.id }),
+  //   })
+  //     .then(response => {
+  //       if (response.ok) {
+  //         return response.json();
+  //       } else {
+  //         throw new Error('아이디 전송 실패');
+  //       }
+  //     })
+  // }
 
   const openModal=()=>{
     setModal(true);
@@ -176,7 +194,29 @@ const BuyPage = () => {
 
 
   const handlePurchase = () => {
-    console.log('주식 구매:', quantity);
+    console.log('주식 구매:', totalPrice);
+    // Flask 서버로 totalPrice 전송하는 코드 작성
+    fetch('http://10.0.2.2:5000/buy', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ totalPrice }),
+    })
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('구매 요청 실패');
+        }
+      })
+      .then(data => {
+        // 응답 데이터 처리
+        console.log('구매 응답:', data);
+      })
+      .catch(error => {
+        console.error(error);
+      });
   };
 
   const handleInputSelection = (inputType: string) => {

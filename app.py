@@ -339,6 +339,26 @@ def get_hoga_data():
     print(get_approval(key, secret))
     return jsonify()
 
+# 구매 페이지의 구매하기 버튼 눌렀을 때 요청
+
+
+@app.route('/buy', methods=['POST'])
+def buy():
+    user_id = session.get('user_id')
+    # # 연결된 db에서 id가 로그인 한 id와 같은 데이터를 db에서 찾음
+    find_id = db.user_info.find_one({"id": user_id})
+    print('find_id'+find_id)
+    data = request.get_json()
+    total_price = data.get('totalPrice')
+    print('total' + total_price)
+    print('data' + data)
+
+    if find_id:
+        account = find_id.get('account')
+        print(account)
+
+    return jsonify(data)
+
 
 if (__name__) == '__main__':
     app.run(host='0.0.0.0', port=5000)
