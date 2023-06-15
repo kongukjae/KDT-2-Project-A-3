@@ -38,68 +38,33 @@ type ChoicePageOneNavigationProp = StackNavigationProp<
 >;
 type ChoicePageOneRouteProp = RouteProp<RootStackParamList, 'ChoicePageTwo'>;
 
+interface Message {
+  content: string;
+  sender: string;
+}
+
 const TopMenuPage = () => {
   const navigation = useNavigation<ChoicePageOneNavigationProp>();
   const [modalVisible, setModalVisible] = useState(false);
-  console.log("test" ,modalVisible)
+  console.log('test', modalVisible);
   const [message, setMessage] = useState('');
-  const [messages, setMessages] = useState<string[]>([]);
-
-  // useEffect(() => {
-  //   const socket = io('http://10.0.2.2:5000');
-  //   if (modalVisible) {
-  //     return () => {
-  //       socket.emit('modalOpen');
-  //       socket.on('clientConnect', () => {
-  //         console.log('연결됨');
-  //         console.log("on", modalVisible);
-  //       });
-  //     }
-      
-  //   } else {
-  //     return () => {
-  //       socket.emit('modalClose');
-  //       socket.disconnect();
-  //       socket.off('clientConnect');
-  //       console.log('연결 끊어짐');
-  //       console.log("off", modalVisible);
-  //     }
-      
-  //   }
-  // }, [modalVisible]);
-
-  useEffect(() => {
-    let socket = io('http://10.0.2.2:5000', {
-      transports: ['websocket'], // WebSocket 전송 방식 사용
-    });
-  
-    if (modalVisible) {
-      socket.connect();
-      socket.on('clientConnect', () => {
-        console.log('연결됨');
-        console.log("on", modalVisible);
-      });
-  
-      return () => {
-        socket.disconnect();
-        console.log('연결 끊어짐');
-        console.log("off", modalVisible);
-      };
-    } else {
-      socket.disconnect();
-      console.log('연결 끊어짐');
-      console.log("off", modalVisible);
-    }
-  }, [modalVisible]);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [bardMsg, setBardMsg] = useState<string[]>([]);
+  const [socket, setSocket] = useState<Socket | null>(null);
 
   const openModal = () => {
     setModalVisible(true);
-    console.log("change1", modalVisible)
+    console.log('change1', modalVisible);
+    setSocket(io('http://10.0.2.2:5000'));
   };
 
   const closeModal = () => {
     setModalVisible(false);
-    console.log("change2", modalVisible)
+    console.log('change2', modalVisible);
+    if (socket) {
+      socket.disconnect(); // Close socket connection when modal is closed
+      setSocket(null);
+    }
   };
 
   const handleOverlayPress = () => {
@@ -112,13 +77,30 @@ const TopMenuPage = () => {
   };
 
   const handleSend = () => {
-    // 메시지 전송 로직을 추가할 수 있습니다.
-    console.log('Sending message:', message);
-
-    setMessages(prevMessages => [...prevMessages, message]);
-
+    if (socket) {
+      console.log('Sending message:', message);
+      socket.emit('message', message);
+    }
     setMessage('');
   };
+
+  useEffect(() => {
+    if (socket) {
+      socket.on('response', data => {
+        console.log(data);
+        let responseData = {
+          content: data['content'],
+          sender: 'bot',
+        };
+        setMessages(prevMessages => [...prevMessages, responseData]);
+      });
+    }
+    return () => {
+      if (socket) {
+        socket.off('response'); // 이벤트 핸들러 해제
+      }
+    };
+  }, [socket]);
 
   return (
     <View>
@@ -158,14 +140,17 @@ const TopMenuPage = () => {
                     주식 용어에 대해서 물어보세요!
                   </Text>
                   <View style={styles.chatContainer}>
-                    <ScrollView
+                  <ScrollView
                       contentContainerStyle={styles.chatContent}
                       showsVerticalScrollIndicator={false}>
-                      {messages.map((msg, index) => (
-                        <Text key={index} style={styles.chatBox}>
-                          {msg}
-                        </Text>
-                      ))}
+                      {messages.map((msg, index) => {
+                        const key = `${msg.content}-${msg.sender}`; // 유일한 key 생성
+                        return (
+                          <View style={styles.chatBox} key={key}>
+                            <Text style={styles.chatText}>{msg.content}</Text>
+                          </View>
+                        );
+                      })}
                     </ScrollView>
                     <View style={styles.inputContainer}>
                       <TextInput
@@ -246,10 +231,15 @@ const styles = StyleSheet.create({
   chatBox: {
     minWidth: 50,
     marginTop: 10,
+    padding: 10,
     borderColor: '#1B9C85',
     borderWidth: 2,
     borderRadius: 5,
     textAlign: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  chatText: {
     fontSize: 15,
     color: 'black',
   },
@@ -275,6 +265,12 @@ const styles = StyleSheet.create({
   sendButtonText: {
     color: 'white',
     fontWeight: 'bold',
+  },
+  userMessage: {
+    backgroundColor: '#1B9C85',
+  },
+  botMessage: {
+    backgroundColor: '#FFD700',
   },
 });
 

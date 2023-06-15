@@ -72,15 +72,15 @@ function Main_page(): JSX.Element {
   };
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      stock_list(selectedButton);
-    }, 3000)
+    // const interval = setInterval(() => {
+    //   stock_list(selectedButton);
+    // }, 3000)
 
     stock_list(selectedButton);
 
-    return () => {
-      clearInterval(interval);
-    };
+    // return () => {
+    //   clearInterval(interval);
+    // };
 
   }, [selectedButton]);
 
