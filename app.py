@@ -62,6 +62,7 @@ def account():
         return jsonify({'error': 'Invalid login_id'})  # 유효하지 않은 로그인 아이디인 경우
 
 
+
 @app.route('/api/data', methods=['GET'])
 @app.route('/signup', methods=['POST'])
 def register():
@@ -153,7 +154,7 @@ def login_Check():
 @socketio.on('get_data')
 def get_data():
 
-    data = broker._fetch_today_1m_ohlcv("001470", to="15:30:30")
+    data = broker._fetch_today_1m_ohlcv("328380", to="15:30:30")
     df = pd.DataFrame(data['output2'])
     df['stck_cntg_hour'] = pd.to_datetime(
         df['stck_cntg_hour'], format='%H%M%S').dt.strftime('%H:%M:%S')
@@ -235,8 +236,9 @@ def get_company_updown():
         '현재가': company_price['output']['stck_prpr'],
         '시가총액': company_price['output']['cpfn_cnnm'],
     }
-
+    print(company_infof)
     return jsonify(company_infof)
+    
 
 # 컴포넌트 1-2 기업 등락률, 가격
 # 실시간 주식 등락률,현재가격 API에서 제공되는 것을 가져다 씀
@@ -350,6 +352,38 @@ def get_hoga_data():
         return approval_key
     print(get_approval(key, secret))
     return jsonify()
+
+#구매로직 작성
+@app.route('/buy', methods=['POST'])
+def buy():
+    data = request.get_json()
+    user_id = session.get('user_id')
+    # # 연결된 db에서 id가 로그인 한 id와 같은 데이터를 db에서 찾음
+    find_id = db.user_info.find_one({"id": user_id})
+    total_price = data.get('totalPrice')
+
+    account = None  # 초기값으로 None 설정
+
+    if find_id is not None:
+        account = find_id.get('account')
+
+         # account 값을 수정하는 로직을 추가
+        new_account = account - total_price  # 새로운 account 값으로 대체할 값 설정
+
+        # 데이터베이스에서 account 값을 수정
+        db.user_info.update_one({"id": user_id}, {"$set": {"account": new_account}})
+        print('account 값이 수정되었습니다.')
+
+        # 수정된 account 값을 다시 가져와서 확인
+        updated_account = db.user_info.find_one({"id": user_id}).get('account')
+        print('수정된 account 값:', str(updated_account))
+
+    print('find_id'+str(find_id))
+    print('total' + str(total_price))
+    print('data' + str(data))
+    print('account' + str(account))
+
+    return jsonify(data)
 
 #! 챗봇 API
 

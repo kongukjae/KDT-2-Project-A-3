@@ -41,8 +41,9 @@ function Main_page(): JSX.Element {
       // 서버에서 시가총액 기준으로 정렬한 데이터를 보내주지만 json 형식은 순서를 보장하지 않기 때문에 순서가 뒤섞인다.
       // 따라서 데이터를 sort() 메서드를 이용해 다시한번 시가총액 기준으로 정렬시킴
       // console.log('데이터 정렬 전 : ', selectedButton)
-      const dataArray = Object.entries(data).sort((a:any, b:any) => { // type 에러가 발생하므로 any 형식으로 지정해둠 [웨않뒈는고야...]
-        let key: keyof typeof a[1];
+      const dataArray = Object.entries(data).sort((a: any, b: any) => {
+        // type 에러가 발생하므로 any 형식으로 지정해둠 [웨않뒈는고야...]
+        let key: keyof (typeof a)[1];
         // console.log('데이터 정렬 타입: ', selectedButton)
         switch (selectedButton) {
           case '등락':
@@ -60,42 +61,42 @@ function Main_page(): JSX.Element {
           default:
             key = '시가총액';
         }
-        const sortA = parseInt(a[1][key]);  
+        const sortA = parseInt(a[1][key]);
         const sortB = parseInt(b[1][key]);
         return sortB - sortA; // 내림차순 정렬
       });
       // setJsonData(data);
-      setDataArray(dataArray)
+      setDataArray(dataArray);
     } catch (error) {
       console.error(error);
     }
   };
 
   useEffect(() => {
-    // const interval = setInterval(() => {
-    //   stock_list(selectedButton);
-    // }, 3000)
+    const interval = setInterval(() => {
+      stock_list(selectedButton);
+    }, 3000);
 
     stock_list(selectedButton);
 
-    // return () => {
-    //   clearInterval(interval);
-    // };
-
+    return () => {
+      clearInterval(interval);
+    };
   }, [selectedButton]);
 
   // console.log('함수 밖');
   // console.log(jsonData);
 
   // [ 정렬 버튼 기능 ]
-  const dataArraySortByCurrentPrice = (standard:string) => {  // 
-    const sortDataArray = [...dataArray].sort((a:any, b:any) => {
+  const dataArraySortByCurrentPrice = (standard: string) => {
+    //
+    const sortDataArray = [...dataArray].sort((a: any, b: any) => {
       const currentPriceA = parseInt(a[1][standard]);
       const currentPriceB = parseInt(b[1][standard]);
       return currentPriceB - currentPriceA;
-    })
+    });
     setDataArray(sortDataArray);
-  }
+  };
 
   const handleButtonPress = (buttonName: string) => {
     setSelectedButton(buttonName);
@@ -128,7 +129,7 @@ function Main_page(): JSX.Element {
 
   // 컨텍스트
   const {userId} = useContext(AuthContext);
-  console.log(userId)
+  console.log(userId);
 
   const navigation = useNavigation<MainPageNavigationProp>();
 
@@ -142,7 +143,7 @@ function Main_page(): JSX.Element {
     ChoicePageThree: {choice: string};
     ChoicePageFour: {choice: string};
     MainPage: undefined;
-    Another: {company_name: string},
+    Another: {company_name: string, company_code: string},
   };
 
   type MainPageNavigationProp = StackNavigationProp<
@@ -152,8 +153,8 @@ function Main_page(): JSX.Element {
   // type ChoicePageOneRouteProp = RouteProp<RootStackParamList, 'ChoicePageTwo'>;
 
   // 상세 페이지로 이동 / 누른 회사 이름을 인자로 전달
-  const stockChoice = (company_name: string) => {
-    navigation.navigate('Another', {company_name});
+  const stockChoice = (company_name: string, company_code: string) => {
+    navigation.navigate('Another', {company_name, company_code});
   };
 
   return (
@@ -165,81 +166,115 @@ function Main_page(): JSX.Element {
       {dataArray.length === 0 ? (
         // 로딩 창 표시
         <View style={styles.loading_window}>
-          <Image 
-          source={require('./image/logo.png')} 
-          style={styles.LogoImage}
+          <Image
+            source={require('./image/logo.png')}
+            style={styles.LogoImage}
           />
           <Text style={styles.loadingText}>Loading...</Text>
           <ActivityIndicator size="large" color="#E8F6EF" />
         </View>
-      ) : (<ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        scrollEventThrottle={2}>
-        <View style={styles.header}>
-          <View style={styles.logoView}>
-            <Image
-              source={require('./image/logo_G.png')}
-              style={styles.logoImg}
-            />
-            <Text style={styles.logoText}>Chicken Stock</Text>
-          </View>
-          <View style={styles.header_inner}>
-            <View>
-              <TopMenuPage></TopMenuPage>
+      ) : (
+        <ScrollView
+          contentInsetAdjustmentBehavior="automatic"
+          scrollEventThrottle={2}>
+          <View style={styles.header}>
+            <View style={styles.logoView}>
+              <Image
+                source={require('./image/logo_G.png')}
+                style={styles.logoImg}
+              />
+              <Text style={styles.logoText}>Chicken Stock</Text>
             </View>
-            <View style={styles.login_box}>
-              <Text style={styles.login_user_name}>{userId}님 환영합니다.</Text>
+            <View style={styles.header_inner}>
+              <View>
+                <TopMenuPage></TopMenuPage>
+              </View>
+              <View style={styles.login_box}>
+                <Text style={styles.login_user_name}>
+                  {userId}님 환영합니다.
+                </Text>
+              </View>
             </View>
           </View>
-        </View>
-        <View style={styles.article_area}>
-          <SlideComponent />
-        </View>
-        <View style={[styles.flex_row, styles.marginLeft_015P]}>
-          <TouchableHighlight
-            style={[styles.button, selectedButton === '등락' ? styles.selectedButton : null,]}
-            onPress={() => handleButtonPress('등락')}>
-            <Text style={styles.buttonText}>등락 순</Text>
-          </TouchableHighlight>
-          <TouchableHighlight
-            style={[styles.button, selectedButton === '현재가' ? styles.selectedButton : null,]}
-            onPress={() => handleButtonPress('현재가')}>
-            <Text style={styles.buttonText}>가격 순</Text>
-          </TouchableHighlight>
-          <TouchableHighlight
-            style={[styles.button, selectedButton === '시가총액' ? styles.selectedButton : null,]}
-            onPress={() => handleButtonPress('시가총액')}>
-            <Text style={styles.buttonText}>시가총액 순</Text>
-          </TouchableHighlight>
-          <TouchableHighlight
-            style={[styles.button, selectedButton === '거래량' ? styles.selectedButton : null,]}
-            onPress={() => handleButtonPress('거래량')}>
-            <Text style={styles.buttonText}>거래량 순</Text>
-          </TouchableHighlight>
-        </View>
-        <View style={styles.container}>
-          {dataArray.map((item, index) => {
+          <View style={styles.article_area}>
+            <SlideComponent />
+          </View>
+          <View style={[styles.flex_row, styles.marginLeft_015P]}>
+            <TouchableHighlight
+              style={[
+                styles.button,
+                selectedButton === '등락' ? styles.selectedButton : null,
+              ]}
+              onPress={() => handleButtonPress('등락')}>
+              <Text style={styles.buttonText}>등락 순</Text>
+            </TouchableHighlight>
+            <TouchableHighlight
+              style={[
+                styles.button,
+                selectedButton === '현재가' ? styles.selectedButton : null,
+              ]}
+              onPress={() => handleButtonPress('현재가')}>
+              <Text style={styles.buttonText}>가격 순</Text>
+            </TouchableHighlight>
+            <TouchableHighlight
+              style={[
+                styles.button,
+                selectedButton === '시가총액' ? styles.selectedButton : null,
+              ]}
+              onPress={() => handleButtonPress('시가총액')}>
+              <Text style={styles.buttonText}>시가총액 순</Text>
+            </TouchableHighlight>
+            <TouchableHighlight
+              style={[
+                styles.button,
+                selectedButton === '거래량' ? styles.selectedButton : null,
+              ]}
+              onPress={() => handleButtonPress('거래량')}>
+              <Text style={styles.buttonText}>거래량 순</Text>
+            </TouchableHighlight>
+          </View>
+          <View style={styles.container}>
+            {dataArray.map((item, index) => {
               const name_data = item[0];
               const company_data: any = item[1]; // up_down과 current_price에서 타입 에러가 발생하므로 any로 할당함
+              const company_code = company_data['종목코드']
               const up_down = parseInt(company_data['등락']).toLocaleString();
-              const current_price = parseInt(company_data['현재가']).toLocaleString();
+              const current_price = parseInt(
+                company_data['현재가'],
+              ).toLocaleString();
               return (
-                <TouchableHighlight key={index} style={styles.view} onPress={() => {stockChoice(name_data)}}>
+                <TouchableHighlight key={index} style={styles.view} onPress={() => {stockChoice(name_data, company_code)}}>
                   <View style={styles.flex_col_center}>
-                    <View style={[styles.width_100P, styles.height_50P, styles.flex_center]}>
+                    <View
+                      style={[
+                        styles.width_100P,
+                        styles.height_50P,
+                        styles.flex_center,
+                      ]}>
                       <Text>{name_data}</Text>
                     </View>
-                    <View style={[styles.flex_row, styles.flex_center, styles.space_evenly, styles.width_100P, styles.height_50P]}>
+                    <View
+                      style={[
+                        styles.flex_row,
+                        styles.flex_center,
+                        styles.space_evenly,
+                        styles.width_100P,
+                        styles.height_50P,
+                      ]}>
                       <Text>현재가 {current_price}</Text>
-                      {parseInt(up_down) < 0 ? (<Text style={styles.down_style}>▼ {up_down}</Text>) : (<Text style={styles.up_style}>▲ {up_down}</Text>)}
+                      {parseInt(up_down) < 0 ? (
+                        <Text style={styles.down_style}>▼ {up_down}</Text>
+                      ) : (
+                        <Text style={styles.up_style}>▲ {up_down}</Text>
+                      )}
                     </View>
                   </View>
                 </TouchableHighlight>
               );
-            })
-          }
-        </View>
-      </ScrollView>)}
+            })}
+          </View>
+        </ScrollView>
+      )}
     </SafeAreaView>
   );
 }
@@ -262,10 +297,10 @@ const styles = StyleSheet.create({
   logoText: {
     color: '#4C4C6D',
     fontSize: 16,
-    fontFamily: 'BagelFatOne-Regular'
+    fontFamily: 'BagelFatOne-Regular',
   },
   marginLeft_015P: {
-    marginLeft: '1.5%'
+    marginLeft: '1.5%',
   },
   loading_window: {
     width: '100%',
@@ -274,11 +309,11 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#1B9C85'
+    backgroundColor: '#1B9C85',
   },
   loadingText: {
     fontSize: 40,
-    fontWeight: '700'
+    fontWeight: '700',
   },
   infiniteScrollArea: {
     paddingHorizontal: 20,
@@ -333,7 +368,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   space_evenly: {
-    justifyContent: 'space-evenly'
+    justifyContent: 'space-evenly',
   },
   flex_col_center: {
     display: 'flex',
@@ -408,15 +443,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   width_100P: {
-    width: '100%'
+    width: '100%',
   },
   height_50P: {
-    height: '50%'
+    height: '50%',
   },
   test_box: {
     borderWidth: 1,
     borderColor: 'black',
-  }
+  },
 });
 
 export default Main_page;

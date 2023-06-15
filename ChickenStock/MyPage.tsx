@@ -21,7 +21,6 @@ import TopMenuPage from './TopMenuPage';
 // import axios from 'axios';
 
 const MyPage = () => {
- 
   const [data, setData] = useState<any>({});
 
   // 데이터 가져오는 비동기 함수
@@ -45,11 +44,9 @@ const MyPage = () => {
     fetchData();
   }, []);
 
-  console.log("data", data)
-  console.log("type")
-  console.log(typeof(data))
-
-  
+  console.log('data', data);
+  console.log('type');
+  console.log(typeof data);
 
   const interest = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
   const enter = ['기업 명', '현재가', '등락', '보유 수량', '평가 금액'];
@@ -63,7 +60,9 @@ const MyPage = () => {
       </View>
       {Object.keys(data).length !== 0 && (
         <View style={styles.myMoneyCss}>
-          <Text>은행 : {data.bank}  계좌 잔액 : {data.account}</Text>
+          <Text>
+            은행 : {data.bank} 계좌 잔액 : {data.account}
+          </Text>
           {/* <Text></Text> */}
         </View>
       )}
@@ -236,7 +235,7 @@ const styles = StyleSheet.create({
     height: 30,
     backgroundColor: 'gray',
     borderRadius: 30,
-    margin:  8,
+    margin: 8,
     justifyContent: 'center',
     alignItems: 'center',
   },
