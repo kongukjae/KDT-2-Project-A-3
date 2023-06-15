@@ -142,7 +142,7 @@ function Main_page(): JSX.Element {
     ChoicePageThree: {choice: string};
     ChoicePageFour: {choice: string};
     MainPage: undefined;
-    Another: {company_name: string},
+    Another: {company_name: string, company_code: string},
   };
 
   type MainPageNavigationProp = StackNavigationProp<
@@ -152,8 +152,8 @@ function Main_page(): JSX.Element {
   // type ChoicePageOneRouteProp = RouteProp<RootStackParamList, 'ChoicePageTwo'>;
 
   // 상세 페이지로 이동 / 누른 회사 이름을 인자로 전달
-  const stockChoice = (company_name: string) => {
-    navigation.navigate('Another', {company_name});
+  const stockChoice = (company_name: string, company_code: string) => {
+    navigation.navigate('Another', {company_name, company_code});
   };
 
   return (
@@ -221,10 +221,11 @@ function Main_page(): JSX.Element {
           {dataArray.map((item, index) => {
               const name_data = item[0];
               const company_data: any = item[1]; // up_down과 current_price에서 타입 에러가 발생하므로 any로 할당함
+              const company_code = company_data['종목코드']
               const up_down = parseInt(company_data['등락']).toLocaleString();
               const current_price = parseInt(company_data['현재가']).toLocaleString();
               return (
-                <TouchableHighlight key={index} style={styles.view} onPress={() => {stockChoice(name_data)}}>
+                <TouchableHighlight key={index} style={styles.view} onPress={() => {stockChoice(name_data, company_code)}}>
                   <View style={styles.flex_col_center}>
                     <View style={[styles.width_100P, styles.height_50P, styles.flex_center]}>
                       <Text>{name_data}</Text>
