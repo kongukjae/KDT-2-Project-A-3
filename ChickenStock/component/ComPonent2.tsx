@@ -2,6 +2,12 @@ import React, {useState, useEffect} from 'react';
 import {LineChart, Grid, XAxis, YAxis} from 'react-native-svg-charts';
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import io from 'socket.io-client';
+
+type Component2Props = {
+  company_name: string;
+  company_code: string;
+};
+
 // 서버에서 받아올 데이터의 타입을 정의
 interface StockData {
   stck_cntg_hour: string; // 시간
@@ -13,8 +19,9 @@ interface StockData {
   stck_prpr: number; // 종가
   cntg_vol: number; // 거래량
 }
-
-const ComPonent2 = () => {
+const ComPonent2: React.FC<Component2Props> = ({ company_name, company_code }) => {
+  console.log('com2')
+  console.log(company_name, company_code)
   const [data, setData] = useState<StockData[]>([]);
   const [dayData, setDayData] = useState<StockData[]>([]);
   const [monthData, setMonthData] = useState<StockData[]>([]);
