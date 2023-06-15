@@ -304,19 +304,23 @@ def main_page_init():
 @socketio.on('hoga_data')
 def get_hoga_data():
     def get_approval(key, secret):
-    # url = https://openapivts.koreainvestment.com:29443' # 모의투자계좌     
-         url = 'https://openapi.koreainvestment.com:9443' # 실전투자계좌
-         headers = {"content-type": "application/json"}
-         body = {"grant_type": "client_credentials",
-                 "appkey": key,
-                 "secretkey": secret}
-         PATH = "oauth2/Approval"
-         URL = f"{url}/{PATH}"
-         res = requests.post(URL, headers=headers, data=json.dumps(body))
-         approval_key = res.json()["approval_key"]
-         return approval_key
+        # url = https://openapivts.koreainvestment.com:29443' # 모의투자계좌     
+        url = 'https://openapi.koreainvestment.com:9443' # 실전투자계좌
+        headers = {"content-type": "application/json"}
+        body = {"grant_type": "client_credentials",
+                "appkey": key,
+                "secretkey": secret}
+        PATH = "oauth2/Approval"
+        URL = f"{url}/{PATH}"
+        res = requests.post(URL, headers=headers, data=json.dumps(body))
+        approval_key = res.json()["approval_key"]
+        return approval_key
+
+    ### 1. 국내주식 ###
+
+    # 주식호가 출력라이브러리
     def stockhoka_domestic(data):
-    
+
         recvvalue = data.split('^')  # 수신데이터를 split '^'
 
         print("유가증권 단축 종목코드 [" + recvvalue[0] + "]")
@@ -360,8 +364,12 @@ def get_hoga_data():
         print("예상체결 전일대비율    [%s]" % (recvvalue[52]))
         print("누적거래량             [%s]" % (recvvalue[53]))
         print("주식매매 구분코드      [%s]" % (recvvalue[58]))
-        
-    def connect():
+
+
+
+
+    async def connect():
+
         g_appkey = key
         g_appsceret = secret
         g_approval_key = get_approval(g_appkey, g_appsceret)
@@ -386,16 +394,16 @@ def get_hoga_data():
         #websockets.connect() 함수를 호출하여 url에 지정된 주소로 웹소켓 연결을 수립합니다. ping_interval은 30초마다 핑(ping) 메시지를 보내는 간격을 나타내는 매개변수입니다.
         # as websocket 구문은 웹소켓 연결 객체를 websocket 변수에 할당합니다. 이를 통해 웹소켓 연결을 조작하고 데이터를 송수신할 수 있습니다.
         # async with 블록 내부의 코드는 웹소켓 연결이 활성화된 상태에서 실행됩니다. 이 블록 안에서 비동기 작업을 수행할 수 있습니다.     
-        with websockets.connect(url, ping_interval=30) as websocket:
+        async with websockets.connect(url, ping_interval=30) as websocket:
 
             for senddata in senddata_list:
-                websocket.send(senddata) # 소켓에 헤더 정보를 담아 데이터를 보냄
+                await websocket.send(senddata) # 소켓에 헤더 정보를 담아 데이터를 보냄
                 time.sleep(0.5)
                 print(f"Input Command is :{senddata}")
 
             while True:
                 try:
-                    data = websocket.recv()
+                    data = await websocket.recv()
                     time.sleep(0.5)
                     '''print(data) = 0|H0STASP0|001|005930^120755^0^71500^71600^71700^71800^71900^72000^72100^72200^72300^72400^71400^71300^71200^71100^71000^70900^70800^70700^70600^70500^224894^232186^146088^104734^149529^164939^70009^113786^95478^118801^255687^363921^204942^342566^471139^207546^245925^295307^144386^423045^1420444^2954464^0^0^0^0^326405^-72000^5^-100.00^7504606^1^1^0^0^0'''
                     if data[0] == '0':
@@ -409,7 +417,7 @@ def get_hoga_data():
                             time.sleep(0.2)
                         else: 
                             print('호가 데이터가 아닌 다른 데이터 유입')
-# --    ----
+    # ------
                     #    
                     else:
                         jsonObject = json.loads(data)
@@ -441,9 +449,10 @@ def get_hoga_data():
                 except websockets.ConnectionClosed:
                     continue
 
-    emit('return_hoga',"a")
+
     # 비동기로 서버에 접속한다.
+    asyncio.get_event_loop().run_until_complete(connect())
+    asyncio.get_event_loop().close()
 
 if (__name__) == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
-    socketio.run(app, host='0.0.0.0', port=5000)
