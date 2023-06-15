@@ -105,24 +105,6 @@ const BuyPage = () => {
   const [price, setPrice] = useState('');
   const [selectedInput, setSelectedInput] = useState('');
   const [modal,setModal] = useState(false)
-  // const [totalPrice, settotalPrice] = useState('');
-
-  // const buy = () =>{
-  //   fetch('http://10.0.2.2:5000/buy', {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify({ id: data.id }),
-  //   })
-  //     .then(response => {
-  //       if (response.ok) {
-  //         return response.json();
-  //       } else {
-  //         throw new Error('아이디 전송 실패');
-  //       }
-  //     })
-  // }
 
   const openModal=()=>{
     setModal(true);

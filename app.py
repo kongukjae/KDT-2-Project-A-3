@@ -351,18 +351,18 @@ def get_hoga_data():
 
 @app.route('/buy', methods=['POST'])
 def buy():
-    user_id = session.get('user_id')
-    # # 연결된 db에서 id가 로그인 한 id와 같은 데이터를 db에서 찾음
-    find_id = db.user_info.find_one({"id": user_id})
-    print('find_id'+find_id)
+    # user_id = session.get('user_id')
+    # # # 연결된 db에서 id가 로그인 한 id와 같은 데이터를 db에서 찾음
+    # find_id = db.user_info.find_one({"id": user_id})
+    # total_price = data.get('totalPrice')
+    # print('find_id'+find_id)
     data = request.get_json()
-    total_price = data.get('totalPrice')
-    print('total' + total_price)
+    # print('total' + total_price)
     print('data' + data)
 
-    if find_id:
-        account = find_id.get('account')
-        print(account)
+    # if find_id:
+    #     account = find_id.get('account')
+    #     print(account)
 
     return jsonify(data)
 
