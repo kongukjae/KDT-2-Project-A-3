@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, TouchableOpacity, Text, StyleSheet} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {useNavigation} from '@react-navigation/native';
@@ -106,28 +106,37 @@ const styles = StyleSheet.create({
 
 
 const BuyPage = () => {
+
+  
   const [quantity, setQuantity] = useState('');
   const [price, setPrice] = useState('');
   const [selectedInput, setSelectedInput] = useState('');
   const [modal,setModal] = useState(false)
-  const socket = io('http://10.0.2.2:5000');  
+  const socket = io('http://10.0.2.2:5000');      
+
+  useEffect(()=>{
+    socket.on('connect', () => {
+      console.log('Connected to server');
+    });    
+  })
 
   const openModal=()=>{
     setModal(true);
-    const socket = io('http://10.0.2.2:5000');
-    socket.emit('get_hoga')
-      
+    socket.emit('get_hoga_data')
     console.log('soket 요청 갔다')
+
     socket.on('get_hogaFromServer',data=>{
       console.log(data)
       console.log('서버로부터 소켓 데이터 통신 완료')
-      socket.emit('get_hoga')
     })
   }
 
 
   const closeModal=()=>{
     setModal(false);
+    socket.off('get_hogaFromServer');
+    socket.disconnect();
+    console.log('서버꺼짐')
   }
 
   const totalPrice =
