@@ -11,6 +11,7 @@ import pprint
 from flask_socketio import SocketIO, emit
 # 개인 제작 모듈
 import callApiData.Mainpage_stock_data
+import callApiData.Search_stock_data
 import callDBData.category_name_changer
 # bardapi
 import bardapi
@@ -312,7 +313,7 @@ def get_news_data():
     return jsonify(json_news)
 
 
-# 메인 페이지에 주식 목록 데이터
+#? 메인 페이지 주식 목록 데이터
 @app.route('/api/main_page', methods=['POST'])
 def main_page_init():
     user_id = session.get('user_id')
@@ -359,6 +360,15 @@ def handle_disconnect():
     # 클라이언트가 소켓 연결을 끊었을 때 실행되는 로직을 작성합니다.
     print('Client disconnected')
     emit('clientDisconnect');
+
+#? 주식 검색
+@app.route('/search_stock', methods=['POST'])
+def search_stock_server():
+    print('검색 진입')
+    search_value = request.get_json()
+    print('들어온 회사명 ', search_value)
+    search_response = callApiData.Search_stock_data.Search_data(search_value)
+    return jsonify(search_response)
 
 if (__name__) == '__main__':
     app.run(host='0.0.0.0', port=5000)
