@@ -1,16 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
-  SafeAreaView,
   ScrollView,
-  StatusBar,
   StyleSheet,
   Text,
-  useColorScheme,
   View,
   Image,
   TouchableOpacity,
-  TouchableHighlight,
-  Linking,
   Modal,
   TouchableWithoutFeedback,
   TextInput,
@@ -58,44 +53,45 @@ const TopMenuPage = () => {
 
   const openModal = () => {
     setModalVisible(true);
-    console.log('change1', modalVisible);
-    setSocket(io('http://10.0.2.2:5000'));
+    setSocket(io('http://10.0.2.2:5000')); //* 소켓 설정
   };
 
+  // 모달 창을 닫는 함수
   const closeModal = () => {
     setModalVisible(false);
-    console.log('change2', modalVisible);
     if (socket) {
-      socket.disconnect(); // Close socket connection when modal is closed
+      socket.disconnect(); //* 모달창 닫혔을 때 소켓 연결 해제
       setSocket(null);
     }
   };
 
   const handleOverlayPress = () => {
-    closeModal();
-    // 모달 이외의 영역을 터치했을 때 수행할 동작을 추가할 수 있습니다.
+    closeModal(); // 모달창이 아닌 다른 부분을 닫았을 때 함수 실행
   };
 
+  // 마이페이지 아이콘 눌렀을 때 마이페이지로 이동하는 함수
   const goToChoicePage = () => {
     navigation.navigate('MyPage');
   };
 
+  // 전송 버튼을 눌렀을 때 실행되는 함수
   const handleSend = () => {
     if (socket) {
       console.log('Sending message:', message);
-      socket.emit('message', message);
+      socket.emit('message', message); // 'message' 이벤트 리스너 전달
       const userMessage: Message = {
         content: message,
         sender: 'user',
       };
-      setMessages(prevMessages => [...prevMessages, userMessage]);
+      setMessages(prevMessages => [...prevMessages, userMessage]); //유저가 보내는 함수 및 이전에 보냈던 것을 가져와서 useState에 담음
     }
-    setMessage('');
+    setMessage(''); // 메시지 입력창을 빈 값으로 초기화
   };
 
+  // Effect()를 처리하는 코드
   useEffect(() => {
     if (socket) {
-      socket.on('response', data => {
+      socket.on('response', data => { // 'response' 이벤트 리스너를 받음
         console.log(data);
         let responseData = {
           content: data['content'],
@@ -105,6 +101,7 @@ const TopMenuPage = () => {
         scrollViewRef.current?.scrollToEnd({ animated: true });
       });
     }
+    // Clean-up 함수 작성 부분
     return () => {
       if (socket) {
         socket.off('response'); // 이벤트 핸들러 해제
@@ -211,15 +208,21 @@ const TopMenuPage = () => {
                   </Text>
                   <View style={styles.chatContainer}>
                     <ScrollView
+                      //! ScrollView 내부의 컨텐츠에 대한 스타일을 지정
                       contentContainerStyle={styles.chatContent}
+                      //! 세로 스크롤바의 표시 여부
                       showsVerticalScrollIndicator={false}
+                      //! ref: React 컴포넌트에서 DOM 요소나 컴포넌트 인스턴스에 접근하기 위한 방법
                       ref={scrollViewRef}>
+                      {/* messages의 배열을 순회 */}
                       {messages.map((msg, index) => {
+                        // msg의 내용과 받는사람으로 키값 생성
                         const key = `${msg.content}-${msg.sender}`;
                         return (
                           <View
                             style={[
                               styles.chatBox,
+                              // 만약 sender가 user이면 userMessage 스타일로 아니면 botMessage스타일로
                               msg.sender === 'user'
                                 ? styles.userMessage
                                 : styles.botMessage,
