@@ -174,9 +174,9 @@ def get_Mdata(company_code):
         'stck_clpr', 'stck_hgpr', 'stck_lwpr', 'stck_oprc', 'acml_vol', 'acml_tr_pbmn']].astype(float)
 
     # 날짜 컬럼 형식 변경
-    df['stck_bsop_date'] = pd.to_datetime(
-        df['stck_bsop_date'], format='%Y%m%d')
-
+    # df['stck_bsop_date'] = pd.to_datetime(
+    #     df['stck_bsop_date'], format='%Y%m%d')
+    df['stck_bsop_date'] = df['stck_bsop_date'].dt.strftime('%Y-%m-%d')
     # 필요한 정보만 포함된 json 데이터로 변환
     chart_data = df[['stck_bsop_date', 'stck_oprc', 'stck_hgpr',
                      'stck_lwpr', 'stck_clpr', 'acml_vol']].to_dict(orient='records')

@@ -48,4 +48,7 @@ df['stck_bsop_date'] = pd.to_datetime(
 chart_data = df[['stck_bsop_date', 'stck_oprc', 'stck_hgpr',
                      'stck_lwpr', 'stck_clpr', 'acml_vol']].to_dict(orient='records')
 
+# json_data = json.dumps(chart_data)
+# print(json_data)
 print(chart_data)
+
