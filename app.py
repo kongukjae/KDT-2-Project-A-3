@@ -348,18 +348,16 @@ def get_hoga_data():
     return jsonify()
 
 #! 챗봇 API
-@socketio.on('modalOpen')
-def modal_open():
-    # 클라이언트가 소켓에 연결되었을 때 실행되는 로직을 작성합니다.
     
-    print('Client connected')
-    emit('clientConnect');
-
-@socketio.on('modalClose')
-def handle_disconnect():
-    # 클라이언트가 소켓 연결을 끊었을 때 실행되는 로직을 작성합니다.
-    print('Client disconnected')
-    emit('clientDisconnect');
+@socketio.on('message')  # 수정된 부분
+def handle_message(message):
+    print("받음")
+    print('Received message:', message)
+    bard_question = f'주식이나 투자에서 {message} 짧게 한 문장으로 얘기해줘'
+    bard_answer = bardapi.core.Bard().get_answer(bard_question)
+    # 메시지 처리 로직을 추가할 수 있습니다.
+    # 필요에 따라 클라이언트에 응답 메시지를 보낼 수도 있습니다.
+    emit('response', bard_answer)
 
 #? 주식 검색
 @app.route('/search_stock', methods=['POST'])
