@@ -29,7 +29,7 @@ key = lines[0].strip()
 secret = lines[1].strip()
 acc_no = lines[2].strip()
 f.close()
-broker = mojito.KoreaInvestment(api_key=key, api_secret=secret, acc_no=acc_no)
+broker = mojito.KoreaInvestment(api_key=key, api_secret=secret, acc_no=acc_no,)
 socketio = SocketIO(app, cors_allowed_origins="*")
 logger = logging.getLogger('socketio')  # SocketIO 로거 생성
 logger.setLevel(logging.DEBUG)  # 로그 레벨을 DEBUG로 설정
