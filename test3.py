@@ -45,8 +45,9 @@ def send_front():
     send_data = "data"
     emit('end',send_data)
 
-if (__name__) == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+if (__name__) == '__main__':    
+    # app.run(host='0.0.0.0', port=5000)
+    socketio.run(app, host='0.0.0.0', port=4000)
 # 웹소켓 접속키 발급
 # def get_approval(key, secret):
 #     # url = https://openapivts.koreainvestment.com:29443' # 모의투자계좌     

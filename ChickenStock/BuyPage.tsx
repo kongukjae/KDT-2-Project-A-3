@@ -3,8 +3,7 @@ import {View, TouchableOpacity, Text, StyleSheet} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {useNavigation} from '@react-navigation/native';
 import HogaModal from './HogaModal';
-import io from 'socket.io-client'; // socket.io-client import
-
+import {io ,Socket} from 'socket.io-client'
 
 
 
@@ -112,16 +111,16 @@ const BuyPage = () => {
   const [price, setPrice] = useState('');
   const [selectedInput, setSelectedInput] = useState('');
   const [modal,setModal] = useState(false)
-
+  // const [socket, setSocket] = useState<Socket | null>(null);
   // useEffect(()=>{
   //   socket.on('connect', () => {
   //     console.log('Connected to server');
   //   });    
   // })
-
+  
   const openModal=()=>{
+    const socket = io('http://10.0.2.2:4000');      // 소켓 켜는 코드
     setModal(true);
-    const socket = io('http://10.0.2.2:5000');      // 소켓 켜는 코드
     socket.connect()
     socket.emit('start')
     console.log('soket 요청 갔다')
@@ -129,15 +128,21 @@ const BuyPage = () => {
     socket.on('end',data=>{
       console.log(data)
       console.log('서버로부터 소켓 데이터 통신 완료')
+      
     })
+    
+
+
   }
-
-
+  
+  
   const closeModal=()=>{
+    const socket = io('http://10.0.2.2:4000');      // 소켓 켜는 코드
+    
     setModal(false);
-    // socket.off('get_hogaFromServer');
-    // socket.disconnect();
+    socket.disconnect();
     console.log('서버꺼짐')
+    // socket.off('get_hogaFromServer');
   }
 
   const totalPrice =
