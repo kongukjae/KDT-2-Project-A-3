@@ -111,13 +111,13 @@ const BuyPage = () => {
   const [price, setPrice] = useState('');
   const [selectedInput, setSelectedInput] = useState('');
   const [modal,setModal] = useState(false)
+  const [hogaString,setHogaString] = useState('')
   // const [socket, setSocket] = useState<Socket | null>(null);
   // useEffect(()=>{
   //   socket.on('connect', () => {
   //     console.log('Connected to server');
   //   });    
   // })
-  const [hogaString,setHogaString] = useState([])
   const openModal=()=>{
     const socket = io('http://10.0.2.2:5000');      // 소켓 켜는 코드
     setModal(true);
@@ -127,8 +127,9 @@ const BuyPage = () => {
     
     socket.on('end',data=>{
       console.log(data)
-      console.log('서버로부터 소켓 데이터 통신 완료')
-      
+      // setHogaString(data)
+      // let hogadata= hogaString.split('^')
+      // console.log(hogadata)
     })
   }
   
@@ -151,7 +152,7 @@ const BuyPage = () => {
     if (selectedInput === 'quantity') {
       if (quantity === '0') {
         setQuantity(number); 
-        //? 0일경우 누르는 값으로 값을 대체
+        // ? 0일경우 누르는 값으로 값을 대체
       } else {
         setQuantity(quantity + number); 
         //? 0이 아닐경우 그 뒤에 값을 붙임
