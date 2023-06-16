@@ -197,7 +197,7 @@ def get_Ydata():
 
     # 필요한 정보만 포함된 json 데이터로 변환
     chart_data = df[['stck_bsop_date', 'stck_oprc', 'stck_hgpr',
-                     'stck_lwpr', 'stck_clpr', 'acml_vol']].to_dict(orient='records')
+                    'stck_lwpr', 'stck_clpr', 'acml_vol']].to_dict(orient='records')
 
     return jsonify(chart_data)
 

@@ -164,6 +164,8 @@ const TopMenuPage = () => {
 
   // 상세 페이지로 이동 / 누른 회사 이름을 인자로 전달
   const stockSearchChoice = (company_name: string, company_code: string) => {
+    setSearchVisible(false);
+    setSearchRes(null)
     navigation.navigate('Another', {company_name, company_code});
   };
 
