@@ -276,7 +276,20 @@ const TopMenuPage = () => {
                   <View>
                     {/* 검색 결과 출력 */}
                     {searchRes && (
-                      <Text>{searchRes}</Text>
+                      typeof searchRes === 'object' ? (
+                        <View>
+                        {Object.keys(searchRes).map(key => (
+                          <View key = {key}>
+                            <Text>{key}</Text>
+                            <Text>{searchRes[key]}</Text>
+                          </View>
+                        ))}
+                        </View>
+                      ) : (
+                        <View>
+                          <Text>{searchRes}</Text>
+                        </View>
+                      )
                     )}
                   </View>
                 </View>

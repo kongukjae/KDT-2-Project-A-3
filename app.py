@@ -366,7 +366,7 @@ def search_stock_server():
     search_value = request.get_json()
     print('들어온 회사명 ', search_value)
     search_response = callApiData.Search_stock_data.Search_data(search_value)
-    return jsonify(search_response)
+    return jsonify(search_response.to_dict())
 
 if (__name__) == '__main__':
     app.run(host='0.0.0.0', port=5000)
