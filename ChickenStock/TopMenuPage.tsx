@@ -26,17 +26,30 @@ type RootStackParamList = {
   ChoicePageThree: undefined;
   ChoicePageFour: undefined;
   MainPage: undefined;
-  Another: undefined;
+  Another: {company_name: string, company_code: string},
   SignUpPage: undefined;
   LoginPage: undefined;
   MyPage: undefined;
 };
 
+type TopMenuNavigationProp = StackNavigationProp<
+    RootStackParamList,
+    'Another'
+  >;
+
 type ChoicePageOneNavigationProp = StackNavigationProp<
   RootStackParamList,
   'ChoicePageTwo'
 >;
-type ChoicePageOneRouteProp = RouteProp<RootStackParamList, 'ChoicePageTwo'>;
+
+// type ChoicePageOneRouteProp = RouteProp<RootStackParamList, 'ChoicePageTwo'>;
+
+const navigation = useNavigation<ChoicePageOneNavigationProp>();
+
+// 상세 페이지로 이동 / 누른 회사 이름을 인자로 전달
+const stockSearchChoice = (company_name: string, company_code: string) => {
+  navigation.navigate('Another', {company_name, company_code});
+};
 
 interface Message {
   content: string;
@@ -44,7 +57,7 @@ interface Message {
 }
 
 const TopMenuPage = () => {
-  const navigation = useNavigation<ChoicePageOneNavigationProp>();
+  const navigation = useNavigation<TopMenuNavigationProp>();
   const [modalVisible, setModalVisible] = useState(false);
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState<Message[]>([]);
@@ -275,14 +288,16 @@ const TopMenuPage = () => {
                   </View>
                   <View>
                     {/* 검색 결과 출력 */}
-                    {searchRes && (
+                    {/* {searchRes && (
                       typeof searchRes === 'object' ? (
                         <View>
                         {Object.keys(searchRes).map(key => (
-                          <View key = {key}>
-                            <Text>{key}</Text>
-                            <Text>{searchRes[key]}</Text>
-                          </View>
+                          <TouchableOpacity onPress={() => stockSearchChoice(key, searchRes[key])}>
+                            <View>
+                              <Text>{key}</Text>
+                              <Text>{searchRes[key]}</Text>
+                            </View>
+                          </TouchableOpacity>
                         ))}
                         </View>
                       ) : (
@@ -290,7 +305,7 @@ const TopMenuPage = () => {
                           <Text>{searchRes}</Text>
                         </View>
                       )
-                    )}
+                    )} */}
                   </View>
                 </View>
               </TouchableWithoutFeedback>
