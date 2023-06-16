@@ -26,9 +26,15 @@ acc_no = lines[2].strip()
 f.close()
 broker = mojito.KoreaInvestment(api_key=key, api_secret=secret, acc_no=acc_no)
 
+# data = broker._fetch_today_1m_ohlcv("005930", to="15:30:30")
+# df = pd.DataFrame(data['output2'])
+# df['stck_cntg_hour'] = pd.to_datetime(
+# df['stck_cntg_hour'], format='%H%M%S').dt.strftime('%H:%M:%S')
+# df[['stck_prpr', 'stck_oprc', 'stck_hgpr', 'stck_lwpr', 'cntg_vol', 'acml_tr_pbmn']] = df[[
+#         'stck_prpr', 'stck_oprc', 'stck_hgpr', 'stck_lwpr', 'cntg_vol', 'acml_tr_pbmn']].astype(float)
 
-
-data = broker.fetch_ohlcv("005930", "Y")
+# print(df)
+data = broker.fetch_ohlcv_domestic('005930', "M","20220608")
 df = pd.DataFrame(data['output2'])
     # 필요한 컬럼을 숫자로 변환
 df[['stck_clpr', 'stck_hgpr', 'stck_lwpr', 'stck_oprc', 'acml_vol', 'acml_tr_pbmn']] = df[[
@@ -41,4 +47,5 @@ df['stck_bsop_date'] = pd.to_datetime(
     # 필요한 정보만 포함된 json 데이터로 변환
 chart_data = df[['stck_bsop_date', 'stck_oprc', 'stck_hgpr',
                      'stck_lwpr', 'stck_clpr', 'acml_vol']].to_dict(orient='records')
+
 print(chart_data)

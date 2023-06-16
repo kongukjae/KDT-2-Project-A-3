@@ -149,6 +149,7 @@ def get_data(company_code):
     print(company_code)
     print("여기는 실시간 코드 여기는 실시간 코드 여기는 실시간 코드")
     code1=company_code['company_code']
+    print(code1)
     data = broker._fetch_today_1m_ohlcv([(f'{code1}')], to="15:30:30")
     df = pd.DataFrame(data['output2'])
     df['stck_cntg_hour'] = pd.to_datetime(
@@ -164,8 +165,8 @@ def get_data(company_code):
 def get_Mdata(company_code):
     print(company_code)
     print('여기는 무엇인가요?')
-    code2=company_code['company_code']
-    data = broker.fetch_ohlcv_domestic([(f'{code2}')], "M", "20220608")
+    code2=company_code['company_code'] 
+    data = broker.fetch_ohlcv_domestic(f'{code2}', "M", "20220608")
     df = pd.DataFrame(data['output2'])
 
     # 필요한 컬럼을 숫자로 변환
@@ -179,6 +180,7 @@ def get_Mdata(company_code):
     # 필요한 정보만 포함된 json 데이터로 변환
     chart_data = df[['stck_bsop_date', 'stck_oprc', 'stck_hgpr',
                      'stck_lwpr', 'stck_clpr', 'acml_vol']].to_dict(orient='records')
+
 
     return jsonify(chart_data)
 
