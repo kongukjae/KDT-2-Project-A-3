@@ -9,7 +9,7 @@ type RootStackParamList = {
   ChoicePageThree: {choice: string};
   ChoicePageFour: {choice: string};
   MainPage: undefined;
-  Another: {company_name: string}; // 전달 받는 데이터 타입 지정
+  Another: {company_name: string, company_code: string}; // 전달 받는 데이터 타입 지정
   BuyPage: undefined;
   SellPage: undefined;
 };
@@ -19,16 +19,18 @@ type AnotherPageNavigationProp = StackNavigationProp<
   'BuyPage',
   'SellPage'
 >;
-
+//  수정필요
 // AnotherPage에서 전달 받는 데이터의 속성 지정
 type Component4Props = {
   company_name: string;
+  company_code: string;
 };
 
 // Component4에게 Component4Props라는 속성을 주고 변수를 전달받아 사용함
-const Component4: React.FC<Component4Props> = ({ company_name }) => {
-  console.log('컴포넌트4')
+const Component4: React.FC<Component4Props> = ({ company_name, company_code }) => {
+  console.log('com4')
   console.log(company_name)
+  console.log(company_code)
   const navigation = useNavigation<AnotherPageNavigationProp>();
 
   const handleLocationMain = () => {
