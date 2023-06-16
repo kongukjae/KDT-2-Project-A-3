@@ -54,6 +54,7 @@ const TopMenuPage = () => {
   const [searchVisible, setSearchVisible] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [searchPress, setSearchPress] = useState(false);
+  const [searchRes, setSearchRes] = useState(null)
   console.log("press0101: ", searchPress)
 
   const openModal = () => {
@@ -125,7 +126,7 @@ const TopMenuPage = () => {
     // 2. 서버는 들어온 요청 데이터를 보고 API와 통신하여 해당 기업을 찾아서 응답
     // 3. 응답 받은 데이터를 이용해 View 태그를 추가로 만들어냄
   }, [searchPress])
-  
+
   const closeSearch = () => {
     setSearchVisible(false);
   }
@@ -136,6 +137,7 @@ const TopMenuPage = () => {
 
   const handleSearchOverlayPress = () => {
     closeSearch();
+    setSearchRes(null)
   }
 
   const handleSearch = () => {
@@ -158,6 +160,7 @@ const TopMenuPage = () => {
 
       const search_res = await search_req.json();
       console.log('검색 결과 응답: ', search_res);
+      setSearchRes(search_res);
     } catch(error) {
       console.error(error);
     }
@@ -269,6 +272,12 @@ const TopMenuPage = () => {
                       onPress={handleSearch}>
                       <Text>검색</Text>
                     </TouchableOpacity>
+                  </View>
+                  <View>
+                    {/* 검색 결과 출력 */}
+                    {searchRes && (
+                      <Text>{searchRes}</Text>
+                    )}
                   </View>
                 </View>
               </TouchableWithoutFeedback>
