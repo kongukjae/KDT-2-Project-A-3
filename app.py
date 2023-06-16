@@ -22,6 +22,7 @@ from base64 import b64decode
 # bardapi
 import bardapi
 import os
+import logging
 
 # Flask 애플리케이션을 생성하는 부분
 app = Flask(__name__)
@@ -43,7 +44,15 @@ client = MongoClient(
 db = client['chicken_stock']
 # mojito1 = mojito()
 # Flask-SocketIO  인스턴스 생성
-socketio = SocketIO(app, cors_allowed_origins="*",async_mode='gevent')
+socketio = SocketIO(app, cors_allowed_origins="*")
+
+logger = logging.getLogger('socketio')  # SocketIO 로거 생성
+logger.setLevel(logging.DEBUG)  # 로그 레벨을 DEBUG로 설정
+
+stream_handler = logging.StreamHandler()  # 콘솔 핸들러 생성
+stream_handler.setLevel(logging.DEBUG)  # 핸들러의 로그 레벨을 DEBUG로 설정
+logger.addHandler(stream_handler)  # 핸들러를 로거에 추가
+
 @app.route('/account', methods=['GET'])
 def account():
     login_id = session.get('user_id')  # 로그인한 아이디를 세션을 사용하여 저장
@@ -352,19 +361,49 @@ def get_hoga_data():
     print(get_approval(key,secret))
     return jsonify()
 
-#! 챗봇 API
-@socketio.on('modalOpen')
-def modal_open():
-    # 클라이언트가 소켓에 연결되었을 때 실행되는 로직을 작성합니다.
-    
-    print('Client connected')
-    emit('clientConnect');
+#구매로직 작성
+@app.route('/buy', methods=['POST'])
+def buy():
+    data = request.get_json()
+    user_id = session.get('user_id')
+    # # 연결된 db에서 id가 로그인 한 id와 같은 데이터를 db에서 찾음
+    find_id = db.user_info.find_one({"id": user_id})
+    total_price = data.get('totalPrice')
 
-@socketio.on('modalClose')
-def handle_disconnect():
-    # 클라이언트가 소켓 연결을 끊었을 때 실행되는 로직을 작성합니다.
-    print('Client disconnected')
-    emit('clientDisconnect');
+    account = None  # 초기값으로 None 설정
+
+    if find_id is not None:
+        account = find_id.get('account')
+
+         # account 값을 수정하는 로직을 추가
+        new_account = account - total_price  # 새로운 account 값으로 대체할 값 설정
+
+        # 데이터베이스에서 account 값을 수정
+        db.user_info.update_one({"id": user_id}, {"$set": {"account": new_account}})
+        print('account 값이 수정되었습니다.')
+
+        # 수정된 account 값을 다시 가져와서 확인
+        updated_account = db.user_info.find_one({"id": user_id}).get('account')
+        print('수정된 account 값:', str(updated_account))
+
+    print('find_id'+str(find_id))
+    print('total' + str(total_price))
+    print('data' + str(data))
+    print('account' + str(account))
+
+    return jsonify(data)
+
+#! 챗봇 API
+    
+@socketio.on('message')  # 수정된 부분
+def handle_message(message):
+    print("받음")
+    print('Received message:', message)
+    bard_question = f'주식이나 투자에서 {message} 짧게 한 문장으로 얘기해줘'
+    bard_answer = bardapi.core.Bard().get_answer(bard_question)
+    # 메시지 처리 로직을 추가할 수 있습니다.
+    # 필요에 따라 클라이언트에 응답 메시지를 보낼 수도 있습니다.
+    emit('response', bard_answer)
 
 if (__name__) == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)

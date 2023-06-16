@@ -1,7 +1,7 @@
-import React, {useState} from 'react';
-import {View, TouchableOpacity, Text, StyleSheet} from 'react-native';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {useNavigation} from '@react-navigation/native';
+import React, { useState } from 'react';
+import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { useNavigation } from '@react-navigation/native';
 import HogaModal from './HogaModal';
 import io from 'socket.io-client'; // socket.io-client import
 
@@ -109,38 +109,38 @@ const BuyPage = () => {
   const [modal,setModal] = useState(false)
   const socket = io('http://10.0.2.2:5000');  
 
-  const openModal=()=>{
+  const openModal = () => {
     setModal(true);
     socket.emit('hoga_data')
-    socket.on('return_hoga', data => {
+  socket.on('return_hoga', data => {
     console.log(data);
     console.log('뜸북장이여 어디여');
     });  
   };
-  const closeModal=()=>{
+  const closeModal = () => {
     setModal(false);
   }
 
   const totalPrice =
-    quantity !== '' && price !== '' ? parseInt(quantity) * parseInt(price) : ''; 
-    //! 수량과 가격이 ''이 아닐경우에 두 값을 곱하고 아닐경우에는 ''을 붙인다.
+    quantity !== '' && price !== '' ? parseInt(quantity) * parseInt(price) : '';
+  //! 수량과 가격이 ''이 아닐경우에 두 값을 곱하고 아닐경우에는 ''을 붙인다.
 
   const handleNumberPress = (number: string) => {
     //? selectedInput 변수를 확인하여 현재 선택된 입력 상자를 확인. 선택된 입력 상자는 'quantity'(수량)인지, 'price'(가격)인지를 나타냄.
     if (selectedInput === 'quantity') {
       if (quantity === '0') {
-        setQuantity(number); 
+        setQuantity(number);
         //? 0일경우 누르는 값으로 값을 대체
       } else {
-        setQuantity(quantity + number); 
+        setQuantity(quantity + number);
         //? 0이 아닐경우 그 뒤에 값을 붙임
       }
     } else if (selectedInput === 'price') {
       if (price === '0') {
-        setPrice(number); 
+        setPrice(number);
         //? 0일경우 누르는 값으로 값을 대체
       } else {
-        setPrice(price + number); 
+        setPrice(price + number);
         //? 0이 아닐경우 그 뒤에 값을 붙임
       }
     }
@@ -156,7 +156,7 @@ const BuyPage = () => {
   type RootStackParamList = {
     ModalPopup: undefined;
     MainPage: undefined;
-    BuyPage : undefined;
+    BuyPage: undefined;
   };
   type loginPageNavigationProp = StackNavigationProp<
     RootStackParamList,
@@ -166,15 +166,37 @@ const BuyPage = () => {
 
 
   const handlePurchase = () => {
-    console.log('주식 구매:', quantity);
+    console.log('주식 구매:', totalPrice);
+    // Flask 서버로 totalPrice 전송하는 코드 작성
+    fetch('http://10.0.2.2:5000/buy', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ totalPrice }),
+    })
+      .then(response => {
+        if (response.ok) {
+          navigation.navigate('MainPage'); 
+        } else {
+          throw new Error('구매 요청 실패');
+        }
+      })
+      .then(data => {
+        // 응답 데이터 처리
+        console.log('구매 응답:', data);
+      })
+      .catch(error => {
+        console.error(error);
+      });
   };
 
   const handleInputSelection = (inputType: string) => {
     setSelectedInput(inputType);
   };
-  
+
   const [data, setData] = useState('')
- 
+
 
   return (
     <View style={styles.container}>
@@ -192,7 +214,7 @@ const BuyPage = () => {
         <View>
           <Text style={styles.calculateText}>
             {totalPrice !== '' ? totalPrice.toLocaleString() : ''} 원
-          </Text> 
+          </Text>
           {/* //! toLocaleString 1000 단위로 , 표시해줌 */}
         </View>
       </View>
