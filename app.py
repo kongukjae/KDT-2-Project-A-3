@@ -386,16 +386,6 @@ def buy():
     return jsonify(data)
 
 #! 챗봇 API
-
- 
-
-
-# @socketio.on('modalOpen')
-# def modal_open():
-#     # 클라이언트가 소켓에 연결되었을 때 실행되는 로직을 작성합니다.
-    
-#     logger.debug('Client connected')  # 로그 기록
-#     emit('clientConnect');
     
 @socketio.on('message')  # 수정된 부분
 def handle_message(message):
