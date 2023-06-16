@@ -192,10 +192,6 @@ const BuyPage = () => {
           throw new Error('구매 요청 실패');
         }
       })
-      .then(data => {
-        // 응답 데이터 처리
-        console.log('구매 응답:', data);
-      })
       .catch(error => {
         console.error(error);
       });

@@ -52,11 +52,11 @@ def account():
     print(login_id)
     # 연결된 db에서 id가 로그인 한 id와 같은 데이터를 db에서 찾음
     result = db.user_info.find_one({'id': login_id})
-    print(result)
+    print('전체 결과' +str(result))
     if result:
         # ObjectId를 문자열로 변환
         result['_id'] = str(result['_id'])
-        print(result)
+        print(str(result))
         return jsonify(result)
     else:
         return jsonify({'error': 'Invalid login_id'})  # 유효하지 않은 로그인 아이디인 경우
