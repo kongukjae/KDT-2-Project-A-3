@@ -119,7 +119,7 @@ const BuyPage = () => {
   // })
   
   const openModal=()=>{
-    const socket = io('http://10.0.2.2:4000');      // 소켓 켜는 코드
+    const socket = io('http://10.0.2.2:5000');      // 소켓 켜는 코드
     setModal(true);
     socket.connect()
     socket.emit('start')
@@ -137,7 +137,7 @@ const BuyPage = () => {
   
   
   const closeModal=()=>{
-    const socket = io('http://10.0.2.2:4000');      // 소켓 켜는 코드
+    const socket = io('http://10.0.2.2:5000');      // 소켓 켜는 코드
     
     setModal(false);
     socket.disconnect();
