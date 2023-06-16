@@ -160,6 +160,7 @@ def send_front():
                         if trid0 == "H0STASP0":  # 주식호가tr 일경우의 처리 단계
                             print("#### 주식호가 ####")
                             stockhoka_domestic(recvstr[3])
+                            emit('end',recvstr[3])
                             time.sleep(0.2)
                         else: 
                             print('호가 데이터가 아닌 다른 데이터 유입')

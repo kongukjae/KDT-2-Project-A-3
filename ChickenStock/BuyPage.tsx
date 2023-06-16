@@ -117,7 +117,7 @@ const BuyPage = () => {
   //     console.log('Connected to server');
   //   });    
   // })
-  
+  const [hogaString,setHogaString] = useState([])
   const openModal=()=>{
     const socket = io('http://10.0.2.2:5000');      // 소켓 켜는 코드
     setModal(true);
@@ -130,9 +130,6 @@ const BuyPage = () => {
       console.log('서버로부터 소켓 데이터 통신 완료')
       
     })
-    
-
-
   }
   
   
