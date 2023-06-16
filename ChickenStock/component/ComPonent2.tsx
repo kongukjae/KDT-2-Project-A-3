@@ -41,34 +41,42 @@ const ComPonent2: React.FC<Component2Props> = ({
   console.log('여기는 년');
   console.log(yearData);
   console.log('여기는 년');
-
   useEffect(() => {
     // 소켓 인스턴스 생성, 일종의 공용방
     const socket = io('http://10.0.2.2:5000');
 
-    socket.emit('get_data', {company_code});
     socket.on('data_response', (data: StockData[]) => {
+      console.log('여기뭐냐');
       console.log(
         'day data stck_prpr:',
         data.map(item => item.stck_prpr),
       );
+      console.log('여기뭐냐');
+
       setDayData(data.reverse());
-      socket.emit('get_data', {company_code});
       if (currentChart === 'day') {
         setData(data);
       }
-      // setData(data);
-
-      console.log(data);
-      console.log('오는거여 마는거야');
     });
 
+    const intervalId = setInterval(() => {
+      socket.emit('get_data', {company_code});
+    }, 6000); // 2초마다 실행
+
     return () => {
+      clearInterval(intervalId); // 컴포넌트 unmount시 interval 제거
       socket.off('data_response');
       socket.disconnect();
       console.log('소켓이 진짜로 꺼졌습니다.');
     };
-  }, [currentChart]);
+  }, [currentChart, company_code]);
+
+  //   return () => {
+  //     socket.off('data_response');
+  //     socket.disconnect();
+  //     console.log('소켓이 진짜로 꺼졌습니다.');
+  //   };
+  // }, [currentChart]);
 
   //  2. 월간 차트 요청
   useEffect(() => {
@@ -80,10 +88,13 @@ const ComPonent2: React.FC<Component2Props> = ({
           ...item,
           stck_prpr: item.stck_clpr,
         }));
-        console.log(
-          'modified month data stck_prpr:',
-          modifiedData.map(item => item.stck_prpr).reverse(),
-        );
+
+        // console.log(data);
+        console.log('오는거여 마는거야');
+        // console.log(
+        //   'modified month data stck_prpr:',
+        //   modifiedData.map(item => item.stck_prpr).reverse(),
+        // );
         setMonthData(modifiedData.reverse());
         if (currentChart === 'month') {
           setData(modifiedData);
@@ -99,10 +110,10 @@ const ComPonent2: React.FC<Component2Props> = ({
           ...item,
           stck_prpr: item.stck_clpr,
         }));
-        console.log(
-          '수정된 YEAR data stck_prpr:',
-          modifiedData.map(item => item.stck_prpr).reverse(),
-        );
+        // console.log(
+        //   '수정된 YEAR data stck_prpr:',
+        //   modifiedData.map(item => item.stck_prpr).reverse(),
+        // );
         setYearData(modifiedData.reverse());
         if (currentChart === 'year') {
           setData(modifiedData);
@@ -118,8 +129,8 @@ const ComPonent2: React.FC<Component2Props> = ({
     const isDailyData = data.some(item =>
       item.hasOwnProperty('stck_cntg_hour'),
     );
-    console.log(data);
-    console.log('여기는 데이트가 무엇일까');
+    // console.log(data);
+    // console.log('여기는 데이트가 무엇일까');
 
     // 배열을 순회, true 이면 hour(일간)를 dateStr에 할당
     // 그렇지 않다면, bsop_date를 할당
@@ -148,7 +159,7 @@ const ComPonent2: React.FC<Component2Props> = ({
       return ''; // 위의 조건을 충족하지 않는 경우 빈 문자열 반환
     };
 
-    console.log(xData);
+    // console.log(xData);
 
     return (
       <View style={{height: 220, flexDirection: 'row'}}>

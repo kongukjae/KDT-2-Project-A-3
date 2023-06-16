@@ -42,22 +42,27 @@ const ComPonent1: React.FC<Component1Props> = ({
       setChangeRate(data);
       console.log(data);
       console.log('뜸북장이여 어디여');
-      socket.emit('request_company_rate', {company_code});
+      // socket.emit('request_company_rate', {company_code});
     });
+
+    const intervalId = setInterval(() => {
+      socket.emit('request_company_rate', {company_code});
+    }, 6000); // 2초마다 실행
 
     return () => {
       console.log('소켓이 꺼졌습니다.');
+      clearInterval(intervalId); // 컴포넌트 unmount시 interval 제거
       socket.off('changerate');
       socket.disconnect();
     };
-  }, []);
+  }, [company_code]);
 
   return (
     <View style={styles1.container}>
       <Text style={styles1.text}>코스피</Text>
       <View style={styles1.priceContainer}>
-        <Text style={styles2.text}>기업이름: {company['한글명']}</Text>
-        <Text style={styles3.text}>단축코드: {company['단축코드']}</Text>
+        <Text style={styles2.text}>기업이름: {company_name}</Text>
+        <Text style={styles3.text}>단축코드: {company_code}</Text>
         <View style={styles1.priceContainer}>
           <Text
             style={[
