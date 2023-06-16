@@ -37,20 +37,6 @@ type TopMenuNavigationProp = StackNavigationProp<
     'Another'
   >;
 
-type ChoicePageOneNavigationProp = StackNavigationProp<
-  RootStackParamList,
-  'ChoicePageTwo'
->;
-
-// type ChoicePageOneRouteProp = RouteProp<RootStackParamList, 'ChoicePageTwo'>;
-
-const navigation = useNavigation<ChoicePageOneNavigationProp>();
-
-// 상세 페이지로 이동 / 누른 회사 이름을 인자로 전달
-const stockSearchChoice = (company_name: string, company_code: string) => {
-  navigation.navigate('Another', {company_name, company_code});
-};
-
 interface Message {
   content: string;
   sender: string;
@@ -179,6 +165,11 @@ const TopMenuPage = () => {
     }
   }
 
+  // 상세 페이지로 이동 / 누른 회사 이름을 인자로 전달
+  const stockSearchChoice = (company_name: string, company_code: string) => {
+    navigation.navigate('Another', {company_name, company_code});
+  };
+
   return (
     <View>
       <View style={styles.icon_box}>
@@ -288,7 +279,7 @@ const TopMenuPage = () => {
                   </View>
                   <View>
                     {/* 검색 결과 출력 */}
-                    {/* {searchRes && (
+                    {searchRes && (
                       typeof searchRes === 'object' ? (
                         <View>
                         {Object.keys(searchRes).map(key => (
@@ -305,7 +296,7 @@ const TopMenuPage = () => {
                           <Text>{searchRes}</Text>
                         </View>
                       )
-                    )} */}
+                    )}
                   </View>
                 </View>
               </TouchableWithoutFeedback>
