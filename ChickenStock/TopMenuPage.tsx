@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -46,11 +46,10 @@ interface Message {
 const TopMenuPage = () => {
   const navigation = useNavigation<ChoicePageOneNavigationProp>();
   const [modalVisible, setModalVisible] = useState(false);
-  console.log('test', modalVisible);
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState<Message[]>([]);
-  const [bardMsg, setBardMsg] = useState<string[]>([]);
   const [socket, setSocket] = useState<Socket | null>(null);
+  const scrollViewRef = useRef<ScrollView>(null);
 
   const openModal = () => {
     setModalVisible(true);
@@ -76,10 +75,23 @@ const TopMenuPage = () => {
     navigation.navigate('MyPage');
   };
 
+  // const handleSend = () => {
+  //   if (socket) {
+  //     console.log('Sending message:', message);
+  //     socket.emit('message', message);
+  //   }
+  //   setMessage('');
+  // };
+
   const handleSend = () => {
     if (socket) {
       console.log('Sending message:', message);
       socket.emit('message', message);
+      const userMessage: Message = {
+        content: message,
+        sender: 'user',
+      };
+      setMessages(prevMessages => [...prevMessages, userMessage]);
     }
     setMessage('');
   };
@@ -93,6 +105,7 @@ const TopMenuPage = () => {
           sender: 'bot',
         };
         setMessages(prevMessages => [...prevMessages, responseData]);
+        scrollViewRef.current?.scrollToEnd({ animated: true });
       });
     }
     return () => {
@@ -101,6 +114,24 @@ const TopMenuPage = () => {
       }
     };
   }, [socket]);
+
+  // useEffect(() => {
+  //   if (socket) {
+  //     socket.on('response', data => {
+  //       console.log(data);
+  //       let responseData = {
+  //         content: data['content'],
+  //         sender: 'bot',
+  //       };
+  //       setMessages(prevMessages => [...prevMessages, responseData]);
+  //     });
+  //   }
+  //   return () => {
+  //     if (socket) {
+  //       socket.off('response'); // 이벤트 핸들러 해제
+  //     }
+  //   };
+  // }, [socket]);
 
   return (
     <View>
@@ -123,7 +154,7 @@ const TopMenuPage = () => {
         </TouchableOpacity>
       </View>
       <View>
-        <Modal
+      <Modal
           visible={modalVisible}
           transparent={true}
           onRequestClose={closeModal}>
@@ -140,13 +171,21 @@ const TopMenuPage = () => {
                     주식 용어에 대해서 물어보세요!
                   </Text>
                   <View style={styles.chatContainer}>
-                  <ScrollView
+                    <ScrollView
                       contentContainerStyle={styles.chatContent}
-                      showsVerticalScrollIndicator={false}>
+                      showsVerticalScrollIndicator={false}
+                      ref={scrollViewRef}>
                       {messages.map((msg, index) => {
-                        const key = `${msg.content}-${msg.sender}`; // 유일한 key 생성
+                        const key = `${msg.content}-${msg.sender}`;
                         return (
-                          <View style={styles.chatBox} key={key}>
+                          <View
+                            style={[
+                              styles.chatBox,
+                              msg.sender === 'user'
+                                ? styles.userMessage
+                                : styles.botMessage,
+                            ]}
+                            key={key}>
                             <Text style={styles.chatText}>{msg.content}</Text>
                           </View>
                         );
@@ -232,7 +271,7 @@ const styles = StyleSheet.create({
     minWidth: 50,
     marginTop: 10,
     padding: 10,
-    borderColor: '#1B9C85',
+    borderColor: '#4C4C6D',
     borderWidth: 2,
     borderRadius: 5,
     textAlign: 'center',
@@ -258,7 +297,7 @@ const styles = StyleSheet.create({
   sendButton: {
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'blue',
+    backgroundColor: '#1B9C85',
     paddingHorizontal: 16,
     borderRadius: 4,
   },
@@ -270,7 +309,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#1B9C85',
   },
   botMessage: {
-    backgroundColor: '#FFD700',
+    backgroundColor: '#FFE194',
   },
 });
 
