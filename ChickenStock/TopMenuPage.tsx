@@ -287,8 +287,8 @@ const TopMenuPage = () => {
                     {searchRes && (
                       typeof searchRes === 'object' ? (
                         <View>
-                        {Object.keys(searchRes).map(key => (
-                          <TouchableOpacity onPress={() => stockSearchChoice(key, searchRes[key])}>
+                        {Object.keys(searchRes).map((key) => (
+                          <TouchableOpacity key={key} onPress={() => stockSearchChoice(key, searchRes[key])}>
                             <View>
                               <Text>{key}</Text>
                               <Text>{searchRes[key]}</Text>
