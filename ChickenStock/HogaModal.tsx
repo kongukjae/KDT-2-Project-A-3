@@ -1,10 +1,11 @@
 
-import React, { useState ,useContext} from 'react';
+import React, { useState ,useContext,useEffect} from 'react';
 import { Button, Modal, StyleSheet, Text, TouchableOpacity, View, ModalProps } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import { ScreenStackHeaderBackButtonImage } from 'react-native-screens';
 import {AuthContext} from './AllContext';
+
 
 
 
@@ -20,10 +21,13 @@ const HogaModal:React.FC<HogaModalProps> = ({visible, onClose,}) => {
   let a = parseInt(userHoga[43])
   let b = parseInt(userHoga[44])
 
-  setInterval(()=>{
-    setHogaGap(a-b)
-  },1000)
   
+  
+  
+  useEffect(()=>{
+    const newHogaGap= a-b
+    setHogaGap(newHogaGap)
+  })
   
 
 
