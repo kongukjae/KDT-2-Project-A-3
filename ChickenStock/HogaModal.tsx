@@ -46,7 +46,7 @@ const HogaModal:React.FC<HogaModalProps> = ({visible, onClose,}) => {
                   <Text>매도잔량</Text>
                 </View>
                 <View style={styles.hogaTopText}>
-                  <Text>시간</Text>
+                  <Text>{userHoga[1]}</Text>
                 </View>
                 <View style={styles.hogaTopText}>
                   <Text>매수잔량</Text>
