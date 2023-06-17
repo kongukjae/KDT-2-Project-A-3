@@ -122,8 +122,9 @@ const BuyPage = () => {
     // const socket = io('http://10.0.2.2:5000');      // 소켓 켜는 코드
     setModal(true);
     setInterval(()=>{
-      fetch('http://10.0.2.2:5000/api/hoga').then(res=>res.json()).then(data=>{console.log(data)}).catch(error=>console.log(error))
+      fetch('http://10.0.2.2:5000/api/hoga').then(res=>res.json()).then(data=>setHogaString(data)).catch(error=>console.log(error))
     },1000)
+    console.log(hogaString)
     // socket.connect()
     // socket.emit('start')
     // console.log('soket 요청 갔다')
