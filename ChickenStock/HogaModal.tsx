@@ -1,9 +1,11 @@
 
-import React, { useState } from 'react';
+import React, { useState ,useContext} from 'react';
 import { Button, Modal, StyleSheet, Text, TouchableOpacity, View, ModalProps } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import { ScreenStackHeaderBackButtonImage } from 'react-native-screens';
+import {AuthContext} from './AllContext';
+
 
 
 interface HogaModalProps extends ModalProps{
@@ -12,6 +14,8 @@ interface HogaModalProps extends ModalProps{
 
 
 const HogaModal:React.FC<HogaModalProps> = ({visible, onClose}) => {
+ 
+  const {userHoga} = useContext(AuthContext);
   
   return (
       <Modal visible={visible} transparent={true}>
@@ -38,36 +42,36 @@ const HogaModal:React.FC<HogaModalProps> = ({visible, onClose}) => {
                 <View style={styles.hogaBuyBox1}>
                   <View style={styles.hogadivide}>
                     <View style={styles.hogaContents1}>
-                      <Text>매수잔량1</Text>
+                      <Text>{userHoga[27]}</Text>
                     </View>
                     <View style={styles.hogaContents1}>
-                      <Text>매수잔량2</Text>
+                      <Text>{userHoga[26]}</Text>
                     </View>
                     <View style={styles.hogaContents1}>
-                      <Text>매수잔량3</Text>
+                      <Text>{userHoga[25]}</Text>
                     </View>
                     <View style={styles.hogaContents1}>
-                      <Text>매수잔량4</Text>
+                      <Text>{userHoga[24]}</Text>
                     </View>
                     <View style={styles.hogaContents1}>
-                      <Text>매수잔량5</Text>
+                      <Text>{userHoga[23]}</Text>
                     </View>
                   </View>
                   <View style={styles.hogadivide}>
                     <View style={styles.hogaContents1}>
-                      <Text>매수시간1</Text>
+                      <Text>{userHoga[7]}</Text>
                     </View>
                     <View style={styles.hogaContents1}>
-                      <Text>매수시간2</Text>
+                      <Text>{userHoga[6]}</Text>
                     </View>
                     <View style={styles.hogaContents1}>
-                      <Text>매수시간3</Text>
+                      <Text>{userHoga[5]}</Text>
                     </View>
                     <View style={styles.hogaContents1}>
-                      <Text>매수시간4</Text>
+                      <Text>{userHoga[4]}</Text>
                     </View>
                     <View style={styles.hogaContents1}>
-                      <Text>매수시간5</Text>
+                      <Text>{userHoga[3]}</Text>
                     </View>
                   </View>
                 </View>
@@ -79,50 +83,50 @@ const HogaModal:React.FC<HogaModalProps> = ({visible, onClose}) => {
                   {/* 매수시간view */}
                   <View style={styles.hogadivide}>
                     <View style={styles.hogaContents2}>
-                      <Text>매수시간1</Text>
+                      <Text>{userHoga[13]}</Text>
                     </View>
                     <View style={styles.hogaContents2}>
-                      <Text>매수시간2</Text>
+                      <Text>{userHoga[14]}</Text>
                     </View>
                     <View style={styles.hogaContents2}>
-                      <Text>매수시간3</Text>
+                      <Text>{userHoga[15]}</Text>
                     </View>
                     <View style={styles.hogaContents2}>
-                      <Text>매수시간4</Text>
+                      <Text>{userHoga[16]}</Text>
                     </View>
                     <View style={styles.hogaContents2}>
-                      <Text>매수시간5</Text>
+                      <Text>{userHoga[17]}</Text>
                     </View>
                   </View>
                   {/* 매수잔량 view */}
                   <View style={styles.hogadivide}> 
                     <View style={styles.hogaContents2}>
-                      <Text>매수잔량1</Text>
+                      <Text>{userHoga[33]}</Text>
                     </View>
                     <View style={styles.hogaContents2}>
-                      <Text>매수잔량2</Text>
+                      <Text>{userHoga[34]}</Text>
                     </View>
                     <View style={styles.hogaContents2}>
-                      <Text>매수잔량3</Text>
+                      <Text>{userHoga[35]}</Text>
                     </View>
                     <View style={styles.hogaContents2}>
-                      <Text>매수잔량4</Text>
+                      <Text>{userHoga[36]}</Text>
                     </View>
                     <View style={styles.hogaContents2}>
-                      <Text>매수잔량5</Text>
+                      <Text>{userHoga[37]}</Text>
                     </View>
                   </View>
                 </View>
               </View>
               <View style={styles.hogaBottomContent}>
                 <View style={styles.hogaBottomText}>
-                  <Text>1,704,940</Text>
+                  <Text>{userHoga[43]}</Text>
                 </View>
                 <View style={styles.hogaBottomText}>
                   <Text>-197,713</Text>
                 </View>
                 <View style={styles.hogaBottomText}>
-                  <Text>1,507,227</Text>
+                  <Text>{userHoga[44]}</Text>
                 </View>
               </View>
             </View>

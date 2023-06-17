@@ -1,10 +1,10 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState,useContext} from 'react';
 import {View, TouchableOpacity, Text, StyleSheet} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {useNavigation} from '@react-navigation/native';
 import HogaModal from './HogaModal';
 import {io ,Socket} from 'socket.io-client'
-
+import { AuthContext } from './AllContext';
 
 
 const styles = StyleSheet.create({
@@ -111,7 +111,7 @@ const BuyPage = () => {
   const [price, setPrice] = useState('');
   const [selectedInput, setSelectedInput] = useState('');
   const [modal,setModal] = useState(false)
-  const [hogaString,setHogaString] = useState('')
+  const {setUserHoga}=useContext(AuthContext)
   // const [socket, setSocket] = useState<Socket | null>(null);
   // useEffect(()=>{
   //   socket.on('connect', () => {
@@ -122,9 +122,10 @@ const BuyPage = () => {
     // const socket = io('http://10.0.2.2:5000');      // 소켓 켜는 코드
     setModal(true);
     setInterval(()=>{
-      fetch('http://10.0.2.2:5000/api/hoga').then(res=>res.json()).then(data=>setHogaString(data)).catch(error=>console.log(error))
+      fetch('http://10.0.2.2:5000/api/hoga').then(res=>res.json()).then(data=>setUserHoga(data)).catch(error=>console.log(error))
     },1000)
-    console.log(hogaString)
+
+    
     // socket.connect()
     // socket.emit('start')
     // console.log('soket 요청 갔다')

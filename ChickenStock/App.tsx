@@ -25,6 +25,7 @@ import SlideComponent from './NewsComponent';
 import {AuthProvider} from './AllContext';
 import TopMenuPage from './TopMenuPage';
 import MyPage from './MyPage';
+import HogaModal from './HogaModal'
 
 type RootStackParamList = {
   ChoicePageOne: undefined;
