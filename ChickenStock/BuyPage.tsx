@@ -119,27 +119,30 @@ const BuyPage = () => {
   //   });    
   // })
   const openModal=()=>{
-    const socket = io('http://10.0.2.2:5000');      // 소켓 켜는 코드
+    // const socket = io('http://10.0.2.2:5000');      // 소켓 켜는 코드
     setModal(true);
-    socket.connect()
-    socket.emit('start')
-    console.log('soket 요청 갔다')
+    setInterval(()=>{
+      fetch('http://10.0.2.2:5000/api/hoga').then(res=>{res.json()}).then(data=>{console.log(data)}).catch(error=>console.log(error))
+    },1000)
+    // socket.connect()
+    // socket.emit('start')
+    // console.log('soket 요청 갔다')
     
-    socket.on('end',data=>{
-      console.log(data)
+    // socket.on('end',data=>{
+      // console.log(data)
       // setHogaString(data)
       // let hogadata= hogaString.split('^')
       // console.log(hogadata)
-    })
+    // })
   }
   
   
   const closeModal=()=>{
-    const socket = io('http://10.0.2.2:5000');      // 소켓 켜는 코드
+    // const socket = io('http://10.0.2.2:5000');      // 소켓 켜는 코드
     
     setModal(false);
-    socket.disconnect();
-    console.log('서버꺼짐')
+    // socket.disconnect();
+    // console.log('서버꺼짐')
     // socket.off('get_hogaFromServer');
   }
 
