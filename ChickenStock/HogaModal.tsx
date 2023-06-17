@@ -8,7 +8,7 @@ import {AuthContext} from './AllContext';
 
 
 
-
+// 모달팝업안의 자식들 타입 지정
 interface HogaModalProps extends ModalProps{
   onClose: () => void;
 }
@@ -16,14 +16,14 @@ interface HogaModalProps extends ModalProps{
 
 const HogaModal:React.FC<HogaModalProps> = ({visible, onClose,}) => {
  
-  const {userHoga} = useContext(AuthContext);
-  const [hogaGap,setHogaGap] = useState<number>(0)
+  const {userHoga} = useContext(AuthContext); //컨텍스트 사
+  const [hogaGap,setHogaGap] = useState<number>(0)//매수 매도 차 저장 용도
   let a = parseInt(userHoga[43])
   let b = parseInt(userHoga[44])
 
   
   
-  
+  //마운트 될 떄 마다 매수 매도 차이 계산 후 hogaGap에 저장 
   useEffect(()=>{
     const newHogaGap= a-b
     setHogaGap(newHogaGap)
