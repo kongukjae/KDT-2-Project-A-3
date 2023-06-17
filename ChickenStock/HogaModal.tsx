@@ -11,12 +11,22 @@ import {AuthContext} from './AllContext';
 interface HogaModalProps extends ModalProps{
   onClose: () => void;
 }
+ 
 
-
-const HogaModal:React.FC<HogaModalProps> = ({visible, onClose}) => {
+const HogaModal:React.FC<HogaModalProps> = ({visible, onClose,}) => {
  
   const {userHoga} = useContext(AuthContext);
+  const [hogaGap,setHogaGap] = useState<number>(0)
+  let a = parseInt(userHoga[43])
+  let b = parseInt(userHoga[44])
+
+  setInterval(()=>{
+    setHogaGap(a-b)
+  },1000)
   
+  
+
+
   return (
       <Modal visible={visible} transparent={true}>
         <TouchableOpacity style={styles.modalContainer} onPress={onClose}>
@@ -123,7 +133,7 @@ const HogaModal:React.FC<HogaModalProps> = ({visible, onClose}) => {
                   <Text>{userHoga[43]}</Text>
                 </View>
                 <View style={styles.hogaBottomText}>
-                  <Text>-197,713</Text>
+                  <Text>{hogaGap}</Text>
                 </View>
                 <View style={styles.hogaBottomText}>
                   <Text>{userHoga[44]}</Text>
