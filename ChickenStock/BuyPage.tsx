@@ -1,8 +1,9 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, TouchableOpacity, Text, StyleSheet} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {useNavigation} from '@react-navigation/native';
 import HogaModal from './HogaModal';
+import {io ,Socket} from 'socket.io-client'
 
 
 
@@ -100,35 +101,45 @@ const styles = StyleSheet.create({
   },
 });
 
+
+
+
 const BuyPage = () => {
+
   const [quantity, setQuantity] = useState('');
   const [price, setPrice] = useState('');
   const [selectedInput, setSelectedInput] = useState('');
   const [modal,setModal] = useState(false)
-
+  const [hogaString,setHogaString] = useState('')
+  const [socket, setSocket] = useState<Socket | null>(null);
+  // useEffect(()=>{
+  //   socket.on('connect', () => {
+  //     console.log('Connected to server');
+  //   });    
+  // })
   const openModal=()=>{
+    const socket = io('http://10.0.2.2:5000');      // 소켓 켜는 코드
     setModal(true);
-    // const getHoga = async () => {
-    //   try {
-    //     const response = await fetch('http://10.0.2.2:5000/api/hoga', {
-    //       method: 'GET',
-    //       headers: {
-    //         'Content-Type': 'application/json',
-    //       },
-    //       // body: JSON.stringify({}), // 플라스크로 데이터를 담아 요청을 보냄
-    //     });
+    socket.connect()
+    socket.emit('start')
+    console.log('soket 요청 갔다')
+    
+    socket.on('end',data=>{
+      console.log(data)
+      // setHogaString(data)
+      // let hogadata= hogaString.split('^')
+      // console.log(hogadata)
+    })
+  }
   
-    //     const jsonData = await response.json(); //여기서 플라스크로부터 반환값을 가져옴. 반환객체 ={'state':true or false,'message':"해당 에러 메세지"}\
-    //     console.log(jsonData)
-    //     // console.log(jsonData);
-    //   } catch (error) {
-    //     console.error(error);
-    //   }
-    // }
-    // getHoga()
-  };
+  
   const closeModal=()=>{
+    const socket = io('http://10.0.2.2:5000');      // 소켓 켜는 코드
+    
     setModal(false);
+    socket.disconnect();
+    console.log('서버꺼짐')
+    // socket.off('get_hogaFromServer');
   }
 
   const totalPrice =
@@ -140,7 +151,7 @@ const BuyPage = () => {
     if (selectedInput === 'quantity') {
       if (quantity === '0') {
         setQuantity(number); 
-        //? 0일경우 누르는 값으로 값을 대체
+        // ? 0일경우 누르는 값으로 값을 대체
       } else {
         setQuantity(quantity + number); 
         //? 0이 아닐경우 그 뒤에 값을 붙임

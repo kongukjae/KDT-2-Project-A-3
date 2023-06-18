@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -13,18 +13,17 @@ import {
   Linking,
 } from 'react-native';
 
-import {RouteProp, useNavigation} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
+import { RouteProp, useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import TopMenuPage from './TopMenuPage';
-// import mongoose from 'mongoose';
-// import { MongoClient, WithId } from 'mongodb';
-// import axios from 'axios';
 
 const MyPage = () => {
-  const [data, setData] = useState<any>({});
+  const [data, setData] = useState<any>({}); // data useState를 사용하여 상태 설정
 
-  // 데이터 가져오는 비동기 함수
+  // 데이터 가져오는 함수
+  // flask서버로 데이터 요청
   const fetchData = async () => {
+    console.log('요청보냄')
     try {
       const response = await fetch('http://10.0.2.2:5000/account');
       if (response.ok) {
@@ -40,6 +39,7 @@ const MyPage = () => {
     }
   };
 
+  // useEffect를 사용하여 페이지가 렌더링 될 때마다 fetchData()함수를 실행
   useEffect(() => {
     fetchData();
   }, []);

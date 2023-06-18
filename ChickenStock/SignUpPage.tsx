@@ -3,25 +3,26 @@ import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-nativ
 import { Alert } from 'react-native';
 import { RouteProp, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-// // import { checkServerIdentity } from 'tls';
 
 export default function SignUpPage() {
-  const [id, setId] = useState('');
-  const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
-  const [bank, setBank] = useState('');
-  const [number, setNumber] = useState('');
-  const [count, setCount] = useState(0);
+  const [id, setId] = useState(''); //아이디 상태 변수
+  const [password, setPassword] = useState(''); //비밀번호 상태 변수
+  const [name, setName] = useState(''); //이름 상태 변수
+  const [bank, setBank] = useState(''); //은행 상태 변수
+  const [number, setNumber] = useState(''); //계좌번호 상태 변수
+  const [count, setCount] = useState(0); //중복확인 카운트 변수
 
+  // data 변수 객체로 선언
   const data = {
     id,
     password,
     name,
     bank,
     number,
-    account : 5000000
+    account: 5000000
   };
 
+  // 네비게이션 설정
   const navigation = useNavigation<ChoicePageOneNavigationProp>();
 
   type RootStackParamList = {
@@ -40,9 +41,11 @@ export default function SignUpPage() {
     'ChoicePageTwo'
   >;
   type ChoicePageOneRouteProp = RouteProp<RootStackParamList, 'ChoicePageTwo'>;
-  // let changeState = 0;
-  // 중복 확인
+
+
+  // id 중복 확인 로직
   const checkId = () => {
+    
     fetch('http://10.0.2.2:5000/checkId', {
       method: 'POST',
       headers: {
@@ -60,26 +63,26 @@ export default function SignUpPage() {
       .then(responseData => {
         if (responseData.state === 'available') {
           console.log('아이디 사용 가능');
+          // id를 정규 표현시식을 사용하여 형식을 지정
           const validateId = () => {
             const idRegex = /^(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9]+$/;
             return id.length >= 4 && idRegex.test(id);
           };
+          // 정규표현식에 어긋날 경우 뜨는 문구
           if (!validateId()) {
             Alert.alert(
               '경고',
               '아이디는 4자리 이상, 영문, 숫자를 포함하여 입력해주세요.',
             );
-            // return;
           } else {
             Alert.alert(
               '안내', '사용 가능한 ID입니다'
             )
           }
-          setCount(count+1);
-          // console.log('중복확인 후' + changeState)
-          // Alert.alert('알림', '사용 가능한 ID입니다');
-          // 회원가입 데이터 전송
-        } else if (responseData.state === 'taken') {
+          // useState의 set 함수를 사용하여 count값 1증가하여 저장
+          setCount(count + 1);
+          
+        } else if (responseData.state === 'unavailable') {
           console.log('아이디 이미 사용 중');
           Alert.alert('경고', '이미 사용중인 ID입니다.');
         }
@@ -88,26 +91,27 @@ export default function SignUpPage() {
         console.error('중복확인 실패', error);
       });
   };
+
+
   // 회원가입 데이터 전송
-
   const sendSignUpData = () => {
-
+    // 비밀번호 정규표현식 설정
     const validatePassword = () => {
       const passwordRegex =
         /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]+$/;
       return password.length >= 8 && passwordRegex.test(password);
     };
-
+    // 계좌번호 정규표현식 설정
     const validateNumber = () => {
       const numberRegex = /^\d{10}$/;
       return number.length == 10 && numberRegex.test(number);
     };
-
+    // 모든 정보를 필수로 입력하도록 설정
     if (!id || !password || !name || !bank || !number) {
       Alert.alert('경고', '모든 정보를 입력해주세요.');
       return;
     }
-
+    // 비밀번호 정규표현식에 어긋났을 때 뜨는 문구
     if (!validatePassword()) {
       Alert.alert(
         '경고',
@@ -120,10 +124,9 @@ export default function SignUpPage() {
       Alert.alert('경고', '계좌번호는 숫자 10자리로 입력해주세요');
       return;
     }
-    // console.log('전송 전 '+changeState)
 
     if ((count % 2) === 1) {
-      // console.log(changeState)
+      // 서버로 데이터 요청
       fetch('http://10.0.2.2:5000/signup', {
         method: 'POST',
         headers: {
@@ -131,7 +134,7 @@ export default function SignUpPage() {
         },
         body: JSON.stringify(data),
       })
-        .then(response => {
+        .then(response => { //요청에 대한 응답
           if (response.ok) {
             console.log('회원가입 데이터 전송 성공');
             console.log(JSON.stringify(data));
@@ -144,12 +147,12 @@ export default function SignUpPage() {
         .catch(error => {
           console.error('데이터 전송 실패', error);
         });
-    }else if ((count % 2) === 0){
+    } else if ((count % 2) === 0) {
       Alert.alert(
         '경고',
         '아아디 중복 확인 해주세요',
       );
-    } 
+    }
   };
   return (
     <View style={styles.container}>
