@@ -51,12 +51,15 @@ const TopMenuPage = () => {
   const [searchRes, setSearchRes] = useState(null)
   console.log("press0101: ", searchPress)
 
+  //! AI챗봇 기능 부분
+
+  //* 모달창이 열렸을 때의 함수
   const openModal = () => {
     setModalVisible(true);
     setSocket(io('http://10.0.2.2:5000')); //* 소켓 설정
   };
 
-  // 모달 창을 닫는 함수
+  //* 모달 창을 닫혔을 때의 함수
   const closeModal = () => {
     setModalVisible(false);
     if (socket) {
@@ -66,15 +69,15 @@ const TopMenuPage = () => {
   };
 
   const handleOverlayPress = () => {
-    closeModal(); // 모달창이 아닌 다른 부분을 닫았을 때 함수 실행
+    closeModal(); //* 모달창이 아닌 다른 부분을 닫았을 때 함수 실행
   };
 
-  // 마이페이지 아이콘 눌렀을 때 마이페이지로 이동하는 함수
+  //* 마이페이지 아이콘 눌렀을 때 마이페이지로 이동하는 함수
   const goToChoicePage = () => {
     navigation.navigate('MyPage');
   };
 
-  // 전송 버튼을 눌렀을 때 실행되는 함수
+  //* 전송 버튼을 눌렀을 때 실행되는 함수
   const handleSend = () => {
     if (socket) {
       console.log('Sending message:', message);
@@ -88,7 +91,7 @@ const TopMenuPage = () => {
     setMessage(''); // 메시지 입력창을 빈 값으로 초기화
   };
 
-  // Effect()를 처리하는 코드
+  //* Effect()를 처리하는 코드
   useEffect(() => {
     if (socket) {
       socket.on('response', data => { // 'response' 이벤트 리스너를 받음
@@ -101,7 +104,7 @@ const TopMenuPage = () => {
         scrollViewRef.current?.scrollToEnd({ animated: true });
       });
     }
-    // Clean-up 함수 작성 부분
+    //* Clean-up 함수 작성 부분
     return () => {
       if (socket) {
         socket.off('response'); // 이벤트 핸들러 해제
@@ -109,10 +112,10 @@ const TopMenuPage = () => {
     };
   }, [socket]);
 
-  // 검색창 관련
+  //! 검색창 관련
   useEffect(() => {
     console.log('test search', searchTerm)
-    // 검색 버튼이 눌렸을 경우 동작 할 코드
+    //* 검색 버튼이 눌렸을 경우 동작 할 코드
     if (searchPress) {
       console.log('searchPress가 true')
       search_stock();
@@ -224,7 +227,7 @@ const TopMenuPage = () => {
                           <View
                             style={[
                               styles.chatBox,
-                              // 만약 sender가 user이면 userMessage 스타일로 아니면 botMessage스타일로
+                              //* 만약 sender가 user이면 userMessage 스타일로 아니면 botMessage스타일로
                               msg.sender === 'user'
                                 ? styles.userMessage
                                 : styles.botMessage,
