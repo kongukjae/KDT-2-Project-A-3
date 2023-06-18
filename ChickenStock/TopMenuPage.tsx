@@ -114,16 +114,18 @@ const TopMenuPage = () => {
 
   //! 검색창 관련
   useEffect(() => {
+    // 검색 버튼이 눌렸을 경우 동작 할 코드
+    // 1. Textinput에 적힌 기업 이름을 서버에 보냄
+    // 2. 서버는 들어온 요청 데이터를 보고 API와 통신하여 해당 기업을 찾아서 응답
+    // 3. 응답 받은 데이터를 이용해 View 태그를 추가로 만들어냄
     console.log('test search', searchTerm)
     //* 검색 버튼이 눌렸을 경우 동작 할 코드
     if (searchPress) {
       console.log('searchPress가 true')
       search_stock();
+      // searchPress 값을 초기화 시켜 줌
       setSearchPress(false)
     }
-    // 1. Textinput에 적힌 기업 이름을 서버에 보냄
-    // 2. 서버는 들어온 요청 데이터를 보고 API와 통신하여 해당 기업을 찾아서 응답
-    // 3. 응답 받은 데이터를 이용해 View 태그를 추가로 만들어냄
   }, [searchPress])
 
   const closeSearch = () => {
@@ -134,6 +136,7 @@ const TopMenuPage = () => {
     setSearchVisible(true);
   }
 
+  // 모달 창 바깥을 클릭하거나 닫기 버튼을 누를 경우, 모달 창을 닫고 검색 결과를 초기화
   const handleSearchOverlayPress = () => {
     closeSearch();
     setSearchRes(null)
@@ -143,11 +146,11 @@ const TopMenuPage = () => {
     console.log('search : ', searchTerm);
     setSearchPress(true)
   }
-
+  // 서버에 입력된 값을 전달하고 응답을 받아오는 함수
   const search_stock = async() => {
-    console.log('search_stock 함수 실행 됨');
+    // console.log('search_stock 함수 실행 됨');
     const data = searchTerm;
-    console.log('data', data)
+    // console.log('data', data)
     try {
       const search_req = await fetch('http://10.0.2.2:5000/search_stock', {
         method: 'POST',
@@ -165,7 +168,7 @@ const TopMenuPage = () => {
     }
   }
 
-  // 상세 페이지로 이동 / 누른 회사 이름을 인자로 전달
+  // 상세 페이지로 이동 / 누른 회사 이름과 코드를 인자로 전달
   const stockSearchChoice = (company_name: string, company_code: string) => {
     setSearchVisible(false);
     setSearchRes(null)
@@ -276,17 +279,20 @@ const TopMenuPage = () => {
                   <View style={styles.inputContainer}>
                     <TextInput
                       style = {styles.searchInput}
+                      // 입력이 생길 때 마다 searchTerm 변수를 갱신함
                       onChangeText={(text) => setSearchTerm(text)}
                       placeholder = '종목 명을 입력하세요'
                     />
                     <TouchableOpacity
                       style={styles.searchButton}
+                      // 검색 버튼을 누르면 마지막으로 입력 되어 있던 값을 서버로 전송함
                       onPress={handleSearch}>
                       <Text>검색</Text>
                     </TouchableOpacity>
                   </View>
                   <View>
                     {/* 검색 결과 출력 */}
+                    {/* searchRes 변수에 값이 있을 때만 랜더링 / 값이 있을 경우 type이 string일 경우 그대로 표시, object일 경우 key 값(기업 명)과 value값(종목코드)을 각각 표시 */}
                     {searchRes && (
                       typeof searchRes === 'object' ? (
                         <View>
