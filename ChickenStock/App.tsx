@@ -16,7 +16,7 @@ import {
 import MainPage from './MainPage';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import AnotherPage from './AnotherPage';
+import DetailPage from './DetailPageRouter';
 import SignUpPage from './SignUpPage';
 import LoginPage from './loginPage';
 import BuyPage from './BuyPage';
@@ -75,7 +75,7 @@ const App: React.FC = () => {
           />
           <Stack.Screen
             name="Another"
-            component={AnotherPage}
+            component={DetailPage}
             options={{headerShown: false}}
           />
           <Stack.Screen
