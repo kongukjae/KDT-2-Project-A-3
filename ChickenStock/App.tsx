@@ -23,7 +23,7 @@ import BuyPage from './BuyPage';
 import SellPage from './SellPage';
 import SlideComponent from './NewsComponent';
 import {AuthProvider} from './AllContext';
-import TopMenuPage from './TopMenuPage';
+import TopMenuPage from './BuyPage';
 import MyPage from './MyPage';
 
 type RootStackParamList = {

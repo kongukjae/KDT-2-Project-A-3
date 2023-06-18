@@ -8,9 +8,9 @@ const SlideComponent = () => {
   const [newsDetail, setNewsDetail] = useState('');
   const [newsLink, setNewsLink] = useState('');
 
+  const sequence = [1, 2, 3];
 
-  const colors = ['red', 'blue', 'green'];
-
+  //* 뉴스 data 요청하는 함수
   const loadLocation = () => {
     fetch('http://10.0.2.2:5000/news')
     .then(response =>  {
@@ -27,22 +27,23 @@ const SlideComponent = () => {
     })
   }
 
+  //* 로드될 때 함수를 한번 실행
   useEffect(() => {
     loadLocation();
   }, [])
 
   
-
+  //* 3초마다 현재 페이지를 바꾸는 Effect
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentPage((prevPage) => (prevPage + 1) % colors.length); //? 현재 페이지를 다음페이지로 업데이트 -> 0일 때 1, 1일 때 2, 2일 때 0 순
+      setCurrentPage((prevPage) => (prevPage + 1) % sequence.length); //? 현재 페이지를 다음페이지로 업데이트 -> 0일 때 1, 1일 때 2, 2일 때 0 순
     }, 3000);
 
     return () => clearInterval(timer); //? 타이머 초기화
   }, []);
 
   useEffect(() => {
-    if (currentPage === colors.length - 1) {
+    if (currentPage === sequence.length - 1) {
       const resetTimer = setTimeout(() => {
         setCurrentPage(0);
       }, 3000); //? 만약 현재 페이지가 2일 경우 현재 페이지를 0으로 하고 타이머 초기화
@@ -51,6 +52,7 @@ const SlideComponent = () => {
     }
   }, [currentPage]);
 
+  //* 해당 뉴스 기사를 눌렀을 때 해당 기사 페이지로 이동하게 되는 함수
   const handleNewsLinkPress = () => {
     Linking.openURL(newsLink[currentPage]);
   };

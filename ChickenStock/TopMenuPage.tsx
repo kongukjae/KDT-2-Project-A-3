@@ -21,16 +21,16 @@ type RootStackParamList = {
   ChoicePageThree: undefined;
   ChoicePageFour: undefined;
   MainPage: undefined;
-  Another: undefined;
+  Another: {company_name: string, company_code: string},
   SignUpPage: undefined;
   LoginPage: undefined;
   MyPage: undefined;
 };
 
-type ChoicePageOneNavigationProp = StackNavigationProp<
-  RootStackParamList,
-  'ChoicePageTwo'
->;
+type TopMenuNavigationProp = StackNavigationProp<
+    RootStackParamList,
+    'Another'
+  >;
 
 interface Message {
   content: string;
@@ -38,20 +38,28 @@ interface Message {
 }
 
 const TopMenuPage = () => {
-  const navigation = useNavigation<ChoicePageOneNavigationProp>();
+  const navigation = useNavigation<TopMenuNavigationProp>();
   const [modalVisible, setModalVisible] = useState(false);
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState<Message[]>([]);
   const [socket, setSocket] = useState<Socket | null>(null);
   const scrollViewRef = useRef<ScrollView>(null);
 
-  // 모달 창을 여는 함수
+  const [searchVisible, setSearchVisible] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchPress, setSearchPress] = useState(false);
+  const [searchRes, setSearchRes] = useState(null)
+  console.log("press0101: ", searchPress)
+
+  //! AI챗봇 기능 부분
+
+  //* 모달창이 열렸을 때의 함수
   const openModal = () => {
     setModalVisible(true);
     setSocket(io('http://10.0.2.2:5000')); //* 소켓 설정
   };
 
-  // 모달 창을 닫는 함수
+  //* 모달 창을 닫혔을 때의 함수
   const closeModal = () => {
     setModalVisible(false);
     if (socket) {
@@ -61,15 +69,15 @@ const TopMenuPage = () => {
   };
 
   const handleOverlayPress = () => {
-    closeModal(); // 모달창이 아닌 다른 부분을 닫았을 때 함수 실행
+    closeModal(); //* 모달창이 아닌 다른 부분을 닫았을 때 함수 실행
   };
 
-  // 마이페이지 아이콘 눌렀을 때 마이페이지로 이동하는 함수
+  //* 마이페이지 아이콘 눌렀을 때 마이페이지로 이동하는 함수
   const goToChoicePage = () => {
     navigation.navigate('MyPage');
   };
 
-  // 전송 버튼을 눌렀을 때 실행되는 함수
+  //* 전송 버튼을 눌렀을 때 실행되는 함수
   const handleSend = () => {
     if (socket) {
       console.log('Sending message:', message);
@@ -83,7 +91,7 @@ const TopMenuPage = () => {
     setMessage(''); // 메시지 입력창을 빈 값으로 초기화
   };
 
-  // Effect()를 처리하는 코드
+  //* Effect()를 처리하는 코드
   useEffect(() => {
     if (socket) {
       socket.on('response', data => { // 'response' 이벤트 리스너를 받음
@@ -96,7 +104,7 @@ const TopMenuPage = () => {
         scrollViewRef.current?.scrollToEnd({ animated: true });
       });
     }
-    // Clean-up 함수 작성 부분
+    //* Clean-up 함수 작성 부분
     return () => {
       if (socket) {
         socket.off('response'); // 이벤트 핸들러 해제
@@ -104,13 +112,78 @@ const TopMenuPage = () => {
     };
   }, [socket]);
 
+  //! 검색창 관련
+  useEffect(() => {
+    // 검색 버튼이 눌렸을 경우 동작 할 코드
+    // 1. Textinput에 적힌 기업 이름을 서버에 보냄
+    // 2. 서버는 들어온 요청 데이터를 보고 API와 통신하여 해당 기업을 찾아서 응답
+    // 3. 응답 받은 데이터를 이용해 View 태그를 추가로 만들어냄
+    console.log('test search', searchTerm)
+    //* 검색 버튼이 눌렸을 경우 동작 할 코드
+    if (searchPress) {
+      console.log('searchPress가 true')
+      search_stock();
+      // searchPress 값을 초기화 시켜 줌
+      setSearchPress(false)
+    }
+  }, [searchPress])
+
+  const closeSearch = () => {
+    setSearchVisible(false);
+  }
+
+  const openSearch = () => {
+    setSearchVisible(true);
+  }
+
+  // 모달 창 바깥을 클릭하거나 닫기 버튼을 누를 경우, 모달 창을 닫고 검색 결과를 초기화
+  const handleSearchOverlayPress = () => {
+    closeSearch();
+    setSearchRes(null)
+  }
+
+  const handleSearch = () => {
+    console.log('search : ', searchTerm);
+    setSearchPress(true)
+  }
+  // 서버에 입력된 값을 전달하고 응답을 받아오는 함수
+  const search_stock = async() => {
+    // console.log('search_stock 함수 실행 됨');
+    const data = searchTerm;
+    // console.log('data', data)
+    try {
+      const search_req = await fetch('http://10.0.2.2:5000/search_stock', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      })
+
+      const search_res = await search_req.json();
+      console.log('검색 결과 응답: ', search_res);
+      setSearchRes(search_res);
+    } catch(error) {
+      console.error(error);
+    }
+  }
+
+  // 상세 페이지로 이동 / 누른 회사 이름과 코드를 인자로 전달
+  const stockSearchChoice = (company_name: string, company_code: string) => {
+    setSearchVisible(false);
+    setSearchRes(null)
+    navigation.navigate('Another', {company_name, company_code});
+  };
+
   return (
     <View>
       <View style={styles.icon_box}>
-        <Image
-          source={require('./resource/Icon_search.png')}
-          style={styles.icon}
-        />
+        <TouchableOpacity onPress={openSearch}>
+          <Image
+            source={require('./resource/Icon_search.png')}
+            style={styles.icon}
+          />
+        </TouchableOpacity>
         <TouchableOpacity onPress={goToChoicePage}>
           <Image
             source={require('./resource/Icon_cart.png')}
@@ -157,7 +230,7 @@ const TopMenuPage = () => {
                           <View
                             style={[
                               styles.chatBox,
-                              // 만약 sender가 user이면 userMessage 스타일로 아니면 botMessage스타일로
+                              //* 만약 sender가 user이면 userMessage 스타일로 아니면 botMessage스타일로
                               msg.sender === 'user'
                                 ? styles.userMessage
                                 : styles.botMessage,
@@ -181,6 +254,63 @@ const TopMenuPage = () => {
                         <Text style={styles.sendButtonText}>Send</Text>
                       </TouchableOpacity>
                     </View>
+                  </View>
+                </View>
+              </TouchableWithoutFeedback>
+            </View>
+          </TouchableWithoutFeedback>
+        </Modal>
+      </View>
+      {/* 검색 모달 창 */}
+      <View>
+        <Modal
+        visible={searchVisible}
+        transparent={true}
+        onRequestClose={closeSearch}>
+          <TouchableWithoutFeedback onPress={handleSearchOverlayPress}>
+            <View style={styles.searchModalBackdrop}>
+              <TouchableWithoutFeedback>
+                <View style={styles.searchModalContent}>
+                  <TouchableOpacity
+                    onPress={closeSearch}
+                    style={styles.closeButton}>
+                    <Text style={styles.closeButtonText}>X</Text>
+                  </TouchableOpacity>
+                  <View style={styles.inputContainer}>
+                    <TextInput
+                      style = {styles.searchInput}
+                      // 입력이 생길 때 마다 searchTerm 변수를 갱신함
+                      onChangeText={(text) => setSearchTerm(text)}
+                      placeholder = '종목 명을 입력하세요'
+                    />
+                    <TouchableOpacity
+                      style={styles.searchButton}
+                      // 검색 버튼을 누르면 마지막으로 입력 되어 있던 값을 서버로 전송함
+                      onPress={handleSearch}>
+                      <Text>검색</Text>
+                    </TouchableOpacity>
+                  </View>
+                  <View>
+                    {/* 검색 결과 출력 */}
+                    {/* searchRes 변수에 값이 있을 때만 랜더링 / 값이 있을 경우 type이 string일 경우 그대로 표시, object일 경우 key 값(기업 명)과 value값(종목코드)을 각각 표시 */}
+                    {searchRes && (
+                      typeof searchRes === 'object' ? (
+                        <View>
+                        {Object.keys(searchRes).map((key) => (
+                          <TouchableOpacity key={key} onPress={() => stockSearchChoice(key, searchRes[key])}>
+                            <View>
+                              <Text>{key}</Text>
+                              <Text>{searchRes[key]}</Text>
+                            </View>
+                          </TouchableOpacity>
+                        ))}
+                        </View>
+                      ) : (
+                        <View>
+                          <Text>{searchRes}</Text>
+                        </View>
+                      )
+                    )}
                   </View>
                 </View>
               </TouchableWithoutFeedback>
@@ -220,6 +350,22 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 8,
     justifyContent: 'center',
+    alignItems: 'center',
+  },
+  searchModalBackdrop: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    paddingTop: '15%',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+  },
+  searchModalContent: {
+    backgroundColor: '#E8F6EF',
+    width: '80%',
+    height: '80%',
+    padding: 16,
+    borderRadius: 8,
+    justifyContent: 'flex-start',
     alignItems: 'center',
   },
   closeButton: {
@@ -271,10 +417,26 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     marginRight: 8,
   },
+  searchInput: {
+    width: 200,
+    height: 40,
+    borderWidth: 1,
+    borderRadius: 4,
+    paddingHorizontal: 8,
+    marginRight: 8,
+    backgroundColor: '#ffffff'
+  },
   sendButton: {
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#1B9C85',
+    paddingHorizontal: 16,
+    borderRadius: 4,
+  },
+  searchButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'blue',
     paddingHorizontal: 16,
     borderRadius: 4,
   },

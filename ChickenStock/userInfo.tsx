@@ -60,6 +60,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
+//* 사용되는 해당 페이지의 타입 지정
 type RootStackParamList = {
   ChoicePageOne: undefined;
   ChoicePageTwo: {choiceOne: string};
@@ -74,10 +75,12 @@ type ChoicePageOneNavigationProp = StackNavigationProp<
 >;
 type ChoicePageOneRouteProp = RouteProp<RootStackParamList, 'ChoicePageTwo'>;
 
+//* 리액트의 Fuction Component로 사용하여 ChoicePageOne으로 export
 export const ChoicePageOne: React.FC = () => {
   const navigation = useNavigation<ChoicePageOneNavigationProp>();
 
   const handleChoice = (choiceOne: string) => {
+    //* choiceOne의 데이터와 함께 navigate메서드를 이용해 ChoicePageTwo 이동
     navigation.navigate('ChoicePageTwo', {choiceOne});
   };
 
@@ -254,6 +257,7 @@ export const ChoicePageFour: React.FC = () => {
     setChoiceFour(choice);
   };
 
+  //* 저장버튼을 누르면 data에 One부터 Four를 담음
   const handleSubmit = () => {
     const data = {
       choiceOne,
@@ -261,7 +265,8 @@ export const ChoicePageFour: React.FC = () => {
       choiceThree,
       choiceFour,
     };
-
+    
+    //* fetch를 통해서 db에 저장하기 위해 요청을 보냄
     fetch('http://10.0.2.2:5000/api/user-info', {
       method: 'POST',
       headers: {
