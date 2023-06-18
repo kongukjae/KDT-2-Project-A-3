@@ -2,37 +2,40 @@ import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import io from 'socket.io-client'; // socket.io-client import
 
+// 1.받는 매개변수의 타입을 설정 문자열
 type Component1Props = {
   company_name: string;
   company_code: string;
 };
-
+// 2. 컴포넌트1 함수를 정의, 기업이름, 기업코드를 매개변수로 받음
 const ComPonent1: React.FC<Component1Props> = ({
   company_name,
   company_code,
 }) => {
   console.log('com1');
   console.log(company_name, company_code); //305020
-  const [company, setCompany] = useState({
-    한글명: '',
-    단축코드: '',
-    기준가: '',
-  });
+  // const [company, setCompany] = useState({
+  //   한글명: '',
+  //   단축코드: '',
+  //   기준가: '',
+  // });
+  // 3. 상태관리를 위해서 useState hook을 사용, 초기 빈 문자열로 상태를 배정
   const [changeRate, setChangeRate] = useState({
     prdy_ctrt: '',
     stck_prpr: '',
   });
 
   useEffect(() => {
-    fetch(`http://10.0.2.2:5000/companydetail/${company_name}`)
-      .then(response => response.json())
-      .then(data => {
-        setCompany(data);
+    // fetch(`http://10.0.2.2:5000/companydetail/${company_name}`)
+    //   .then(response => response.json())
+    //   .then(data => {
+    //     setCompany(data);
 
-        console.log(data);
-      })
-      .catch(error => console.error(error));
-
+    //     console.log(data);
+    //   })
+    //   .catch(error => console.error(error));
+    // 4. useEffect Hook을 사용해서 컴포넌트가 렌더링 될때, company_code가 변경될때마다 다르게 렌더링
+    // 소켓을 통해
     // 1.socket instance 생성, 서버와 연결되는 소켓 인스턴스를 생성한다.
     const socket = io('http://10.0.2.2:5000');
 

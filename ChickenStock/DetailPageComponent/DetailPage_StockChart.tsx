@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {LineChart, Grid, XAxis, YAxis} from 'react-native-svg-charts';
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import io from 'socket.io-client';
-
+// 매개변수를 정의
 type Component2Props = {
   company_name: string;
   company_code: string;
@@ -19,12 +19,14 @@ interface StockData {
   stck_prpr: number; // 종가
   cntg_vol: number; // 거래량
 }
+// 컴포넌트2 정의, 이름과 코드를 매개변수로 받는다.
 const ComPonent2: React.FC<Component2Props> = ({
   company_name,
   company_code,
 }) => {
   console.log('com2');
   console.log(company_name, company_code);
+  // 3. 상태변수 정의
   const [data, setData] = useState<StockData[]>([]);
   const [dayData, setDayData] = useState<StockData[]>([]);
   const [monthData, setMonthData] = useState<StockData[]>([]);
@@ -41,6 +43,7 @@ const ComPonent2: React.FC<Component2Props> = ({
   console.log('여기는 년');
   console.log(yearData);
   console.log('여기는 년');
+  // 컴포넌트가 마운트 될때 실행되는 useEffet 즉, 페이지가 보여지면 일간 차트가 보임
   useEffect(() => {
     // 소켓 인스턴스 생성, 일종의 공용방
     const socket = io('http://10.0.2.2:5000');
@@ -120,7 +123,7 @@ const ComPonent2: React.FC<Component2Props> = ({
         }
       });
   }, [currentChart]);
-
+  // 차트를 그리는 함수, 주어진 데이터를 통해서 차트를 그린다
   const renderChart = (data: StockData[], title: string) => {
     // 데이터가 없으면 아무것도 그리지 않는다.
     if (!data || data.length === 0) {
