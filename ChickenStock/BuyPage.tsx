@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState ,useContext} from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
 import HogaModal from './HogaModal';
+import { AuthContext } from './AllContext';
 
 
 
@@ -105,9 +106,14 @@ const BuyPage = () => {
   const [price, setPrice] = useState('');
   const [selectedInput, setSelectedInput] = useState('');
   const [modal,setModal] = useState(false)
+  const {setUserHoga}=useContext(AuthContext)
 
   const openModal = () => {
     setModal(true);
+    setInterval(()=>{
+      fetch('http://10.0.2.2:5000/api/hoga').then(res=>res.json()).then(data=>setUserHoga(data)).catch(error=>console.log(error))
+    },1000)
+
   };
   const closeModal = () => {
     setModal(false);
