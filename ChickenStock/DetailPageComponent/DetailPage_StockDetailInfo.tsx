@@ -34,8 +34,12 @@ const ComPonent3: React.FC<Component2Props> = ({
     num.toLocaleString('en-US') + '원';
   const styles = StyleSheet.create({
     container: {
-      marginTop: 20,
-      padding: 25,
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: 38,
+      backgroundColor: '#4C4C6D',
+      borderRadius: 10,
     },
     text: {
       fontSize: 25,
@@ -44,9 +48,7 @@ const ComPonent3: React.FC<Component2Props> = ({
     coloredText: {
       fontSize: 25,
       padding: 5,
-      backgroundColor: '#1B9C85',
       color: 'white',
-      borderRadius: 5,
     },
     priceContainer: {
       flexDirection: 'column',
@@ -56,13 +58,13 @@ const ComPonent3: React.FC<Component2Props> = ({
 
   return (
     <View style={styles.container}>
-      <Text style={styles.coloredText}>
-        시가: {formatNumber(Number(upAndDown['시가']))}
-      </Text>
-      <Text style={styles.coloredText}>
-        오늘최고가: {formatNumber(Number(upAndDown['오늘최고가']))}
-      </Text>
       <View style={styles.priceContainer}>
+        <Text style={styles.coloredText}>
+          시가: {formatNumber(Number(upAndDown['시가']))}
+        </Text>
+        <Text style={styles.coloredText}>
+          오늘최고가: {formatNumber(Number(upAndDown['오늘최고가']))}
+        </Text>
         <Text style={styles.coloredText}>
           오늘최저가: {formatNumber(Number(upAndDown['오늘최저가']))}
         </Text>

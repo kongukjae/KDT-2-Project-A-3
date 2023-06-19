@@ -148,7 +148,7 @@ const ComPonent2: React.FC<Component2Props> = ({
     // console.log(xData);
 
     return (
-      <View style={{height: 220, flexDirection: 'row'}}>
+      <View style={{width: 365, height: 220, flexDirection: 'row'}}>
         <Text>{title}</Text>
         <YAxis
           data={data.map(item => item.stck_prpr)}
@@ -164,7 +164,7 @@ const ComPonent2: React.FC<Component2Props> = ({
           <LineChart
             style={{flex: 1}}
             data={data.map(item => item.stck_prpr)}
-            svg={{stroke: '#1B9C85', strokeWidth: '6px'}}
+            svg={{stroke: '#1B9C85', strokeWidth: '3px'}}
             contentInset={{top: 10, bottom: 10}}>
             <Grid />
           </LineChart>
@@ -179,7 +179,7 @@ const ComPonent2: React.FC<Component2Props> = ({
   };
 
   return (
-    <View>
+    <View style={styles.root}>
       {isLoading == true ? (
         <View style={styles.loading_window}>
           <ActivityIndicator size="large" color="#1B9C85" />
@@ -207,6 +207,9 @@ const ComPonent2: React.FC<Component2Props> = ({
 };
 
 const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+  },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',

@@ -27,9 +27,12 @@ const AnotherPage = () => {
 
 const styles = StyleSheet.create({
   container: {
+    width: '100%',
     flex: 1,
     padding: 3,
-    backgroundColor: 'beige',
+    backgroundColor: '#FFE194',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   loading_window: {
     width: '100%',
