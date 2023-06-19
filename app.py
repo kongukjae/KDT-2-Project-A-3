@@ -11,11 +11,11 @@ import pprint
 from flask_socketio import SocketIO, emit
 # 개인 제작 모듈
 import callApiData.Mainpage_stock_data
-import callApiData.Search_stock_data
 import callDBData.category_name_changer
 # bardapi
 import bardapi
 import os
+import logging
 
 # Flask 애플리케이션을 생성하는 부분
 app = Flask(__name__)
@@ -39,6 +39,12 @@ db = client['chicken_stock']
 # Flask-SocketIO  인스턴스 생성
 socketio = SocketIO(app, cors_allowed_origins="*")
 
+logger = logging.getLogger('socketio')  # SocketIO 로거 생성
+logger.setLevel(logging.DEBUG)  # 로그 레벨을 DEBUG로 설정
+
+stream_handler = logging.StreamHandler()  # 콘솔 핸들러 생성
+stream_handler.setLevel(logging.DEBUG)  # 핸들러의 로그 레벨을 DEBUG로 설정
+logger.addHandler(stream_handler)  # 핸들러를 로거에 추가
 
 @app.route('/account', methods=['GET'])
 def account():
@@ -197,7 +203,7 @@ def get_Ydata():
 
     # 필요한 정보만 포함된 json 데이터로 변환
     chart_data = df[['stck_bsop_date', 'stck_oprc', 'stck_hgpr',
-                    'stck_lwpr', 'stck_clpr', 'acml_vol']].to_dict(orient='records')
+                     'stck_lwpr', 'stck_clpr', 'acml_vol']].to_dict(orient='records')
 
     return jsonify(chart_data)
 
@@ -313,7 +319,7 @@ def get_news_data():
     return jsonify(json_news)
 
 
-#? 메인 페이지 주식 목록 데이터
+# 메인 페이지에 주식 목록 데이터
 @app.route('/api/main_page', methods=['POST'])
 def main_page_init():
     user_id = session.get('user_id')
@@ -347,6 +353,38 @@ def get_hoga_data():
     print(get_approval(key, secret))
     return jsonify()
 
+#구매로직 작성
+@app.route('/buy', methods=['POST'])
+def buy():
+    data = request.get_json()
+    user_id = session.get('user_id')
+    # # 연결된 db에서 id가 로그인 한 id와 같은 데이터를 db에서 찾음
+    find_id = db.user_info.find_one({"id": user_id})
+    total_price = data.get('totalPrice')
+
+    account = None  # 초기값으로 None 설정
+
+    if find_id is not None:
+        account = find_id.get('account')
+
+         # account 값을 수정하는 로직을 추가
+        new_account = account - total_price  # 새로운 account 값으로 대체할 값 설정
+
+        # 데이터베이스에서 account 값을 수정
+        db.user_info.update_one({"id": user_id}, {"$set": {"account": new_account}})
+        print('account 값이 수정되었습니다.')
+
+        # 수정된 account 값을 다시 가져와서 확인
+        updated_account = db.user_info.find_one({"id": user_id}).get('account')
+        print('수정된 account 값:', str(updated_account))
+
+    print('find_id'+str(find_id))
+    print('total' + str(total_price))
+    print('data' + str(data))
+    print('account' + str(account))
+
+    return jsonify(data)
+
 #! 챗봇 API
     
 @socketio.on('message')  # 수정된 부분
@@ -358,18 +396,6 @@ def handle_message(message):
     # 메시지 처리 로직을 추가할 수 있습니다.
     # 필요에 따라 클라이언트에 응답 메시지를 보낼 수도 있습니다.
     emit('response', bard_answer)
-
-#? 주식 검색
-@app.route('/search_stock', methods=['POST'])
-def search_stock_server():
-    print('검색 진입')
-    search_value = request.get_json()
-    print('들어온 회사명 ', search_value)
-    search_response = callApiData.Search_stock_data.Search_data(search_value)
-    # print(type(search_response))
-    if type(search_response) == str:
-        return jsonify(search_response)
-    return jsonify(search_response.to_dict())
 
 if (__name__) == '__main__':
     app.run(host='0.0.0.0', port=5000)

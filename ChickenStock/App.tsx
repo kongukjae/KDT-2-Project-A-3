@@ -16,14 +16,14 @@ import {
 import MainPage from './MainPage';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import AnotherPage from './AnotherPage';
+import DetailPage from './DetailPageRouter';
 import SignUpPage from './SignUpPage';
 import LoginPage from './loginPage';
 import BuyPage from './BuyPage';
 import SellPage from './SellPage';
 import SlideComponent from './NewsComponent';
 import {AuthProvider} from './AllContext';
-import TopMenuPage from './TopMenuPage';
+import TopMenuPage from './BuyPage';
 import MyPage from './MyPage';
 
 type RootStackParamList = {
@@ -32,7 +32,7 @@ type RootStackParamList = {
   ChoicePageThree: undefined;
   ChoicePageFour: undefined;
   MainPage: undefined;
-  Another: {company_name: string, company_code: string};
+  Another: {company_name: string; company_code: string};
   SignUpPage: undefined;
   LoginPage: undefined;
   BuyPage: undefined;
@@ -75,7 +75,7 @@ const App: React.FC = () => {
           />
           <Stack.Screen
             name="Another"
-            component={AnotherPage}
+            component={DetailPage}
             options={{headerShown: false}}
           />
           <Stack.Screen
