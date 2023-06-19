@@ -11,6 +11,7 @@ import pprint
 from flask_socketio import SocketIO, emit
 # 개인 제작 모듈
 import callApiData.Mainpage_stock_data
+import callApiData.Search_stock_data
 import callDBData.category_name_changer
 # bardapi
 import bardapi
@@ -396,6 +397,19 @@ def handle_message(message):
     # 메시지 처리 로직을 추가할 수 있습니다.
     # 필요에 따라 클라이언트에 응답 메시지를 보낼 수도 있습니다.
     emit('response', bard_answer)
+
+#? 주식 검색
+@app.route('/search_stock', methods=['POST'])
+def search_stock_server():
+    print('검색 진입')
+    search_value = request.get_json()
+    print('들어온 회사명 ', search_value)
+    search_response = callApiData.Search_stock_data.Search_data(search_value)
+    # print(type(search_response))
+    if type(search_response) == str:
+        return jsonify(search_response)
+    return jsonify(search_response.to_dict())
+
 
 if (__name__) == '__main__':
     app.run(host='0.0.0.0', port=5000)

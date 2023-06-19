@@ -270,7 +270,7 @@ const TopMenuPage = () => {
           <TouchableWithoutFeedback onPress={handleSearchOverlayPress}>
             <View style={styles.searchModalBackdrop}>
               <TouchableWithoutFeedback>
-                <View style={styles.searchModalContent}>
+                <View style={[styles.searchModalContent, searchRes && typeof searchRes === 'object' && styles.searchModalContentResult]}>
                   <TouchableOpacity
                     onPress={closeSearch}
                     style={styles.closeButton}>
@@ -307,7 +307,7 @@ const TopMenuPage = () => {
                         </View>
                       ) : (
                         <View>
-                          <Text>{searchRes}</Text>
+                          <Text style={styles.maringTop_10}>{searchRes}</Text>
                         </View>
                       )
                     )}
@@ -362,12 +362,21 @@ const styles = StyleSheet.create({
   searchModalContent: {
     backgroundColor: '#E8F6EF',
     width: '80%',
-    height: 140,
+    height: 160,
     padding: 16,
     borderRadius: 8,
     justifyContent: 'flex-start',
     alignItems: 'center',
   },
+  searchModalContentResult: {
+    backgroundColor: '#E8F6EF',
+    width: '80%',
+    height: 180,
+    padding: 16,
+    borderRadius: 8,
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+  }  ,
   closeButton: {
     alignSelf: 'flex-end',
     marginTop: 8,
@@ -458,7 +467,9 @@ const styles = StyleSheet.create({
     marginTop: 20,
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-evenly'
+    justifyContent: 'space-evenly',
+    borderColor: '#666',
+    borderWidth: 1,
   },
   searchResultValue: {
     width: '100%',
@@ -467,6 +478,9 @@ const styles = StyleSheet.create({
     padding: 10,
     flexDirection: 'row',
     justifyContent: 'space-between'
+  },
+  maringTop_10: {
+    marginTop: 10,
   }
 });
 
