@@ -390,8 +390,6 @@ def search_stock_server():
     search_value = request.get_json()
     print('들어온 회사명 ', search_value)
     search_response = callApiData.Search_stock_data.Search_data(search_value)
-    if type(search_response) == str:
-        return jsonify(search_response)
     return jsonify(search_response.to_dict())
 
 #! 구매로직 작성
