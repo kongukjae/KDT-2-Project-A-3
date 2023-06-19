@@ -297,8 +297,8 @@ const TopMenuPage = () => {
                       typeof searchRes === 'object' ? (
                         <View>
                         {Object.keys(searchRes).map((key) => (
-                          <TouchableOpacity key={key} onPress={() => stockSearchChoice(key, searchRes[key])}>
-                            <View>
+                          <TouchableOpacity style={styles.searchResultBox} key={key} onPress={() => stockSearchChoice(key, searchRes[key])}>
+                            <View style={styles.searchResultValue}>
                               <Text>{key}</Text>
                               <Text>{searchRes[key]}</Text>
                             </View>
@@ -362,7 +362,7 @@ const styles = StyleSheet.create({
   searchModalContent: {
     backgroundColor: '#E8F6EF',
     width: '80%',
-    height: '80%',
+    height: 140,
     padding: 16,
     borderRadius: 8,
     justifyContent: 'flex-start',
@@ -450,6 +450,24 @@ const styles = StyleSheet.create({
   botMessage: {
     backgroundColor: '#FFE194',
   },
+  searchResultBox: {
+    backgroundColor: 'white',
+    width: 270,
+    height: 40,
+    borderRadius: 5,
+    marginTop: 20,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-evenly'
+  },
+  searchResultValue: {
+    width: '100%',
+    fontSize: 20,
+    display: 'flex',
+    padding: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  }
 });
 
 export default TopMenuPage;
