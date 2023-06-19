@@ -48,26 +48,26 @@ const ComPonent1: React.FC<Component1Props> = ({
 
   return (
     <View style={styles1.container}>
-      <Text style={styles1.text}>코스피</Text>
+      <View style={styles1.firstText}>
+        <Text style={styles1.text}>코스피</Text>
+        <Text
+          style={[
+            redblue.text,
+            {
+              color:
+                parseFloat(changeRate['prdy_ctrt'] as string) < 0
+                  ? 'blue'
+                  : 'red',
+              fontSize: 15, fontWeight: '700'
+            },
+          ]}>
+          등락률: {changeRate['prdy_ctrt']}
+        </Text>
+      </View>
       <View style={styles1.priceContainer}>
         <Text style={styles2.text}>기업이름: {company_name}</Text>
         <Text style={styles3.text}>단축코드: {company_code}</Text>
-        <View style={styles1.priceContainer}>
-          <Text
-            style={[
-              redblue.text,
-              {
-                color:
-                  parseFloat(changeRate['prdy_ctrt'] as string) < 0
-                    ? 'blue'
-                    : 'red',
-                fontSize: 13,
-              },
-            ]}>
-            등락률: {changeRate['prdy_ctrt']}
-          </Text>
-          <Text style={styles1.text}>현재가: {changeRate['stck_prpr']}</Text>
-        </View>
+        <Text style={styles1.text}>현재가: {changeRate['stck_prpr']}</Text>
       </View>
     </View>
   );
@@ -75,18 +75,26 @@ const ComPonent1: React.FC<Component1Props> = ({
 
 const styles1 = StyleSheet.create({
   container: {
-    padding: 10,
+    marginTop: 15,
+    width: '95%',
+    height: 65,
+    backgroundColor: '#1B9C85',
+    borderRadius: 10,
+  },
+  firstText: {
+    margin: 5,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   text: {
     fontSize: 15,
-    color: 'black',
-    backgroundColor: '#1B9C85',
+    color: '#E8F6EF',
+    fontWeight: '700',
   },
 
   priceContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    backgroundColor: '#1B9C85',
+    justifyContent: 'space-around',
   },
 });
 // 기업이름, 한글명
@@ -95,17 +103,16 @@ const styles2 = StyleSheet.create({
   text: {
     fontSize: 16,
     color: 'black',
-    backgroundColor: '#1B9C85',
   },
 });
 // 단축코드, 단축코드
 const styles3 = StyleSheet.create({
   text: {
-    marginLeft: -50,
-    fontSize: 12,
-    marginTop: 20,
+    fontSize: 14,
+    marginTop:3,
     color: 'black',
     backgroundColor: '#1B9C85',
+    fontWeight: '700',
   },
 });
 const redblue = StyleSheet.create({

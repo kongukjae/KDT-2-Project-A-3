@@ -19,6 +19,7 @@ import TopMenuPage from './TopMenuPage';
 
 const MyPage = () => {
   const [data, setData] = useState<any>({}); // data useState를 사용하여 상태 설정
+  const [selectedButtonIndex, setSelectedButtonIndex] = useState<number>(-1);
 
   // 데이터 가져오는 함수
   // flask서버로 데이터 요청
@@ -52,6 +53,8 @@ const MyPage = () => {
   const transaction = ['구매', '판매', '미체결'];
   const enterValue = [1, 2, 3, 4, 5];
   const transactionValue = [6, 7, 8, 9, 10];
+
+
   return (
     <View style={styles.root}>
       <View>
@@ -71,12 +74,27 @@ const MyPage = () => {
         <Text style={styles.myMoneyText}>본인 관심사</Text>
       </View>
       <View style={styles.circleContainerCss}>
-        {interest.map((item, index) => (
-          <TouchableOpacity style={styles.circleButtonCss}>
-            <Text key={index}>{item}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
+      {interest.map((item, index) => (
+        <TouchableOpacity
+          style={[
+            styles.circleButtonCss,
+            selectedButtonIndex === index ? styles.selectedButtonCss : null,
+          ]}
+          onPress={() => {
+            if (selectedButtonIndex === index) {
+              // 이미 선택된 버튼을 다시 누르면 선택 해제
+              setSelectedButtonIndex(-1);
+            } else {
+              // 선택되지 않은 버튼을 누르면 선택
+              setSelectedButtonIndex(index);
+            }
+          }}
+          key={index}
+        >
+          <Text>{item}</Text>
+        </TouchableOpacity>
+      ))}
+    </View>
       <View style={styles.enterCss}>
         {enter.map((item, index) => (
           <View style={styles.enterNameCss}>
@@ -210,6 +228,9 @@ const styles = StyleSheet.create({
     borderColor: '#1B9C85',
     borderWidth: 2,
     marginBottom: 5
+  },
+  selectedButtonCss: {
+    backgroundColor: '#4C4C6D',
   },
   enterCss: {
     width: '100%',
