@@ -329,10 +329,15 @@ const styles = StyleSheet.create({
   view: {
     width: '48%',
     height: 100,
-    backgroundColor: 'lightgray',
+    backgroundColor: '#FFE194',
     marginBottom: 5,
     borderWidth: 1,
-    borderColor: '#999999',
+    borderColor: '#E8F6EF',
+    borderRadius: 10,
+    shadowColor: 'rgba(0, 0, 0, 0.7)',
+    shadowOpacity: 0.5,
+    shadowRadius: 3,
+    elevation: 5,
   },
   container: {
     width: '100%',
