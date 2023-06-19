@@ -19,6 +19,36 @@ import TopMenuPage from './TopMenuPage';
 
 const MyPage = () => {
   const [data, setData] = useState<any>({}); // data useState를 사용하여 상태 설정
+  const [userCategory, setUserCategory] = useState<string>();
+  console.log('유저 카테고리: ', userCategory)
+
+  function name_change(name:string) {
+    if(name === '건설') {
+      return '건설업'
+    } else if(name === '금융') {
+      return '금융업'
+    } else if(name === '기계') {
+      return '기계'
+    } else if(name === '서비스업') {
+      return '서비스업'
+    } else if(name === '섬유/의복') {
+      return '섬유·의복'
+    } else if(name === '음식료품') {
+      return '음식료품'
+    } else if(name === '의약품') {
+      return '의약품'
+    } else if(name === '전기/전자') {
+      return '전기·전자'
+    } else if(name === '철강/금속') {
+      return '철강·금속'
+    } else if(name === '통신업') {
+      return '통신'
+    } else if(name === '화학') {
+      return '화학'
+    } else {
+      return '미분류'
+    }
+  }
 
   // 데이터 가져오는 함수
   // flask서버로 데이터 요청
@@ -30,7 +60,9 @@ const MyPage = () => {
         const jsonData = await response.json();
         setData(jsonData);
         console.log('서버 연결 완료');
-        console.log(jsonData);
+        console.log('응답 받은 data: ', jsonData);
+        console.log('카테고리', jsonData['choiceTwo'])
+        setUserCategory(name_change(jsonData['choiceTwo']))
       } else {
         throw new Error('서버 응답이 실패하였습니다.');
       }
@@ -47,8 +79,7 @@ const MyPage = () => {
   console.log('data', data);
   console.log('type');
   console.log(typeof data);
-
-  const interest = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+  const interest = ['건설업', '금융업', '기계', '서비스업', '섬유·의복', '음식료품', '의약품', '전기·전자', '철강·금속', '통신', '화학', '미분류'];
   const enter = ['기업 명', '현재가', '등락', '보유 수량', '평가 금액'];
   const transaction = ['구매', '판매', '미채결'];
   const enterValue = [1, 2, 3, 4, 5];
@@ -180,18 +211,19 @@ const styles = StyleSheet.create({
     heigt: 200,
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'center',
+    justifyContent: 'space-evenly',
     alignItems: 'center',
   },
   circleButtonCss: {
     flexDirection: 'row',
     backgroundColor: 'lightgray',
-    width: 100,
-    height: 100,
-    borderRadius: 50,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     justifyContent: 'space-around',
     alignItems: 'center',
-    flexBasis: '25%',
+    flexBasis: '16%',
+    marginBottom: 5,
   },
   enterCss: {
     width: '100%',
