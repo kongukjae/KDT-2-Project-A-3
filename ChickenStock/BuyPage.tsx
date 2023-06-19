@@ -121,6 +121,7 @@ const BuyPage = () => {
   const openModal=()=>{
     // const socket = io('http://10.0.2.2:5000');      // 소켓 켜는 코드
     setModal(true);
+    //1초마다 플라스크로부터 호가 정보 받아 옴 
     setInterval(()=>{
       fetch('http://10.0.2.2:5000/api/hoga').then(res=>res.json()).then(data=>setUserHoga(data)).catch(error=>console.log(error))
     },1000)

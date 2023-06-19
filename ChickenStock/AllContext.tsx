@@ -1,6 +1,6 @@
 import React, { createContext, useState } from 'react';
 
-// Define the context type
+// 컨텍스트 타입을 정의 
 interface AuthContextProps {
   userId: string;
   userHoga: string;
@@ -8,7 +8,7 @@ interface AuthContextProps {
   setUserHoga:(userHoga:string) => void;
 }
 
-// Create the context
+// 컨텍스트 생성
 export const AuthContext = createContext<AuthContextProps>({
   userId: '',
   setUserId: () => {},
@@ -16,7 +16,7 @@ export const AuthContext = createContext<AuthContextProps>({
   setUserHoga:()=> {},
 });
 
-// Context provider component
+// 컨텍스트 provider를 통해 컨텍스트에 값 수정 
 export const AuthProvider: React.FC<{children:React.ReactNode}> = ({ children }) => {
   const [userId, setUserId] = useState('');
   const [userHoga, setUserHoga] = useState('');
