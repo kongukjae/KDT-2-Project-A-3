@@ -1,6 +1,7 @@
 import mojito
 import pprint
 import json
+import time
 from pymongo import MongoClient
 from flask import Flask, jsonify, request
 
@@ -42,6 +43,7 @@ def Mainpage_stock_list(collection_name):
     collection = db[collection_name]
 
     broker = mojito.KoreaInvestment(api_key=API_key, api_secret=API_secret, acc_no=acc_no)
+    # time.sleep(1)
     symbols = broker.fetch_kospi_symbols()        # 코스피
     newSymbols = symbols.sort_values(by='시가총액', ascending=False) # # sort_values() 메서드를 이용해서 API로 받아온 데이터를 특정 기준(지금은 시가총액, 내림차순)으로 정렬
 
@@ -58,10 +60,14 @@ def Mainpage_stock_list(collection_name):
         else:
             break
     company_Object = companyObject()
+    # 반복문 실행 후 0.5초의 time.sleep을 주는 것으로 API 요청 회수 초과를 개선함
+    time.sleep(1.5)
     # print(name_array)
 
     for i in range(len(code_array)):
         temp = broker.fetch_price(code_array[i])
+        if 'output' not in temp:
+            print('Error 확인 용: ', temp)
         key = name_array[i]
         value = {
             '종목코드': int(code_array[i]),
