@@ -36,14 +36,11 @@ stream_handler.setLevel(logging.DEBUG)  # 핸들러의 로그 레벨을 DEBUG로
 logger.addHandler(stream_handler)  # 핸들러를 로거에 추가
 
 # hogaData = ['0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36','37','38','39','40','41','42','43','44'] 
-hogaData=[]
-priceData=[]
+hogaData=['005930', '155110', '0', '71300', '71400', '71500', '71600', '71700', '71800', '71900', '72000', '72100', '72200', '71200', '71100', '71000', '70900', '70800', '70700', '70600', '70500', '70400', '70300', '71362', '82344', '137302', '131061', '75999', '89133', '115811', '208898', '43732', '89642', '18722', '78174', '251866', '319763', '261333', '93409', '72555', '125027', '31930', '27443', '1045284', '1280222', '3508', 
+'0', '0', '0', '444653', '-71800', '5', '-100.00', '10986246', '0', '0', '1', '0', '0']
 @app.route('/api/hoga', methods=['GET'])
 def returnHoga():
-    # loop = asyncio.get_event_loop().run_until_complete(connect())
-    # asyncio.set_event_loop(loop)
-    # print(loop)
-    return jsonify('a')
+    return jsonify(hogaData)
 
     
 
@@ -155,10 +152,10 @@ def get_hoga_data():
     # 비동기로 서버에 접속한다.
     # result = asyncio.get_event_loop().run_until_complete(connect())
     # print(result)
-    asyncio.get_event_loop().run_until_complete(connect())
-    asyncio.get_event_loop().close()
+    # asyncio.get_event_loop().run_until_complete(connect())
+    # asyncio.get_event_loop().close()
 
-get_hoga_data()
+# get_hoga_data()
 if (__name__) == '__main__':        
     socketio.run(app, host='0.0.0.0', port=5000) 
 
