@@ -347,86 +347,12 @@ def main_page_init():
 
 
 # 구매 페이지에 호가를 눌렀을때 호가 정보를 받아오는 요청
-@socketio.on('get_hoga_data')
-def get_hoga_data():
-    a = 1
-
+hogaData=['005930', '155110', '0', '71300', '71400', '71500', '71600', '71700', '71800', '71900', '72000', '72100', '72200', '71200', '71100', '71000', '70900', '70800', '70700', '70600', '70500', '70400', '70300', '71362', '82344', '137302', '131061', '75999', '89133', '115811', '208898', '43732', '89642', '18722', '78174', '251866', '319763', '261333', '93409', '72555', '125027', '31930', '27443', '1045284', '1280222', '3508', 
+'0', '0', '0', '444653', '-71800', '5', '-100.00', '10986246', '0', '0', '1', '0', '0']
 
 @app.route('/api/hoga', methods=['GET'])
-def get_hoga_data():
-    def get_approval(key, secret):
-        url = 'https://openapi.koreainvestment.com:9443'  # 실전투자계좌
-        headers = {"content-type": "application/json"}
-        body = {"grant_type": "client_credentials",
-                "appkey": key,
-                "secretkey": secret}
-        PATH = "oauth2/Approval"
-        URL = f"{url}/{PATH}"
-        res = requests.post(URL, headers=headers, data=json.dumps(body))
-        approval_key = res.json()["approval_key"]
-        return approval_key
-    print(get_approval(key, secret))
-    return jsonify()
-
-#! 챗봇 API
-
-
-@socketio.on('message')  # 수정된 부분
-def handle_message(message):
-    print("받음")
-    print('Received message:', message)
-    bard_question = f'주식이나 투자에서 {message} 짧게 한 문장으로 얘기해줘'
-    bard_answer = bardapi.core.Bard().get_answer(bard_question)
-    # 메시지 처리 로직을 추가할 수 있습니다.
-    # 필요에 따라 클라이언트에 응답 메시지를 보낼 수도 있습니다.
-    emit('response', bard_answer)
-
-# ? 주식 검색
-
-
-@app.route('/search_stock', methods=['POST'])
-def search_stock_server():
-    print('검색 진입')
-    search_value = request.get_json()
-    print('들어온 회사명 ', search_value)
-    search_response = callApiData.Search_stock_data.Search_data(search_value)
-    return jsonify(search_response.to_dict())
-
-#! 구매로직 작성
-
-
-@app.route('/buy', methods=['POST'])
-def buy():
-    data = request.get_json()
-    user_id = session.get('user_id')
-    # # 연결된 db에서 id가 로그인 한 id와 같은 데이터를 db에서 찾음
-    find_id = db.user_info.find_one({"id": user_id})
-    total_price = data.get('totalPrice')
-    account = None  # 초기값으로 None 설정
-    if find_id is not None:
-        account = find_id.get('account')
-        # account 값을 수정하는 로직을 추가
-        new_account = account - total_price  # 새로운 account 값으로 대체할 값 설정
-        # 데이터베이스에서 account 값을 수정
-        db.user_info.update_one(
-            {"id": user_id}, {"$set": {"account": new_account}})
-        print('account 값이 수정되었습니다.')
-        # 수정된 account 값을 다시 가져와서 확인
-        updated_account = db.user_info.find_one({"id": user_id}).get('account')
-        print('수정된 account 값:', str(updated_account))
-    print('find_id'+str(find_id))
-    print('total' + str(total_price))
-    print('data' + str(data))
-    print('account' + str(account))
-    return jsonify(data)
-@app.route('/api/hoga', methods=['GET'])
-def returnHoga():
-    # loop = asyncio.get_event_loop().run_until_complete(connect())
-    # asyncio.set_event_loop(loop)
-    # print(loop)
-    return jsonify('a')
-
 def get_hoga_data():    
+    return jsonify(hogaData)
    
     def get_approval(key, secret):
         # url = https://openapivts.koreainvestment.com:29443' # 모의투자계좌     
@@ -535,6 +461,60 @@ def get_hoga_data():
     # print(result)
     asyncio.get_event_loop().run_until_complete(connect())
     asyncio.get_event_loop().close()
+
+#! 챗봇 API
+
+
+@socketio.on('message')  # 수정된 부분
+def handle_message(message):
+    print("받음")
+    print('Received message:', message)
+    bard_question = f'주식이나 투자에서 {message} 짧게 한 문장으로 얘기해줘'
+    bard_answer = bardapi.core.Bard().get_answer(bard_question)
+    # 메시지 처리 로직을 추가할 수 있습니다.
+    # 필요에 따라 클라이언트에 응답 메시지를 보낼 수도 있습니다.
+    emit('response', bard_answer)
+
+# ? 주식 검색
+
+
+@app.route('/search_stock', methods=['POST'])
+def search_stock_server():
+    print('검색 진입')
+    search_value = request.get_json()
+    print('들어온 회사명 ', search_value)
+    search_response = callApiData.Search_stock_data.Search_data(search_value)
+    return jsonify(search_response.to_dict())
+
+#! 구매로직 작성
+
+
+@app.route('/buy', methods=['POST'])
+def buy():
+    data = request.get_json()
+    user_id = session.get('user_id')
+    # # 연결된 db에서 id가 로그인 한 id와 같은 데이터를 db에서 찾음
+    find_id = db.user_info.find_one({"id": user_id})
+    total_price = data.get('totalPrice')
+    account = None  # 초기값으로 None 설정
+    if find_id is not None:
+        account = find_id.get('account')
+        # account 값을 수정하는 로직을 추가
+        new_account = account - total_price  # 새로운 account 값으로 대체할 값 설정
+        # 데이터베이스에서 account 값을 수정
+        db.user_info.update_one(
+            {"id": user_id}, {"$set": {"account": new_account}})
+        print('account 값이 수정되었습니다.')
+        # 수정된 account 값을 다시 가져와서 확인
+        updated_account = db.user_info.find_one({"id": user_id}).get('account')
+        print('수정된 account 값:', str(updated_account))
+    print('find_id'+str(find_id))
+    print('total' + str(total_price))
+    print('data' + str(data))
+    print('account' + str(account))
+    return jsonify(data)
+
+
 
 if (__name__) == '__main__':
 
