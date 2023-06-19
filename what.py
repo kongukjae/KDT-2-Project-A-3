@@ -1,7 +1,7 @@
 import re
 import mojito
 import json
-from flask import Flask, jsonify, request, session
+from flask import Flask, jsonify, request,session
 from pymongo import MongoClient
 # from pykrx import stock
 import pandas as pd
@@ -25,15 +25,38 @@ secret = lines[1].strip()
 acc_no = lines[2].strip()
 f.close()
 broker = mojito.KoreaInvestment(api_key=key, api_secret=secret, acc_no=acc_no)
-symbols = broker.fetch_kospi_symbols()
-company_row = symbols[symbols['한글명'] == "NAVER"]
-company_code = company_row['단축코드'].values[0]
-company_price = broker.fetch_price(company_code)
-company_infof = {
-    '시가': company_price['output']['stck_oprc'],
-    '오늘최고가': company_price['output']['stck_hgpr'],
-    '오늘최저가': company_price['output']['stck_lwpr'],
-    '현재가': company_price['output']['stck_prpr'],
-    '시가총액': company_price['output']['cpfn_cnnm'],
-}
-print(company_infof)
+
+data = broker.fetch_domestic_price('055550','삼성전자')
+# df = pd.DataFrame(data['output2'])
+# df['stck_cntg_hour'] = pd.to_datetime(
+#    df['stck_cntg_hour'], format='%H%M%S').dt.strftime('%H:%M:%S')
+# df[['stck_prpr', 'stck_oprc', 'stck_hgpr', 'stck_lwpr', 'cntg_vol', 'acml_tr_pbmn']] = df[[
+#         'stck_prpr', 'stck_oprc', 'stck_hgpr', 'stck_lwpr', 'cntg_vol', 'acml_tr_pbmn']].astype(float)
+print(data)
+# data = broker._fetch_today_1m_ohlcv("005930", to="15:30:30")
+# df = pd.DataFrame(data['output2'])
+# df['stck_cntg_hour'] = pd.to_datetime(
+# df['stck_cntg_hour'], format='%H%M%S').dt.strftime('%H:%M:%S')
+# df[['stck_prpr', 'stck_oprc', 'stck_hgpr', 'stck_lwpr', 'cntg_vol', 'acml_tr_pbmn']] = df[[
+#         'stck_prpr', 'stck_oprc', 'stck_hgpr', 'stck_lwpr', 'cntg_vol', 'acml_tr_pbmn']].astype(float)
+
+# data2=broker.fetch_ohlcv_recent30('005930')  
+# print(df)
+# data = broker.fetch_ohlcv_domestic('005930', "M","20220608")
+# df = pd.DataFrame(data['output2'])
+#     # 필요한 컬럼을 숫자로 변환
+# df[['stck_clpr', 'stck_hgpr', 'stck_lwpr', 'stck_oprc', 'acml_vol', 'acml_tr_pbmn']] = df[[
+#         'stck_clpr', 'stck_hgpr', 'stck_lwpr', 'stck_oprc', 'acml_vol', 'acml_tr_pbmn']].astype(float)
+
+#     # 날짜 컬럼 형식 변경
+# df['stck_bsop_date'] = pd.to_datetime(
+#         df['stck_bsop_date'], format='%Y%m%d')
+
+#     # 필요한 정보만 포함된 json 데이터로 변환
+# chart_data = df[['stck_bsop_date', 'stck_oprc', 'stck_hgpr',
+#                      'stck_lwpr', 'stck_clpr', 'acml_vol']].to_dict(orient='records')
+
+# json_data = json.dumps(chart_data)
+# print(json_data)
+# print(data2)
+
