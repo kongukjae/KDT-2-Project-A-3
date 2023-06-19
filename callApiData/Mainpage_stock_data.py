@@ -70,6 +70,7 @@ def Mainpage_stock_list(collection_name):
             print('Error 확인 용: ', temp)
         key = name_array[i]
         value = {
+            '종목코드': int(code_array[i]),
             '현재가': temp['output']['stck_prpr'],
             '전일종가' : temp['output']['stck_sdpr'],
             '등락' : (int(temp['output']['stck_prpr']) - int(temp['output']['stck_sdpr'])),

@@ -29,6 +29,7 @@ function Main_page(): JSX.Element {
   const [selectedButton, setSelectedButton] = useState('시가총액'); // 버튼 색상 변경을 위한 상태 선언, 페이지 로드 시 시가총액을 선택한 것으로 표현
   const selectedButtonRef = useRef<string>(selectedButton); // 페이지의 랜더링 상태와 관계없이, 항상 눌려져 있는 버튼의 최신 값을 받아오기 위해 사용
   // console.log('선택된 버튼', selectedButton)
+  console.log("test: ",dataArray)
   const isDarkMode = useColorScheme() === 'dark';
   // 메인 페이지 진입 시 서버에게 주식 리스트 데이터 요청하는 함수
   const stock_list = async () => {
