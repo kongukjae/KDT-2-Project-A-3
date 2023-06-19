@@ -159,9 +159,12 @@ def login_Check():
 # 컴포넌트 2-1 실시간 주가 차트 데이터(일단위)
 # @app.route('/get_data', methods=['GET'])
 @socketio.on('get_data')
-def get_data():
-
-    data = broker._fetch_today_1m_ohlcv("328380", to="15:30:30")
+def get_data(company_code):
+    print(company_code)
+    print("여기는 실시간 코드 여기는 실시간 코드 여기는 실시간 코드")
+    code1=company_code['company_code']
+    # print(code1)
+    data = broker._fetch_today_1m_ohlcv([(f'{code1}')], to="15:30:30")
     df = pd.DataFrame(data['output2'])
     df['stck_cntg_hour'] = pd.to_datetime(
         df['stck_cntg_hour'], format='%H%M%S').dt.strftime('%H:%M:%S')
@@ -169,14 +172,18 @@ def get_data():
         'stck_prpr', 'stck_oprc', 'stck_hgpr', 'stck_lwpr', 'cntg_vol', 'acml_tr_pbmn']].astype(float)
 
     emit('data_response', df.to_dict(orient='records'))
-    print(df.to_dict)
+    # print(df.to_dict)
 
 # 컴포넌트 2-2 주가데이터(한달단위)
-
-
-@app.route('/get_Mdata', methods=['GET'])
-def get_Mdata():
-    data = broker.fetch_ohlcv_domestic("005930", "M", "20220608")
+@app.route('/get_Mdata/<string:company_code>', methods=['GET'])
+def get_Mdata(company_code):
+    # print(company_code)
+    # print('여기는 무엇인가요?')
+    code2=company_code
+    print(code2)
+    print("여기는 월간데이터 월간데이터")
+    data = broker.fetch_ohlcv_domestic([(f'{code2}')], "M", "20220608")
+    print(data)
     df = pd.DataFrame(data['output2'])
 
     # 필요한 컬럼을 숫자로 변환
@@ -186,19 +193,20 @@ def get_Mdata():
     # 날짜 컬럼 형식 변경
     df['stck_bsop_date'] = pd.to_datetime(
         df['stck_bsop_date'], format='%Y%m%d')
-
+    # df['stck_bsop_date'] = df['stck_bsop_date'].dt.strftime('%Y-%m-%d')
     # 필요한 정보만 포함된 json 데이터로 변환
     chart_data = df[['stck_bsop_date', 'stck_oprc', 'stck_hgpr',
                      'stck_lwpr', 'stck_clpr', 'acml_vol']].to_dict(orient='records')
 
+    print(chart_data)
+    print('여기는 월간 여기는 월간 여기는 월간')
     return jsonify(chart_data)
 
 # 컴포넌트 2-3 주가데이터(연단위)
-
-
-@app.route('/get_Ydata', methods=['GET'])
-def get_Ydata():
-    data = broker.fetch_ohlcv("005930", "Y")
+@app.route('/get_Ydata/<string:company_code>', methods=['GET'])
+def get_Ydata(company_code):
+    code3=company_code
+    data = broker.fetch_ohlcv([(f'{code3}')], "Y")
     df = pd.DataFrame(data['output2'])
     # 필요한 컬럼을 숫자로 변환
     df[['stck_clpr', 'stck_hgpr', 'stck_lwpr', 'stck_oprc', 'acml_vol', 'acml_tr_pbmn']] = df[[
@@ -216,24 +224,22 @@ def get_Ydata():
 
 
 # 컴포넌트 1-1 기업 이름, 코드
-@app.route('/companydetail', methods=['GET'])
-def get_company_data():
-
+@app.route('/companydetail/<string:company_name>', methods=['GET'])
+def get_company_data(company_name):
+    print("테스트입니다 테스트입니다",company_name)
     symbols = broker.fetch_kospi_symbols()
-    company_row = symbols[symbols['한글명'] == '삼성전자']
+    company_row = symbols[symbols['한글명'] == company_name]
 
     company_info = company_row[['단축코드', '한글명']].to_dict(orient='records')[0]
 
     return jsonify(company_info)
 
 # 컴포넌트3 기업 상세 정보
-
-
-@app.route('/companyupdown', methods=['GET'])
-def get_company_updown():
+@app.route('/companyupdown/<string:company_name>', methods=['GET'])
+def get_company_updown(company_name):
 
     symbols = broker.fetch_kospi_symbols()
-    company_row = symbols[symbols['한글명'] == '삼성전자']
+    company_row = symbols[symbols['한글명'] == company_name]
     company_code = company_row['단축코드'].values[0]
     company_price = broker.fetch_price(company_code)
     company_infof = {
@@ -245,15 +251,31 @@ def get_company_updown():
     }
     print(company_infof)
     return jsonify(company_infof)
-    
-
 # 컴포넌트 1-2 기업 등락률, 가격
 # 실시간 주식 등락률,현재가격 API에서 제공되는 것을 가져다 씀
+@socketio.on('request_company_rate')
+def get_company_rate(company_code):
+    code=company_code['company_code']
+    print(code)
+    print(type(code))
+    print(type(f'{code}'))
+    print(f'{code}')
+    print([f'{code}']) 
 
+    print("여기는 여기는 여기는 여기는 여기는")
+    data = broker._fetch_today_1m_ohlcv([(f'{code}')], to="15:30:00")
 
 @socketio.on('request_company_rate')
-def get_company_rate():
-    data = broker._fetch_today_1m_ohlcv("005930", to="15:30:30")
+def get_company_rate(company_code):
+    code=company_code['company_code']
+    print(code)
+    print(type(code))
+    print(type(f'{code}'))
+    print(f'{code}')
+    print([f'{code}']) 
+
+    print("여기는 여기는 여기는 여기는 여기는")
+    data = broker._fetch_today_1m_ohlcv([(f'{code}')], to="15:30:00")
 
 #     output1 = data["output1"]
 #     output2 = data["output2"]
