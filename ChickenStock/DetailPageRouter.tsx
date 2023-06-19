@@ -1,5 +1,5 @@
-import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import React, { useState } from 'react';
+import {View, StyleSheet, ActivityIndicator, Image, Text} from 'react-native';
 import ComPonent1 from './DetailPageComponent/DetailPage_NameAndChange';
 import ComPonent2 from './DetailPageComponent/DetailPage_StockChart';
 import ComPonent3 from './DetailPageComponent/DetailPage_StockDetailInfo';
@@ -12,8 +12,7 @@ const AnotherPage = () => {
   const route = useRoute();
   const {company_name} = route.params as {company_name: string};
   const {company_code} = route.params as {company_code: string};
-  // console.log(company_name);
-  // console.log(company_code);
+
 
   // 각각의 컴포넌트에 지정한 매개변수를 전달한다.
   return (
@@ -31,6 +30,23 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 3,
     backgroundColor: 'beige',
+  },
+  loading_window: {
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#1B9C85',
+  },
+  LogoImage: {
+    width: 200,
+    height: 200,
+  },
+  loadingText: {
+    fontSize: 40,
+    fontWeight: '700',
   },
 });
 export default AnotherPage;
