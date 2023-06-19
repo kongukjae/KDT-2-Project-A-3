@@ -368,7 +368,7 @@ def buy():
     if find_id is not None:
         account = find_id.get('account')
 
-         # account 값을 수정하는 로직을 추가
+        # account 값을 수정하는 로직을 추가
         new_account = account - total_price  # 새로운 account 값으로 대체할 값 설정
 
         # 데이터베이스에서 account 값을 수정
