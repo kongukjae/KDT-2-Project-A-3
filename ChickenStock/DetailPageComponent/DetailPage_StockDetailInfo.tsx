@@ -6,9 +6,12 @@ type Component2Props = {
   company_code: string;
 };
 
-const ComPonent3: React.FC<Component2Props> = ({ company_name, company_code }) => {
-  console.log('com3')
-  console.log(company_name, company_code)
+const ComPonent3: React.FC<Component2Props> = ({
+  company_name,
+  company_code,
+}) => {
+  console.log('com3');
+  console.log(company_name, company_code);
   const [upAndDown, setCompany] = useState({
     시가: '',
     오늘최고가: '',
@@ -18,7 +21,7 @@ const ComPonent3: React.FC<Component2Props> = ({ company_name, company_code }) =
   });
 
   useEffect(() => {
-    fetch('http://10.0.2.2:5000/companyupdown')
+    fetch(`http://10.0.2.2:5000/companyupdown/${company_name}`)
       .then(response => response.json())
       .then(data => {
         setCompany(data);

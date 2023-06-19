@@ -11,25 +11,26 @@ import pprint
 from flask_socketio import SocketIO, emit
 # 개인 제작 모듈
 import callApiData.Mainpage_stock_data
+import callApiData.Search_stock_data
 import callDBData.category_name_changer
 import time
+import asyncio
 
 import json
 import websockets
 
 from base64 import b64decode
 
-# bardapi
 import bardapi
 import os
-import logging
 
 # Flask 애플리케이션을 생성하는 부분
 app = Flask(__name__)
 # 시크릿 키는 보안을 강화하기 위해 사용되는 값으로, 애플리케이션에서 사용되는 다양한 보안 기능에 필요
 app.secret_key = "nb1+d(7+2y1q0m*kig4+zxld$v00^7dr=nxqcjn5(fp@ul)yc@"
 
-os.environ['_BARD_API_KEY']="XQiP6_UOiNfmRxuQisZJYU3HJ8ou4gWiEtJHEK2YpJQhzjebXfozrSN1phM02G415pc2UQ."
+
+os.environ['_BARD_API_KEY'] = "XQiP6_UOiNfmRxuQisZJYU3HJ8ou4gWiEtJHEK2YpJQhzjebXfozrSN1phM02G415pc2UQ."
 
 f = open("./secret.key")
 lines = f.readlines()
@@ -46,12 +47,8 @@ db = client['chicken_stock']
 # Flask-SocketIO  인스턴스 생성
 socketio = SocketIO(app, cors_allowed_origins="*")
 
-logger = logging.getLogger('socketio')  # SocketIO 로거 생성
-logger.setLevel(logging.DEBUG)  # 로그 레벨을 DEBUG로 설정
+#! 마이페이지 계좌
 
-stream_handler = logging.StreamHandler()  # 콘솔 핸들러 생성
-stream_handler.setLevel(logging.DEBUG)  # 핸들러의 로그 레벨을 DEBUG로 설정
-logger.addHandler(stream_handler)  # 핸들러를 로거에 추가
 
 @app.route('/account', methods=['GET'])
 def account():
@@ -69,10 +66,11 @@ def account():
         return jsonify({'error': 'Invalid login_id'})  # 유효하지 않은 로그인 아이디인 경우
 
 
-
 @app.route('/api/data', methods=['GET'])
+# 회원가입 기능 서버에서 처리하는 로직
 @app.route('/signup', methods=['POST'])
 def register():
+    # 요청으로 부터 json 데이터 가져오기
     data = request.get_json()
 
     print(data)
@@ -83,17 +81,22 @@ def register():
 
     return '데이터 저장 완료'
 
+# id중복체크 하는 로직
+
 
 @app.route('/checkId', methods=['POST'])
 def checkId():
+    # 요청으로 부터 json 데이터 가져오기
     request_data = request.get_json()
     returnValue = {}
     print('아이디 서버 연결')
+    # id를 db에서 찾아보고 없으면 'available' 을 반환
     if db.user_info.find_one({'id': request_data["id"]}) == None:
         returnValue['state'] = 'available'
         return jsonify(returnValue)
+    # id를 db에서 찾오보고 있으면 'available'을 반환
     elif db.user_info.find_one({'id': request_data["id"]})["id"] == request_data["id"]:
-        returnValue['state'] = 'taken'
+        returnValue['unavailable'] = 'no'
         return jsonify(returnValue)
 
 
@@ -159,9 +162,12 @@ def login_Check():
 # 컴포넌트 2-1 실시간 주가 차트 데이터(일단위)
 # @app.route('/get_data', methods=['GET'])
 @socketio.on('get_data')
-def get_data():
-
-    data = broker._fetch_today_1m_ohlcv("328380", to="15:30:30")
+def get_data(company_code):
+    print(company_code)
+    print("여기는 실시간 코드 여기는 실시간 코드 여기는 실시간 코드")
+    code1 = company_code['company_code']
+    # print(code1)
+    data = broker._fetch_today_1m_ohlcv([(f'{code1}')], to="15:30:30")
     df = pd.DataFrame(data['output2'])
     df['stck_cntg_hour'] = pd.to_datetime(
         df['stck_cntg_hour'], format='%H%M%S').dt.strftime('%H:%M:%S')
@@ -169,14 +175,20 @@ def get_data():
         'stck_prpr', 'stck_oprc', 'stck_hgpr', 'stck_lwpr', 'cntg_vol', 'acml_tr_pbmn']].astype(float)
 
     emit('data_response', df.to_dict(orient='records'))
-    print(df.to_dict)
+    # print(df.to_dict)
 
 # 컴포넌트 2-2 주가데이터(한달단위)
 
 
-@app.route('/get_Mdata', methods=['GET'])
-def get_Mdata():
-    data = broker.fetch_ohlcv_domestic("005930", "M", "20220608")
+@app.route('/get_Mdata/<string:company_code>', methods=['GET'])
+def get_Mdata(company_code):
+    # print(company_code)
+    # print('여기는 무엇인가요?')
+    code2 = company_code
+    print(code2)
+    print("여기는 월간데이터 월간데이터")
+    data = broker.fetch_ohlcv_domestic([(f'{code2}')], "M", "20220608")
+    print(data)
     df = pd.DataFrame(data['output2'])
 
     # 필요한 컬럼을 숫자로 변환
@@ -186,41 +198,42 @@ def get_Mdata():
     # 날짜 컬럼 형식 변경
     df['stck_bsop_date'] = pd.to_datetime(
         df['stck_bsop_date'], format='%Y%m%d')
-
+    # df['stck_bsop_date'] = df['stck_bsop_date'].dt.strftime('%Y-%m-%d')
     # 필요한 정보만 포함된 json 데이터로 변환
     chart_data = df[['stck_bsop_date', 'stck_oprc', 'stck_hgpr',
-                     'stck_lwpr', 'stck_clpr', 'acml_vol']].to_dict(orient='records')
+                    'stck_lwpr', 'stck_clpr', 'acml_vol']].to_dict(orient='records')
 
+    print(chart_data)
+    print('여기는 월간 여기는 월간 여기는 월간')
     return jsonify(chart_data)
 
 # 컴포넌트 2-3 주가데이터(연단위)
-
-
-@app.route('/get_Ydata', methods=['GET'])
-def get_Ydata():
-    data = broker.fetch_ohlcv("005930", "Y")
+@app.route('/get_Ydata/<string:company_code>', methods=['GET'])
+def get_Ydata(company_code):
+    code3=company_code
+    data = broker.fetch_ohlcv_domestic([(f'{code3}')], "Y", "20000000")
+    print(data)
     df = pd.DataFrame(data['output2'])
     # 필요한 컬럼을 숫자로 변환
     df[['stck_clpr', 'stck_hgpr', 'stck_lwpr', 'stck_oprc', 'acml_vol', 'acml_tr_pbmn']] = df[[
         'stck_clpr', 'stck_hgpr', 'stck_lwpr', 'stck_oprc', 'acml_vol', 'acml_tr_pbmn']].astype(float)
-
     # 날짜 컬럼 형식 변경
     df['stck_bsop_date'] = pd.to_datetime(
         df['stck_bsop_date'], format='%Y%m%d')
-
+    # df['stck_bsop_date'] = df['stck_bsop_date'].dt.strftime('%Y-%m-%d')
     # 필요한 정보만 포함된 json 데이터로 변환
-    chart_data = df[['stck_bsop_date', 'stck_oprc', 'stck_hgpr',
-                     'stck_lwpr', 'stck_clpr', 'acml_vol']].to_dict(orient='records')
-
-    return jsonify(chart_data)
+    chart_data1 = df[['stck_bsop_date', 'stck_oprc', 'stck_hgpr',
+                    'stck_lwpr', 'stck_clpr', 'acml_vol']].to_dict(orient='records')
+    print(chart_data1)
+    return jsonify(chart_data1)
 
 
 # 컴포넌트 1-1 기업 이름, 코드
-@app.route('/companydetail', methods=['GET'])
-def get_company_data():
-
+@app.route('/companydetail/<string:company_name>', methods=['GET'])
+def get_company_data(company_name):
+    print("테스트입니다 테스트입니다", company_name)
     symbols = broker.fetch_kospi_symbols()
-    company_row = symbols[symbols['한글명'] == '삼성전자']
+    company_row = symbols[symbols['한글명'] == company_name]
 
     company_info = company_row[['단축코드', '한글명']].to_dict(orient='records')[0]
 
@@ -229,11 +242,11 @@ def get_company_data():
 # 컴포넌트3 기업 상세 정보
 
 
-@app.route('/companyupdown', methods=['GET'])
-def get_company_updown():
+@app.route('/companyupdown/<string:company_name>', methods=['GET'])
+def get_company_updown(company_name):
 
     symbols = broker.fetch_kospi_symbols()
-    company_row = symbols[symbols['한글명'] == '삼성전자']
+    company_row = symbols[symbols['한글명'] == company_name]
     company_code = company_row['단축코드'].values[0]
     company_price = broker.fetch_price(company_code)
     company_infof = {
@@ -245,15 +258,37 @@ def get_company_updown():
     }
     print(company_infof)
     return jsonify(company_infof)
-    
-
 # 컴포넌트 1-2 기업 등락률, 가격
 # 실시간 주식 등락률,현재가격 API에서 제공되는 것을 가져다 씀
 
 
 @socketio.on('request_company_rate')
-def get_company_rate():
-    data = broker._fetch_today_1m_ohlcv("005930", to="15:30:30")
+def get_company_rate(company_code):
+    code = company_code['company_code']
+    print(code)
+    print(type(code))
+    print(type(f'{code}'))
+    print(f'{code}')
+    print([f'{code}'])
+
+    print("여기는 여기는 여기는 여기는 여기는")
+    data = broker._fetch_today_1m_ohlcv([(f'{code}')], to="15:30:00")
+
+
+@socketio.on('request_company_rate')
+def get_company_rate(company_code):
+    code = company_code['company_code']
+    print(code)
+    print(type(code))
+    print(type(f'{code}'))
+    print(f'{code}')
+    print([f'{code}'])
+
+    print("여기는 여기는 여기는 여기는 여기는")
+    data = broker._fetch_today_1m_ohlcv([(f'{code}')], to="15:30:00")
+
+#     output1 = data["output1"]
+#     output2 = data["output2"]
 
     output1 = data["output1"]
     output2 = data["output2"]
@@ -326,7 +361,7 @@ def get_news_data():
     return jsonify(json_news)
 
 
-# 메인 페이지에 주식 목록 데이터
+# ? 메인 페이지 주식 목록 데이터
 @app.route('/api/main_page', methods=['POST'])
 def main_page_init():
     user_id = session.get('user_id')
@@ -344,57 +379,29 @@ def main_page_init():
 # 구매 페이지에 호가를 눌렀을때 호가 정보를 받아오는 요청
 
 
-#구매 페이지에 호가를 눌렀을때 호가 정보를 받아오는 요청
-@socketio.on('hoga_data')
+# 구매 페이지에 호가를 눌렀을때 호가 정보를 받아오는 요청
+@socketio.on('get_hoga_data')
+def get_hoga_data():
+    a = 1
+
+
+@app.route('/api/hoga', methods=['GET'])
 def get_hoga_data():
     def get_approval(key, secret):
-       url = 'https://openapi.koreainvestment.com:9443' # 실전투자계좌
-       headers = {"content-type": "application/json"}
-       body = {"grant_type": "client_credentials",
-            "appkey": key,
-            "secretkey": secret}
-       PATH = "oauth2/Approval"
-       URL = f"{url}/{PATH}"
-       res = requests.post(URL, headers=headers, data=json.dumps(body))
-       approval_key = res.json()["approval_key"]
-       return approval_key
-    print(get_approval(key,secret))
+        url = 'https://openapi.koreainvestment.com:9443'  # 실전투자계좌
+        headers = {"content-type": "application/json"}
+        body = {"grant_type": "client_credentials",
+                "appkey": key,
+                "secretkey": secret}
+        PATH = "oauth2/Approval"
+        URL = f"{url}/{PATH}"
+        res = requests.post(URL, headers=headers, data=json.dumps(body))
+        approval_key = res.json()["approval_key"]
+        return approval_key
+    print(get_approval(key, secret))
     return jsonify()
 
-#구매로직 작성
-@app.route('/buy', methods=['POST'])
-def buy():
-    data = request.get_json()
-    user_id = session.get('user_id')
-    # # 연결된 db에서 id가 로그인 한 id와 같은 데이터를 db에서 찾음
-    find_id = db.user_info.find_one({"id": user_id})
-    total_price = data.get('totalPrice')
-
-    account = None  # 초기값으로 None 설정
-
-    if find_id is not None:
-        account = find_id.get('account')
-
-         # account 값을 수정하는 로직을 추가
-        new_account = account - total_price  # 새로운 account 값으로 대체할 값 설정
-
-        # 데이터베이스에서 account 값을 수정
-        db.user_info.update_one({"id": user_id}, {"$set": {"account": new_account}})
-        print('account 값이 수정되었습니다.')
-
-        # 수정된 account 값을 다시 가져와서 확인
-        updated_account = db.user_info.find_one({"id": user_id}).get('account')
-        print('수정된 account 값:', str(updated_account))
-
-    print('find_id'+str(find_id))
-    print('total' + str(total_price))
-    print('data' + str(data))
-    print('account' + str(account))
-
-    return jsonify(data)
-
 #! 챗봇 API
-    
 @socketio.on('message')  # 수정된 부분
 def handle_message(message):
     print("받음")
@@ -405,6 +412,45 @@ def handle_message(message):
     # 필요에 따라 클라이언트에 응답 메시지를 보낼 수도 있습니다.
     emit('response', bard_answer)
 
+# ? 주식 검색
+@app.route('/search_stock', methods=['POST'])
+def search_stock_server():
+    print('검색 진입')
+    search_value = request.get_json()
+    print('들어온 회사명 ', search_value)
+    search_response = callApiData.Search_stock_data.Search_data(search_value)
+    if type(search_response) == str:
+        return jsonify(search_response)
+    return jsonify(search_response.to_dict())
+
+#! 구매로직 작성
+@app.route('/buy', methods=['POST'])
+def buy():
+    data = request.get_json()
+    user_id = session.get('user_id')
+    # # 연결된 db에서 id가 로그인 한 id와 같은 데이터를 db에서 찾음
+    find_id = db.user_info.find_one({"id": user_id})
+    total_price = data.get('totalPrice')
+    account = None  # 초기값으로 None 설정
+    if find_id is not None:
+        account = find_id.get('account')
+        # account 값을 수정하는 로직을 추가
+        new_account = account - total_price  # 새로운 account 값으로 대체할 값 설정
+        # 데이터베이스에서 account 값을 수정
+        db.user_info.update_one(
+            {"id": user_id}, {"$set": {"account": new_account}})
+        print('account 값이 수정되었습니다.')
+        # 수정된 account 값을 다시 가져와서 확인
+        updated_account = db.user_info.find_one({"id": user_id}).get('account')
+        print('수정된 account 값:', str(updated_account))
+    print('find_id'+str(find_id))
+    print('total' + str(total_price))
+    print('data' + str(data))
+    print('account' + str(account))
+    return jsonify(data)
+
+
 if (__name__) == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+
+    app.run(host='0.0.0.0', port=5000)
     socketio.run(app, host='0.0.0.0', port=5000)

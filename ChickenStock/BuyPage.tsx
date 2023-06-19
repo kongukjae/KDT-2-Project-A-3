@@ -3,8 +3,6 @@ import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
 import HogaModal from './HogaModal';
-import io from 'socket.io-client'; // socket.io-client import
-
 
 
 

@@ -60,6 +60,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
+//* 사용되는 해당 페이지의 타입 지정
 type RootStackParamList = {
   ChoicePageOne: undefined;
   ChoicePageTwo: {choiceOne: string};
@@ -74,10 +75,12 @@ type ChoicePageOneNavigationProp = StackNavigationProp<
 >;
 type ChoicePageOneRouteProp = RouteProp<RootStackParamList, 'ChoicePageTwo'>;
 
+//* 리액트의 Fuction Component로 사용하여 ChoicePageOne으로 export
 export const ChoicePageOne: React.FC = () => {
   const navigation = useNavigation<ChoicePageOneNavigationProp>();
 
   const handleChoice = (choiceOne: string) => {
+    //* choiceOne의 데이터와 함께 navigate메서드를 이용해 ChoicePageTwo 이동
     navigation.navigate('ChoicePageTwo', {choiceOne});
   };
 
@@ -249,11 +252,14 @@ export const ChoicePageFour: React.FC = () => {
   const route = useRoute<ChoicePageFourRouteProp>();
   const {choiceOne, choiceTwo, choiceThree} = route.params;
   const [choiceFour, setChoiceFour] = useState('');
+  const [selectedChoice, setSelectedChoice] = useState('');
 
   const handleChoice = (choice: string) => {
     setChoiceFour(choice);
+    setSelectedChoice(choice);
   };
 
+  //* 저장버튼을 누르면 data에 One부터 Four를 담음
   const handleSubmit = () => {
     const data = {
       choiceOne,
@@ -262,6 +268,7 @@ export const ChoicePageFour: React.FC = () => {
       choiceFour,
     };
 
+    //* fetch를 통해서 db에 저장하기 위해 요청을 보냄
     fetch('http://10.0.2.2:5000/api/user-info', {
       method: 'POST',
       headers: {
@@ -286,21 +293,36 @@ export const ChoicePageFour: React.FC = () => {
     <View style={styles.container}>
       <Text style={styles.title}>주식의 구조, 위험에 대해 알고 계신가요? </Text>
       <TouchableOpacity
-        style={styles.button}
+        style={[
+          styles.button,
+          selectedChoice === '이해하지 못해요' && {backgroundColor: 'rgba(0, 0, 0, 0.5)'},
+        ]}
         onPress={() => handleChoice('이해하지 못해요')}>
         <Text style={styles.text}>이해하지 못해요.</Text>
       </TouchableOpacity>
       <TouchableOpacity
-        style={styles.button}
+        style={[
+          styles.button,
+          selectedChoice === '일정 부분 이해해요' && {
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          },
+        ]}
         onPress={() => handleChoice('일정 부분 이해해요')}>
         <Text style={styles.text}>일정 부분 이해해요.</Text>
       </TouchableOpacity>
       <TouchableOpacity
-        style={styles.button}
+        style={[
+          styles.button,
+          selectedChoice === '깊이 있게 이해해요' && {
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          },
+        ]}
         onPress={() => handleChoice('깊이 있게 이해해요')}>
         <Text style={styles.text}>깊이 있게 이해해요.</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={handleSubmit}>
         <Text style={styles.text}>저장</Text>
       </TouchableOpacity>
     </View>
