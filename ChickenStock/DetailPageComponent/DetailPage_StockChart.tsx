@@ -34,25 +34,29 @@ const ComPonent2: React.FC<Component2Props> = ({
   const [currentChart, setCurrentChart] = useState<'day' | 'month' | 'year'>(
     'day',
   );
-  console.log('여기는 일간');
-  console.log(dayData);
-  console.log('여기는 일간');
-  console.log('여기는 month');
-  console.log(monthData);
-  console.log('여기는 month');
-  console.log('여기는 년');
-  console.log(yearData);
-  console.log('여기는 년');
+  // console.log('여기는 일간');
+  // console.log(dayData);
+  // console.log('여기는 일간');
+  // console.log('여기는 month');
+  // console.log(monthData);
+  // console.log('여기는 month');
+  // console.log('여기는 년');
+  // console.log(yearData);
+  // console.log('여기는 년');
   // 컴포넌트가 마운트 될때 실행되는 useEffet 즉, 페이지가 보여지면 일간 차트가 보임
   useEffect(() => {
     // 소켓 인스턴스 생성, 일종의 공용방
     const socket = io('http://10.0.2.2:5000');
 
+    const interval = setInterval(() => {
+      socket.emit('get_data', { company_code });
+    }, 5000);
+
     socket.on('data_response', (data: StockData[]) => {
       console.log('여기뭐냐');
       console.log(
         'day data stck_prpr:',
-        data.map(item => item.stck_prpr),
+        data.map(item => item.stck_prpr), 
       );
       console.log('여기뭐냐');
 
@@ -62,24 +66,13 @@ const ComPonent2: React.FC<Component2Props> = ({
       }
     });
 
-    const intervalId = setInterval(() => {
-      socket.emit('get_data', {company_code});
-    }, 6000); // 2초마다 실행
-
     return () => {
-      clearInterval(intervalId); // 컴포넌트 unmount시 interval 제거
+      clearInterval(interval);
       socket.off('data_response');
       socket.disconnect();
       console.log('소켓이 진짜로 꺼졌습니다.');
     };
   }, [currentChart, company_code]);
-
-  //   return () => {
-  //     socket.off('data_response');
-  //     socket.disconnect();
-  //     console.log('소켓이 진짜로 꺼졌습니다.');
-  //   };
-  // }, [currentChart]);
 
   //  2. 월간 차트 요청
   useEffect(() => {
