@@ -47,27 +47,28 @@ const MyPage = () => {
   console.log('data', data);
   console.log('type');
   console.log(typeof data);
-
-  const interest = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+  const interest = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
   const enter = ['기업 명', '현재가', '등락', '보유 수량', '평가 금액'];
-  const transaction = ['구매', '판매', '미채결'];
+  const transaction = ['구매', '판매', '미체결'];
   const enterValue = [1, 2, 3, 4, 5];
   const transactionValue = [6, 7, 8, 9, 10];
   return (
-    <View>
+    <View style={styles.root}>
       <View>
         <TopMenuPage></TopMenuPage>
       </View>
       {Object.keys(data).length !== 0 && (
         <View style={styles.myMoneyCss}>
-          <Text>
-            은행 : {data.bank} 계좌 잔액 : {data.account}
+          <Text style={styles.myMoneyText}>
+            나의 은행 : {data.bank}
           </Text>
-          {/* <Text></Text> */}
+          <Text style={styles.myMoneyText}>
+            계좌 잔액 : {data.account}
+          </Text>
         </View>
       )}
       <View style={styles.myInterestCss}>
-        <Text>본인 관심사</Text>
+        <Text style={styles.myMoneyText}>본인 관심사</Text>
       </View>
       <View style={styles.circleContainerCss}>
         {interest.map((item, index) => (
@@ -79,7 +80,7 @@ const MyPage = () => {
       <View style={styles.enterCss}>
         {enter.map((item, index) => (
           <View style={styles.enterNameCss}>
-            <Text key={index}>{item}</Text>
+            <Text style={styles.enterNameText} key={index}>{item}</Text>
           </View>
         ))}
       </View>
@@ -114,7 +115,7 @@ const MyPage = () => {
       <View style={styles.transactionContainerCss}>
         {transaction.map((item, index) => (
           <TouchableOpacity style={styles.transactionCss}>
-            <Text key={index}>{item}</Text>
+            <Text style={styles.transactionText}key={index}>{item}</Text>
           </TouchableOpacity>
         ))}
       </View>
@@ -158,40 +159,57 @@ const MyPage = () => {
 };
 
 const styles = StyleSheet.create({
+  root: {
+    backgroundColor: '#FFE194',
+    flex: 1,
+  },
+  myMoneyText: {
+    fontFamily: 'BagelFatOne-Regular',
+    fontSize: 21,
+    color: '#E8F6EF',
+    marginLeft: 10,
+  },
   myMoneyCss: {
     width: '100%',
     height: 50,
-    backgroundColor: 'gray',
+    backgroundColor: '#1B9C85',
     display: 'flex',
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
+    gap: 20,
+    borderRadius: 15,
   },
   myInterestCss: {
     width: '100%',
-    height: 30,
+    height: 50,
     marginTop: 20,
-    backgroundColor: 'gray',
+    backgroundColor: '#1B9C85',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    borderRadius: 15,
   },
   circleContainerCss: {
     width: '100%',
     heigt: 200,
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'center',
+    justifyContent: 'space-evenly',
     alignItems: 'center',
   },
   circleButtonCss: {
     flexDirection: 'row',
-    backgroundColor: 'lightgray',
-    width: 100,
-    height: 100,
-    borderRadius: 50,
+    backgroundColor: '#E8F6EF',
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     justifyContent: 'space-around',
     alignItems: 'center',
-    flexBasis: '25%',
+    flexBasis: '16%',
+    borderColor: '#1B9C85',
+    borderWidth: 2,
+    marginBottom: 5
   },
   enterCss: {
     width: '100%',
@@ -200,7 +218,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'gray',
+    backgroundColor: '#4C4C6D',
   },
   enterNameCss: {
     width: '20%',
@@ -209,21 +227,24 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  enterNameText: {
+    color: '#E8F6EF',
+    fontWeight: '700',
+  },
   enterValueCss: {
     width: '100%',
     height: 50,
-    backgroundColor: 'lightgray',
-    borderColor: 'black',
-    borderWidth: 1,
+    backgroundColor: '#E8F6EF',
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    borderRadius: 5
   },
   enterInsertCss: {
     width: '20%',
     height: 50,
-    borderColor: 'black',
+    borderColor: '#E8F6EF',
     borderWidth: 1,
   },
   transactionContainerCss: {
@@ -233,28 +254,29 @@ const styles = StyleSheet.create({
   transactionCss: {
     width: 50,
     height: 30,
-    backgroundColor: 'gray',
+    backgroundColor: '#1B9C85',
     borderRadius: 30,
     margin: 8,
     justifyContent: 'center',
     alignItems: 'center',
   },
+  transactionText: {
+    color: '#E8F6EF',
+    fontWeight: '700',
+  },
   transactionValueCss: {
     width: '100%',
-    height: 30,
-    backgroundColor: 'lightgray',
-    borderColor: 'black',
-    borderWidth: 1,
+    height: 40,
+    backgroundColor: '#E8F6EF',
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    borderRadius: 5
   },
   transactionInsertCss: {
     width: '20%',
-    height: 30,
-    borderColor: 'black',
-    borderWidth: 1,
+    height: 40,
   },
 });
 export default MyPage;
