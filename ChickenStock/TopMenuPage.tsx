@@ -270,7 +270,7 @@ const TopMenuPage = () => {
           <TouchableWithoutFeedback onPress={handleSearchOverlayPress}>
             <View style={styles.searchModalBackdrop}>
               <TouchableWithoutFeedback>
-                <View style={styles.searchModalContent}>
+                <View style={[styles.searchModalContent, searchRes && typeof searchRes === 'object' && styles.searchModalContentResult]}>
                   <TouchableOpacity
                     onPress={closeSearch}
                     style={styles.closeButton}>
@@ -297,8 +297,8 @@ const TopMenuPage = () => {
                       typeof searchRes === 'object' ? (
                         <View>
                         {Object.keys(searchRes).map((key) => (
-                          <TouchableOpacity key={key} onPress={() => stockSearchChoice(key, searchRes[key])}>
-                            <View>
+                          <TouchableOpacity style={styles.searchResultBox} key={key} onPress={() => stockSearchChoice(key, searchRes[key])}>
+                            <View style={styles.searchResultValue}>
                               <Text>{key}</Text>
                               <Text>{searchRes[key]}</Text>
                             </View>
@@ -307,7 +307,7 @@ const TopMenuPage = () => {
                         </View>
                       ) : (
                         <View>
-                          <Text>{searchRes}</Text>
+                          <Text style={styles.maringTop_10}>{searchRes}</Text>
                         </View>
                       )
                     )}
@@ -362,12 +362,21 @@ const styles = StyleSheet.create({
   searchModalContent: {
     backgroundColor: '#E8F6EF',
     width: '80%',
-    height: '80%',
+    height: 160,
     padding: 16,
     borderRadius: 8,
     justifyContent: 'flex-start',
     alignItems: 'center',
   },
+  searchModalContentResult: {
+    backgroundColor: '#E8F6EF',
+    width: '80%',
+    height: 180,
+    padding: 16,
+    borderRadius: 8,
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+  }  ,
   closeButton: {
     alignSelf: 'flex-end',
     marginTop: 8,
@@ -450,6 +459,29 @@ const styles = StyleSheet.create({
   botMessage: {
     backgroundColor: '#FFE194',
   },
+  searchResultBox: {
+    backgroundColor: 'white',
+    width: 270,
+    height: 40,
+    borderRadius: 5,
+    marginTop: 20,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    borderColor: '#666',
+    borderWidth: 1,
+  },
+  searchResultValue: {
+    width: '100%',
+    fontSize: 20,
+    display: 'flex',
+    padding: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
+  maringTop_10: {
+    marginTop: 10,
+  }
 });
 
 export default TopMenuPage;
