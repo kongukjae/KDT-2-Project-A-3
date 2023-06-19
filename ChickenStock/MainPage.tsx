@@ -237,7 +237,9 @@ function Main_page(): JSX.Element {
             {dataArray.map((item, index) => {
               const name_data = item[0];
               const company_data: any = item[1]; // up_down과 current_price에서 타입 에러가 발생하므로 any로 할당함
-              const company_code = company_data['종목코드'];
+              const company_code = company_data['종목코드']
+                .toString()
+                .padStart(6, '0');
               const up_down = parseInt(company_data['등락']).toLocaleString();
               const current_price = parseInt(
                 company_data['현재가'],
