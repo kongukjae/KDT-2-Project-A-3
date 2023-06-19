@@ -47,9 +47,8 @@ const ComPonent2: React.FC<Component2Props> = ({
   useEffect(() => {
     // 소켓 인스턴스 생성, 일종의 공용방
     const socket = io('http://10.0.2.2:5000');
-
+    console.log('currentChart: ', currentChart);
     socket.on('data_response', (data: StockData[]) => {
-      console.log('여기뭐냐');
       console.log(
         'day data stck_prpr:',
         data.map(item => item.stck_prpr),
@@ -64,7 +63,7 @@ const ComPonent2: React.FC<Component2Props> = ({
 
     const intervalId = setInterval(() => {
       socket.emit('get_data', {company_code});
-    }, 6000); // 2초마다 실행
+    }, 8000); // 2초마다 실행
 
     return () => {
       clearInterval(intervalId); // 컴포넌트 unmount시 interval 제거
@@ -113,10 +112,11 @@ const ComPonent2: React.FC<Component2Props> = ({
           ...item,
           stck_prpr: item.stck_clpr,
         }));
-        // console.log(
-        //   '수정된 YEAR data stck_prpr:',
-        //   modifiedData.map(item => item.stck_prpr).reverse(),
-        // );
+        console.log(
+          '수정된 YEAR data stck_prpr:',
+          modifiedData.map(item => item.stck_prpr).reverse(),
+        );
+        console.log('여기는 년간데이터인데, 뒤바뀐 공간이다');
         setYearData(modifiedData.reverse());
         if (currentChart === 'year') {
           setData(modifiedData);
@@ -127,7 +127,11 @@ const ComPonent2: React.FC<Component2Props> = ({
   const renderChart = (data: StockData[], title: string) => {
     // 데이터가 없으면 아무것도 그리지 않는다.
     if (!data || data.length === 0) {
-      return null;
+      if (title === 'year') {
+        return <Text>년간 데이터가 없습니다.</Text>;
+      } else {
+        return null;
+      }
     }
     const isDailyData = data.some(item =>
       item.hasOwnProperty('stck_cntg_hour'),
@@ -159,7 +163,12 @@ const ComPonent2: React.FC<Component2Props> = ({
           return xData[index].slice(0, 4);
         }
       }
-      return ''; // 위의 조건을 충족하지 않는 경우 빈 문자열 반환
+      return (
+        <View>
+          {data.length > 0 && renderChart(data, currentChart)}
+          {/* 나머지 코드 */}
+        </View>
+      );
     };
 
     // console.log(xData);

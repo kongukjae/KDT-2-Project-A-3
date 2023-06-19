@@ -206,8 +206,10 @@ def get_Mdata(company_code):
 @app.route('/get_Ydata/<string:company_code>', methods=['GET'])
 def get_Ydata(company_code):
     code3=company_code
-    data = broker.fetch_ohlcv([(f'{code3}')], "Y")
+    data = broker.fetch_ohlcv_domestic([(f'{code3}')], "Y", "20000000")
+    print(data)
     df = pd.DataFrame(data['output2'])
+
     # 필요한 컬럼을 숫자로 변환
     df[['stck_clpr', 'stck_hgpr', 'stck_lwpr', 'stck_oprc', 'acml_vol', 'acml_tr_pbmn']] = df[[
         'stck_clpr', 'stck_hgpr', 'stck_lwpr', 'stck_oprc', 'acml_vol', 'acml_tr_pbmn']].astype(float)
@@ -215,13 +217,13 @@ def get_Ydata(company_code):
     # 날짜 컬럼 형식 변경
     df['stck_bsop_date'] = pd.to_datetime(
         df['stck_bsop_date'], format='%Y%m%d')
-
+    # df['stck_bsop_date'] = df['stck_bsop_date'].dt.strftime('%Y-%m-%d')
     # 필요한 정보만 포함된 json 데이터로 변환
-    chart_data = df[['stck_bsop_date', 'stck_oprc', 'stck_hgpr',
-                    'stck_lwpr', 'stck_clpr', 'acml_vol']].to_dict(orient='records')
+    chart_data1 = df[['stck_bsop_date', 'stck_oprc', 'stck_hgpr',
+                     'stck_lwpr', 'stck_clpr', 'acml_vol']].to_dict(orient='records')
 
-    return jsonify(chart_data)
-
+    print(chart_data1)
+    return jsonify(chart_data1)
 
 # 컴포넌트 1-1 기업 이름, 코드
 @app.route('/companydetail/<string:company_name>', methods=['GET'])
@@ -253,18 +255,6 @@ def get_company_updown(company_name):
     return jsonify(company_infof)
 # 컴포넌트 1-2 기업 등락률, 가격
 # 실시간 주식 등락률,현재가격 API에서 제공되는 것을 가져다 씀
-@socketio.on('request_company_rate')
-def get_company_rate(company_code):
-    code=company_code['company_code']
-    print(code)
-    print(type(code))
-    print(type(f'{code}'))
-    print(f'{code}')
-    print([f'{code}']) 
-
-    print("여기는 여기는 여기는 여기는 여기는")
-    data = broker._fetch_today_1m_ohlcv([(f'{code}')], to="15:30:00")
-
 @socketio.on('request_company_rate')
 def get_company_rate(company_code):
     code=company_code['company_code']

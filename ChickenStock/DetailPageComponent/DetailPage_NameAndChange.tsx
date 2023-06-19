@@ -36,7 +36,7 @@ const ComPonent1: React.FC<Component1Props> = ({
 
     const intervalId = setInterval(() => {
       socket.emit('request_company_rate', {company_code});
-    }, 6000); // 2초마다 실행
+    }, 8000); // 8초마다 실행
 
     return () => {
       console.log('소켓이 꺼졌습니다.');
