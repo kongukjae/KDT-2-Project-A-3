@@ -262,7 +262,7 @@ def get_company_updown(company_name):
 # 실시간 주식 등락률,현재가격 API에서 제공되는 것을 가져다 씀
 
 
-@socketio.on('request_company_rate')
+@socketio.on('request_company_rate')    
 def get_company_rate(company_code):
     code = company_code['company_code']
     print(code)
@@ -451,6 +451,4 @@ def buy():
 
 
 if (__name__) == '__main__':
-
-    app.run(host='0.0.0.0', port=5000)
     socketio.run(app, host='0.0.0.0', port=5000)

@@ -105,15 +105,9 @@ const BuyPage = () => {
   const [price, setPrice] = useState('');
   const [selectedInput, setSelectedInput] = useState('');
   const [modal,setModal] = useState(false)
-  const socket = io('http://10.0.2.2:5000');  
 
   const openModal = () => {
     setModal(true);
-    socket.emit('hoga_data')
-  socket.on('return_hoga', data => {
-    console.log(data);
-    console.log('뜸북장이여 어디여');
-    });  
   };
   const closeModal = () => {
     setModal(false);
