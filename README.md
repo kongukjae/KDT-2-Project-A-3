@@ -13,6 +13,7 @@ BackEnd : Python Flask, Socket
 FrontEnd : React Native
 
 DB: MongoDB
+
 ---
 
 ### 프로젝트 와이어프레임 
