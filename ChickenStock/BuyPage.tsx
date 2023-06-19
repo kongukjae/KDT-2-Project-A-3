@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
 import HogaModal from './HogaModal';
+import {AuthContext} from './AllContext';
+
 
 
 
@@ -105,27 +107,10 @@ const BuyPage = () => {
   const [price, setPrice] = useState('');
   const [selectedInput, setSelectedInput] = useState('');
   const [modal, setModal] = useState(false)
+  const {companyName, companyPrice} = useContext(AuthContext);
 
   const openModal = () => {
     setModal(true);
-    // const getHoga = async () => {
-    //   try {
-    //     const response = await fetch('http://10.0.2.2:5000/api/hoga', {
-    //       method: 'GET',
-    //       headers: {
-    //         'Content-Type': 'application/json',
-    //       },
-    //       // body: JSON.stringify({}), // 플라스크로 데이터를 담아 요청을 보냄
-    //     });
-
-    //     const jsonData = await response.json(); //여기서 플라스크로부터 반환값을 가져옴. 반환객체 ={'state':true or false,'message':"해당 에러 메세지"}\
-    //     console.log(jsonData)
-    //     // console.log(jsonData);
-    //   } catch (error) {
-    //     console.error(error);
-    //   }
-    // }
-    // getHoga()
   };
   const closeModal = () => {
     setModal(false);
@@ -219,7 +204,7 @@ const BuyPage = () => {
       </View>
       <View style={styles.calculateBox}>
         <View>
-          <Text style={styles.calculateText}>카카오뱅크</Text>
+          <Text style={styles.calculateText}>{companyName}</Text>
         </View>
         <View>
           <Text style={styles.calculateText}>
