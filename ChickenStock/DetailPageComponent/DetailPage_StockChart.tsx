@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {LineChart, Grid, XAxis, YAxis} from 'react-native-svg-charts';
-import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import {View, Text, TouchableOpacity, StyleSheet, ActivityIndicator} from 'react-native';
 import io from 'socket.io-client';
 // 매개변수를 정의
 type Component2Props = {
@@ -34,6 +34,8 @@ const ComPonent2: React.FC<Component2Props> = ({
   const [currentChart, setCurrentChart] = useState<'day' | 'month' | 'year'>(
     'day',
   );
+  const [isLoading, setIsLoading] = useState(true);
+  console.log('차트 로딩: ', isLoading)
   // console.log('여기는 일간');
   // console.log(dayData);
   // console.log('여기는 일간');
@@ -64,6 +66,7 @@ const ComPonent2: React.FC<Component2Props> = ({
       if (currentChart === 'day') {
         setData(data);
       }
+      setIsLoading(false);
     });
 
     return () => {
@@ -190,26 +193,34 @@ const ComPonent2: React.FC<Component2Props> = ({
 
   return (
     <View>
-      {data.length > 0 && renderChart(data, '')}
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => setCurrentChart('day')}>
-          <Text style={styles.buttonText}>일별 데이터 보기</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => setCurrentChart('month')}>
-          <Text style={styles.buttonText}>월별 데이터 보기</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => setCurrentChart('year')}>
-          <Text style={styles.buttonText}>년 데이터 보기</Text>
-        </TouchableOpacity>
-      </View>
+      {
+        isLoading == true ? (
+          <View style={styles.loading_window}>
+            <ActivityIndicator size="large" color="#1B9C85" />
+            <Text>Loading...</Text>
+          </View>
+        ) : (
+        <View>
+          {data.length > 0 && renderChart(data, '')}
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => setCurrentChart('day')}>
+              <Text style={styles.buttonText}>일별 데이터 보기</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => setCurrentChart('month')}>
+              <Text style={styles.buttonText}>월별 데이터 보기</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => setCurrentChart('year')}>
+              <Text style={styles.buttonText}>년 데이터 보기</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        )}
     </View>
   );
 };
@@ -222,13 +233,22 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: '#1B9C85',
-    padding: 10,
+    padding: 7,
     borderRadius: 5,
     width: '30%',
     alignItems: 'center',
   },
   buttonText: {
     color: 'white',
+  },
+  loading_window: {
+    width: '100%',
+    height: 265,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'transparent',
   },
 });
 export default ComPonent2;
