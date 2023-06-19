@@ -207,26 +207,6 @@ def get_Mdata(company_code):
     print('여기는 월간 여기는 월간 여기는 월간')
     return jsonify(chart_data)
 
-# 컴포넌트 2-3 주가데이터(연단위)
-@app.route('/get_Ydata/<string:company_code>', methods=['GET'])
-def get_Ydata(company_code):
-    code3=company_code
-    data = broker.fetch_ohlcv_domestic([(f'{code3}')], "Y", "20000000")
-    print(data)
-    df = pd.DataFrame(data['output2'])
-    # 필요한 컬럼을 숫자로 변환
-    df[['stck_clpr', 'stck_hgpr', 'stck_lwpr', 'stck_oprc', 'acml_vol', 'acml_tr_pbmn']] = df[[
-        'stck_clpr', 'stck_hgpr', 'stck_lwpr', 'stck_oprc', 'acml_vol', 'acml_tr_pbmn']].astype(float)
-    # 날짜 컬럼 형식 변경
-    df['stck_bsop_date'] = pd.to_datetime(
-        df['stck_bsop_date'], format='%Y%m%d')
-    # df['stck_bsop_date'] = df['stck_bsop_date'].dt.strftime('%Y-%m-%d')
-    # 필요한 정보만 포함된 json 데이터로 변환
-    chart_data1 = df[['stck_bsop_date', 'stck_oprc', 'stck_hgpr',
-                    'stck_lwpr', 'stck_clpr', 'acml_vol']].to_dict(orient='records')
-    print(chart_data1)
-    return jsonify(chart_data1)
-
 
 # 컴포넌트 1-1 기업 이름, 코드
 @app.route('/companydetail/<string:company_name>', methods=['GET'])
@@ -260,19 +240,6 @@ def get_company_updown(company_name):
     return jsonify(company_infof)
 # 컴포넌트 1-2 기업 등락률, 가격
 # 실시간 주식 등락률,현재가격 API에서 제공되는 것을 가져다 씀
-
-
-@socketio.on('request_company_rate')
-def get_company_rate(company_code):
-    code = company_code['company_code']
-    print(code)
-    print(type(code))
-    print(type(f'{code}'))
-    print(f'{code}')
-    print([f'{code}'])
-
-    print("여기는 여기는 여기는 여기는 여기는")
-    data = broker._fetch_today_1m_ohlcv([(f'{code}')], to="15:30:00")
 
 
 @socketio.on('request_company_rate')
@@ -402,6 +369,8 @@ def get_hoga_data():
     return jsonify()
 
 #! 챗봇 API
+
+
 @socketio.on('message')  # 수정된 부분
 def handle_message(message):
     print("받음")
@@ -413,17 +382,19 @@ def handle_message(message):
     emit('response', bard_answer)
 
 # ? 주식 검색
+
+
 @app.route('/search_stock', methods=['POST'])
 def search_stock_server():
     print('검색 진입')
     search_value = request.get_json()
     print('들어온 회사명 ', search_value)
     search_response = callApiData.Search_stock_data.Search_data(search_value)
-    if type(search_response) == str:
-        return jsonify(search_response)
     return jsonify(search_response.to_dict())
 
 #! 구매로직 작성
+
+
 @app.route('/buy', methods=['POST'])
 def buy():
     data = request.get_json()
@@ -452,5 +423,4 @@ def buy():
 
 if (__name__) == '__main__':
 
-    app.run(host='0.0.0.0', port=5000)
     socketio.run(app, host='0.0.0.0', port=5000)

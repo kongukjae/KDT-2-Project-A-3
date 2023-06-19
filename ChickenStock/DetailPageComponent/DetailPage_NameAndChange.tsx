@@ -61,6 +61,7 @@ const ComPonent1: React.FC<Component1Props> = ({
                   parseFloat(changeRate['prdy_ctrt'] as string) < 0
                     ? 'blue'
                     : 'red',
+                fontSize: 13,
               },
             ]}>
             등락률: {changeRate['prdy_ctrt']}
@@ -77,21 +78,24 @@ const styles1 = StyleSheet.create({
     padding: 10,
   },
   text: {
-    fontSize: 10,
+    fontSize: 15,
     color: 'black',
+    backgroundColor: '#1B9C85',
   },
 
   priceContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    backgroundColor: 'pink',
+    backgroundColor: '#1B9C85',
   },
 });
 // 기업이름, 한글명
 const styles2 = StyleSheet.create({
   container: {},
   text: {
-    fontSize: 15,
+    fontSize: 16,
+    color: 'black',
+    backgroundColor: '#1B9C85',
   },
 });
 // 단축코드, 단축코드
@@ -100,6 +104,8 @@ const styles3 = StyleSheet.create({
     marginLeft: -50,
     fontSize: 12,
     marginTop: 20,
+    color: 'black',
+    backgroundColor: '#1B9C85',
   },
 });
 const redblue = StyleSheet.create({
