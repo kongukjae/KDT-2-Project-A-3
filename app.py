@@ -240,7 +240,7 @@ def get_company_updown(company_name):
 # 실시간 주식 등락률,현재가격 API에서 제공되는 것을 가져다 씀
 
 
-@socketio.on('request_company_rate')    
+@socketio.on('request_company_rate')
 def get_company_rate(company_code):
     code = company_code['company_code']
     print(code)
@@ -345,16 +345,17 @@ def main_page_init():
 
 
 # 구매 페이지에 호가를 눌렀을때 호가 정보를 받아오는 요청
-hogaData=['005930', '155110', '0', '71300', '71400', '71500', '71600', '71700', '71800', '71900', '72000', '72100', '72200', '71200', '71100', '71000', '70900', '70800', '70700', '70600', '70500', '70400', '70300', '71362', '82344', '137302', '131061', '75999', '89133', '115811', '208898', '43732', '89642', '18722', '78174', '251866', '319763', '261333', '93409', '72555', '125027', '31930', '27443', '1045284', '1280222', '3508', 
-'0', '0', '0', '444653', '-71800', '5', '-100.00', '10986246', '0', '0', '1', '0', '0']
+hogaData = ['005930', '155110', '0', '71300', '71400', '71500', '71600', '71700', '71800', '71900', '72000', '72100', '72200', '71200', '71100', '71000', '70900', '70800', '70700', '70600', '70500', '70400', '70300', '71362', '82344', '137302', '131061', '75999', '89133', '115811', '208898', '43732', '89642', '18722', '78174', '251866', '319763', '261333', '93409', '72555', '125027', '31930', '27443', '1045284', '1280222', '3508',
+            '0', '0', '0', '444653', '-71800', '5', '-100.00', '10986246', '0', '0', '1', '0', '0']
+
 
 @app.route('/api/hoga', methods=['GET'])
-def get_hoga_data():    
+def get_hoga_data():
     return jsonify(hogaData)
-   
+
     def get_approval(key, secret):
-        # url = https://openapivts.koreainvestment.com:29443' # 모의투자계좌     
-        url = 'https://openapi.koreainvestment.com:9443' # 실전투자계좌
+        # url = https://openapivts.koreainvestment.com:29443' # 모의투자계좌
+        url = 'https://openapi.koreainvestment.com:9443'  # 실전투자계좌
         headers = {"content-type": "application/json"}
         body = {"grant_type": "client_credentials",
                 "appkey": key,
@@ -367,35 +368,36 @@ def get_hoga_data():
 
     async def connect():
         global priceData
-        
+
         g_appkey = key
         g_appsceret = secret
         g_approval_key = get_approval(g_appkey, g_appsceret)
         stock_code = '005930'
         print("approval_key [%s]" % (g_approval_key))
 
-        url = 'ws://ops.koreainvestment.com:31000' # 모의투자계좌
+        url = 'ws://ops.koreainvestment.com:31000'  # 모의투자계좌
     #     # url = 'ws://ops.koreainvestment.com:21000' # 실전투자계좌
 
     #     # 원하는 호출을 [tr_type, tr_id, tr_key] 순서대로 리스트 만들기
 
         ### 1. 국내주식 호가, 체결가, 체결통보 ###
-        code_list = [['1','H0STASP0',f"{stock_code}"]]
+        code_list = [['1', 'H0STASP0', f"{stock_code}"]]
 
-        senddata_list=[]
+        senddata_list = []
 
-        for i,j,k in code_list:
-            temp = '{"header":{"approval_key": "%s","custtype":"P","tr_type":"%s","content-type":"utf-8"},"body":{"input":{"tr_id":"%s","tr_key":"%s"}}}'%(g_approval_key,i,j,k)
+        for i, j, k in code_list:
+            temp = '{"header":{"approval_key": "%s","custtype":"P","tr_type":"%s","content-type":"utf-8"},"body":{"input":{"tr_id":"%s","tr_key":"%s"}}}' % (
+                g_approval_key, i, j, k)
             senddata_list.append(temp)
 
     #     #async with 구문은 비동기적인 컨텍스트 매니저를 정의합니다. 이를 통해 웹소켓 연결을 관리할 수 있습니다.
     #     #websockets.connect() 함수를 호출하여 url에 지정된 주소로 웹소켓 연결을 수립합니다. ping_interval은 30초마다 핑(ping) 메시지를 보내는 간격을 나타내는 매개변수입니다.
     #     # as websocket 구문은 웹소켓 연결 객체를 websocket 변수에 할당합니다. 이를 통해 웹소켓 연결을 조작하고 데이터를 송수신할 수 있습니다.
-    #     # async with 블록 내부의 코드는 웹소켓 연결이 활성화된 상태에서 실행됩니다. 이 블록 안에서 비동기 작업을 수행할 수 있습니다.     
+    #     # async with 블록 내부의 코드는 웹소켓 연결이 활성화된 상태에서 실행됩니다. 이 블록 안에서 비동기 작업을 수행할 수 있습니다.
         async with websockets.connect(url, ping_interval=30) as websocket:
 
             for senddata in senddata_list:
-                await websocket.send(senddata) # 소켓에 헤더 정보를 담아 데이터를 보냄
+                await websocket.send(senddata)  # 소켓에 헤더 정보를 담아 데이터를 보냄
                 time.sleep(0.5)
                 print(f"Input Command is :{senddata}")
 
@@ -406,7 +408,8 @@ def get_hoga_data():
                     time.sleep(0.5)
                     '''print(data) = 0|H0STASP0|001|005930^120755^0^71500^71600^71700^71800^71900^72000^72100^72200^72300^72400^71400^71300^71200^71100^71000^70900^70800^70700^70600^70500^224894^232186^146088^104734^149529^164939^70009^113786^95478^118801^255687^363921^204942^342566^471139^207546^245925^295307^144386^423045^1420444^2954464^0^0^0^0^326405^-72000^5^-100.00^7504606^1^1^0^0^0'''
                     if data[0] == '0':
-                        recvstr = data.split('|')  # 수신데이터가 실데이터 이전은 '|'로 나뉘어져있어 split
+                        # 수신데이터가 실데이터 이전은 '|'로 나뉘어져있어 split
+                        recvstr = data.split('|')
                         '''print(recvstr)= ['0', 'H0STASP0', '001', '005930^120923^0^71500^71600^71700^71800^71900^72000^72100^72200^72300^72400^71400^71300^71200^71100^71000^70900^70800^70700^70600^70500^316971^141594^146084^103902^149534^165163^69998^113809^95480^118806^225349^364223^205646^342696^471272^207113^245930^295257^144344^423147^1421341^2924977^0^0^0^0^326405^-72000^5^-100.00^7510219^0^0^0^0^0']'''
                         trid0 = recvstr[1]
 
@@ -414,15 +417,15 @@ def get_hoga_data():
                             print("#### 주식호가 ####")
                             global hogaData
                             # stockhoka_domestic(recvstr[3])
-                            recvvalue = recvstr[3].split('^') 
-                            hogaData= recvvalue
+                            recvvalue = recvstr[3].split('^')
+                            hogaData = recvvalue
                             print(hogaData)
                             time.sleep(0.2)
 
-                        else: 
+                        else:
                             print('호가 데이터가 아닌 다른 데이터 유입')
     # ------
-                    #    
+                    #
                     else:
                         jsonObject = json.loads(data)
                         trid = jsonObject["header"]["tr_id"]
@@ -433,18 +436,20 @@ def get_hoga_data():
                             if rt_cd == '1':  # 에러일 경우 처리
 
                                 if jsonObject["body"]["msg1"] != 'ALREADY IN SUBSCRIBE':
-                                    print("### ERROR RETURN CODE [ %s ][ %s ] MSG [ %s ]" % (jsonObject["header"]["tr_key"], rt_cd, jsonObject["body"]["msg1"]))
+                                    print("### ERROR RETURN CODE [ %s ][ %s ] MSG [ %s ]" % (
+                                        jsonObject["header"]["tr_key"], rt_cd, jsonObject["body"]["msg1"]))
                                 break
 
                             elif rt_cd == '0':  # 정상일 경우 처리
-                                print("### RETURN CODE [ %s ][ %s ] MSG [ %s ]" % (jsonObject["header"]["tr_key"], rt_cd, jsonObject["body"]["msg1"]))
+                                print("### RETURN CODE [ %s ][ %s ] MSG [ %s ]" % (
+                                    jsonObject["header"]["tr_key"], rt_cd, jsonObject["body"]["msg1"]))
 
                                 # 체결통보 처리를 위한 AES256 KEY, IV 처리 단계
-                                if trid == "H0STCNI0" or trid == "H0STCNI9": # 국내주식
+                                if trid == "H0STCNI0" or trid == "H0STCNI9":  # 국내주식
                                     aes_key = jsonObject["body"]["output"]["key"]
                                     aes_iv = jsonObject["body"]["output"]["iv"]
-                                    print("### TRID [%s] KEY[%s] IV[%s]" % (trid, aes_key, aes_iv))
-
+                                    print("### TRID [%s] KEY[%s] IV[%s]" % (
+                                        trid, aes_key, aes_iv))
 
                         elif trid == "PINGPONG":
                             print("### RECV [PINGPONG] [%s]" % (data))
@@ -503,30 +508,42 @@ def buy():
         # account 값을 수정하는 로직을 추가
         new_account = account - total_price  # 새로운 account 값으로 대체할 값 설정
         # 데이터베이스에서 account 값을 수정
-        print(total_price)
         db.user_info.update_one(
             {"id": user_id}, {"$set": {"account": new_account}})
         print('account 값이 수정되었습니다.')
-        db.user_info.update_one(
-            {"id": user_id},
-            {"$push": {
-                "companyData": {
-                    "companyName": company_name,
-                    "quantity": quantity,
-                    "totalPrice": total_price
-                }
-            }}
+        existing_company = db.user_info.find_one(
+            {"id": user_id, "companyData.companyName": company_name}
         )
-        # db.user_info.insert_one()
-        # 수정된 account 값을 다시 가져와서 확인
-        updated_account = db.user_info.find_one({"id": user_id}).get('account')
-        print('수정된 account 값:', str(updated_account))
+        quantityPlus = 0
+        total_pricePlus = 0
+        if existing_company:
+            company_data = existing_company['companyData']
+            for company in company_data:
+                if company['companyName'] == company_name:
+                    quantityPlus = company['quantity'] + quantity
+                    total_pricePlus = company['totalPrice']+total_price
+                    company['quantity'] = quantityPlus
+                    company['totalPrice'] = total_pricePlus
+                    break
+            db.user_info.update_one(
+                {"id": user_id}, {"$set": {"companyData": company_data}})
+        else:
+            db.user_info.update_one(
+                {"id": user_id},
+                {"$push": {
+                    "companyData": {
+                        "companyName": company_name,
+                        "quantity": quantity,
+                        "totalPrice": total_price
+                    }
+                }}
+            )
+
     print('find_id'+str(find_id))
     print('total' + str(total_price))
     print('data' + str(data))
     print('account' + str(account))
     return jsonify(data)
-
 
 
 if (__name__) == '__main__':
