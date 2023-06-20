@@ -18,6 +18,7 @@ const ComPonent1: React.FC<Component1Props> = ({
   const [changeRate, setChangeRate] = useState({
     prdy_ctrt: '',
     stck_prpr: '',
+    cntg_vol: '',
   });
 
   useEffect(() => {
@@ -48,11 +49,14 @@ const ComPonent1: React.FC<Component1Props> = ({
 
   return (
     <View style={styles1.container}>
-      <Text style={styles1.text}>코스피</Text>
-      <View style={styles1.priceContainer}>
-        <Text style={styles2.text}>기업이름: {company_name}</Text>
-        <Text style={styles3.text}>단축코드: {company_code}</Text>
-        <View style={styles1.priceContainer}>
+      <View style={styles1.firstText}>
+        <View style={styles1.left}>
+          <Text style={styles1.text}>코스피</Text>
+          <Text style={styles2.text}>기업이름: {company_name}</Text>
+          <Text style={styles3.text}>단축코드: {company_code}</Text>
+        </View>
+
+        <View style={styles1.right}>
           <Text
             style={[
               redblue.text,
@@ -61,11 +65,15 @@ const ComPonent1: React.FC<Component1Props> = ({
                   parseFloat(changeRate['prdy_ctrt'] as string) < 0
                     ? 'blue'
                     : 'red',
+                fontSize: 16,
+                fontWeight: '900',
+                marginBottom: 31,
               },
             ]}>
             등락률: {changeRate['prdy_ctrt']}
           </Text>
-          <Text style={styles1.text}>현재가: {changeRate['stck_prpr']}</Text>
+          <Text style={styles1.text1}>현재가: {changeRate['stck_prpr']}</Text>
+          <Text style={styles1.text1}>거래량: {changeRate['cntg_vol']}</Text>
         </View>
       </View>
     </View>
@@ -74,39 +82,65 @@ const ComPonent1: React.FC<Component1Props> = ({
 
 const styles1 = StyleSheet.create({
   container: {
-    padding: 10,
+    marginTop: 10,
+    width: '95%',
+    height: 85,
+    backgroundColor: '#1B9C85',
+    borderRadius: 10,
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    padding: 8,
   },
-  text: {
-    fontSize: 10,
-    color: 'black',
-  },
-
-  priceContainer: {
+  firstText: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    backgroundColor: 'pink',
+  },
+  text: {
+    fontSize: 15,
+    color: '#E8F6EF',
+    fontWeight: '900',
+  },
+  text1: {
+    fontSize: 15,
+    color: '#E8F6EF',
+    fontWeight: '900',
+    marginLeft: 140,
+  },
+  // 등락률과 현재가
+  left: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+  },
+  right: {
+    flexDirection: 'column',
+    alignItems: 'flex-end',
   },
 });
 // 기업이름, 한글명
 const styles2 = StyleSheet.create({
   container: {},
   text: {
-    fontSize: 15,
+    fontSize: 16,
+    color: 'black',
+    marginLeft: -8,
   },
 });
 // 단축코드, 단축코드
 const styles3 = StyleSheet.create({
   text: {
-    marginLeft: -50,
-    fontSize: 12,
-    marginTop: 20,
+    fontSize: 14,
+    marginTop: 10,
+    marginLeft: -8,
+
+    color: 'black',
+    backgroundColor: '#1B9C85',
+    fontWeight: '900',
   },
 });
 const redblue = StyleSheet.create({
   text: {
     fontSize: 12,
     color: 'red',
-    marginLeft: -20,
   },
 });
 export default ComPonent1;

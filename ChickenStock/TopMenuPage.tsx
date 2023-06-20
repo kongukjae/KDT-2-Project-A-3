@@ -287,7 +287,7 @@ const TopMenuPage = () => {
                       style={styles.searchButton}
                       // 검색 버튼을 누르면 마지막으로 입력 되어 있던 값을 서버로 전송함
                       onPress={handleSearch}>
-                      <Text>검색</Text>
+                      <Text style={styles.sendButtonText}>검색</Text>
                     </TouchableOpacity>
                   </View>
                   <View>
@@ -445,7 +445,7 @@ const styles = StyleSheet.create({
   searchButton: {
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'blue',
+    backgroundColor: '#1B9C85',
     paddingHorizontal: 16,
     borderRadius: 4,
   },
