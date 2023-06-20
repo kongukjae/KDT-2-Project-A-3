@@ -67,13 +67,13 @@ const ComPonent1: React.FC<Component1Props> = ({
                     : 'red',
                 fontSize: 16,
                 fontWeight: '900',
-                marginBottom: 31,
+                marginBottom: 2,
               },
             ]}>
             등락률: {changeRate['prdy_ctrt']}
           </Text>
-          <Text style={styles1.text1}>현재가: {changeRate['stck_prpr']}</Text>
           <Text style={styles1.text1}>거래량: {changeRate['cntg_vol']}</Text>
+          <Text style={styles1.text1}>현재가: {changeRate['stck_prpr']}</Text>
         </View>
       </View>
     </View>
@@ -96,7 +96,7 @@ const styles1 = StyleSheet.create({
     justifyContent: 'space-between',
   },
   text: {
-    fontSize: 15,
+    fontSize: 16,
     color: '#E8F6EF',
     fontWeight: '900',
   },
@@ -128,8 +128,8 @@ const styles2 = StyleSheet.create({
 // 단축코드, 단축코드
 const styles3 = StyleSheet.create({
   text: {
-    fontSize: 14,
-    marginTop: 10,
+    fontSize: 15,
+    marginTop: 5,
     marginLeft: -8,
 
     color: 'black',
