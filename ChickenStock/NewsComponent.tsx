@@ -12,7 +12,7 @@ const SlideComponent = () => {
 
   //* 뉴스 data 요청하는 함수
   const loadLocation = () => {
-    fetch('http://172.26.14.81:5010/news')
+    fetch('http://3.35.39.162:5010/news')
     .then(response =>  {
       return response.json()
     })

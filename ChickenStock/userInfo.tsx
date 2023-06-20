@@ -269,7 +269,7 @@ export const ChoicePageFour: React.FC = () => {
     };
 
     //* fetch를 통해서 db에 저장하기 위해 요청을 보냄
-    fetch('http://172.26.14.81:5010/api/user-info', {
+    fetch('http://3.35.39.162:5010/api/user-info', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

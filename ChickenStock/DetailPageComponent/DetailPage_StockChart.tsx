@@ -53,7 +53,7 @@ const ComPonent2: React.FC<Component2Props> = ({
   // 컴포넌트가 마운트 될때 실행되는 useEffet 즉, 페이지가 보여지면 일간 차트가 보임
   useEffect(() => {
     // 소켓 인스턴스 생성, 일종의 공용방
-    const socket = io('http://172.26.14.81:5010');
+    const socket = io('http://3.35.39.162:5010');
 
     const interval = setInterval(() => {
       socket.emit('get_data', {company_code});
@@ -84,7 +84,7 @@ const ComPonent2: React.FC<Component2Props> = ({
 
   //  2. 월간 차트 요청
   useEffect(() => {
-    fetch(`http://172.26.14.81:5010/get_Mdata/${company_code}`)
+    fetch(`http://3.35.39.162:5010/get_Mdata/${company_code}`)
       .then(response => response.json())
       .then((data: StockData[]) => {
         // 원래의 데이터에 stck_prpr 값이 없으므로 stck_clpr 값을 사용하도록 수정
