@@ -12,12 +12,10 @@ import {
   TouchableHighlight,
   Linking,
 } from 'react-native';
-
 import {RouteProp, useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import TopMenuPage from './TopMenuPage';
 import {AuthContext} from './AllContext';
-
 const MyPage = () => {
   // const { userCategoryCurrent } = useContext(AuthContext);
   const [data, setData] = useState<any>({}); // data useState를 사용하여 상태 설정
@@ -29,35 +27,38 @@ const MyPage = () => {
   console.log('유저 카테고리: ', userCategory);
   console.log('선택 된 카테고리: ', selectedButtonIndex);
   // console.log('선택 된 카테고리(최신): ', selectedButtonRef)
-
+  // useEffect(() => {
+  //   if (userCategory !== '') { // userCategory 값이 빈 문자열이 아닌 경우에만 실행
+  //     setSelectedButtonIndex(userCategory);
+  //   }
+  // }, [userCategory]);
   function name_change(name: string) {
     if (name === '건설') {
-      return '건설업'
+      return '건설업';
     } else if (name === '금융') {
-      return '금융업'
+      return '금융업';
     } else if (name === '기계') {
-      return '기계'
+      return '기계';
     } else if (name === '서비스업') {
-      return '서비스업'
-    } else if (name === '섬유/의복') {
-      return '섬유·의복'
+      return '서비스업';
+    } else if (name === '섬유/의복' || '섬유·의복') {
+      return '섬유·의복';
     } else if (name === '음식료품') {
-      return '음식료품'
+      return '음식료품';
     } else if (name === '의약품') {
-      return '의약품'
-    } else if (name === '전기/전자') {
-      return '전기·전자'
-    } else if (name === '철강/금속') {
-      return '철강·금속'
+      return '의약품';
+    } else if (name === '전기/전자' || '전기·전자') {
+      return '전기·전자';
+    } else if (name === '철강/금속' || '철강·금속') {
+      return '철강·금속';
     } else if (name === '통신업') {
-      return '통신'
+      return '통신';
     } else if (name === '화학') {
-      return '화학'
+      return '화학';
     } else {
       return '미분류';
     }
   }
-
   // 데이터 가져오는 함수
   // flask서버로 데이터 요청
   const fetchData = async () => {
@@ -97,28 +98,23 @@ const MyPage = () => {
       console.error(error);
     }
   };
-
   // 업종 변경 시 DB에서 choiceTwo 항목 변경
   useEffect(() => {
     setUserCategory(selectedButtonIndex);
     fetchCategory();
   }, [selectedButtonIndex]);
-
   // useEffect(() => {
   //   setSelectedButtonIndex(userCategory)
   // }, [userCategory])
-
   // 업종 버튼 선택 시 항상 최신 값으로 갱신
   // useEffect(() => {
   //   selectedButtonRef.current = selectedButtonIndex;
   //   console.log('category_ref 값: ', selectedButtonRef.current);
   // }, [selectedButtonIndex]);
-
   // useEffect를 사용하여 페이지가 렌더링 될 때마다 fetchData()함수를 실행
   useEffect(() => {
     fetchData();
   }, []);
-
   // console.log('data', data);
   // console.log('type');
   // console.log(typeof data);
@@ -126,12 +122,7 @@ const MyPage = () => {
   const enter = ['기업 명', '현재가', '등락', '보유 수량', '평가 금액'];
   const transaction = ['구매', '판매', '미체결'];
   const enterValue = [1, 2, 3, 4, 5];
-
-  let transactionArray = []
-  for(let i = 0; i<5; i++){
-    transactionArray[i] = [data.companyData[i].companyName, data.companyData[i].quantity, data.companyData[i].totalPrice, data.companyData[i].timestamp];
-  }
-
+  const test = [6, 7, 8, 9, 10];
   return (
     <View style={styles.root}>
       <View>
@@ -204,12 +195,7 @@ const MyPage = () => {
           </View>
         ))}
       </View>
-
-
-
     {/* 여기서 구터 구매 판매 뷰 */}
-
-
       <View style={styles.transactionContainerCss}>
         {transaction.map((item, index) => (
           <TouchableOpacity style={styles.transactionCss}>
@@ -220,35 +206,35 @@ const MyPage = () => {
         ))}
       </View>
       <View style={styles.transactionValueCss}>
-        {transactionArray[0].map((item, index) => (
+        {test.map((item, index) => (
           <View style={styles.transactionInsertCss}>
             <Text key={index}>{item}</Text>
           </View>
         ))}
       </View>
       <View style={styles.transactionValueCss}>
-        {transactionArray[1].map((item, index) => (
+        {test.map((item, index) => (
           <View style={styles.transactionInsertCss}>
             <Text key={index}>{item}</Text>
           </View>
         ))}
       </View>
       <View style={styles.transactionValueCss}>
-        {transactionArray[2].map((item, index) => (
+        {test.map((item, index) => (
           <View style={styles.transactionInsertCss}>
             <Text key={index}>{item}</Text>
           </View>
         ))}
       </View>
       <View style={styles.transactionValueCss}>
-        {transactionArray[3].map((item, index) => (
+        {test.map((item, index) => (
           <View style={styles.transactionInsertCss}>
             <Text key={index}>{item}</Text>
           </View>
         ))}
       </View>
       <View style={styles.transactionValueCss}>
-        {transactionArray[4].map((item, index) => (
+        {test.map((item, index) => (
           <View style={styles.transactionInsertCss}>
             <Text key={index}>{item}</Text>
           </View>
@@ -257,7 +243,6 @@ const MyPage = () => {
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   root: {
     backgroundColor: '#FFE194',

@@ -510,14 +510,18 @@ def buy():
     total_price = data.get('totalPrice')
     company_name = data.get('companyName')
     quantity = data.get('quantity')
-    print(company_name, quantity)
+    print('회사명, 수량: ', company_name, quantity)
     account = None  # 초기값으로 None 설정
     if find_id is not None:
         account = find_id.get('account')
         # account 값을 수정하는 로직을 추가
+        print('account: ', account)
+        print('account 타입: ', type(account))
+        print('total_price: ', total_price)
+        print('total_price 타입: ', type(total_price))
         new_account = account - total_price  # 새로운 account 값으로 대체할 값 설정
         # 데이터베이스에서 account 값을 수정
-        print(total_price)
+        print('총 가격: ', total_price)
         db.user_info.update_one(
             {"id": user_id}, {"$set": {"account": new_account}})
         print('account 값이 수정되었습니다.')
