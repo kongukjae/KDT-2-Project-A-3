@@ -537,7 +537,23 @@ def get_my_stock():
     
     return jsonify(find_id["companyData"])
     
+@app.route('/api/nowprice', methods=['POST'])
+def get_now_stock():
+    array=[]
+    request_data = request.get_json()
+    # print(request_data)
+    for x in request_data: 
+        symbols = broker.fetch_kospi_symbols()
+        company_row = symbols[symbols['한글명'] ==x]
+        company_code = company_row['단축코드'].values[0]
+        company_price = broker.fetch_price(company_code)
+        company_infof = {
+         '현재가': company_price['output']['stck_prpr'],
+        }
+        array.append(company_infof)
 
+        # print(array)
+    return jsonify(array)
     
 
 if (__name__) == '__main__':

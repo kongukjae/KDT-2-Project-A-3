@@ -23,9 +23,87 @@ const MyPage = () => {
   const [userCategory, setUserCategory] = useState<string>();
   const [selectedButtonIndex, setSelectedButtonIndex] = useState<number>(-1);
   const [myStock,setMyStock] = useState<any>([])
+  const [stockSum,setStockSum] = useState<any>([])
+  const [nowPrice,setNowPrice] = useState<number>()
+  // let stockData = myStock[0]
+  // console.log('stock',stockData)
+  // let stockData1 = myStock[0]["companyName"]
+  // console.log('stock1',stockData1)
+  // console.log('myStock',myStock)
+  let result
+  stockSumLojic()
+  console.log('result',result)
+  // console.log({stockSum})
+
+  function stockSumLojic() {
+    const groupedData = myStock.reduce((acc, stock) => {
+      const { companyName, quantity, totalPrice } = stock;
+      if (!acc[companyName]) {
+        acc[companyName] = { companyName, quantity, totalPrice };
+      } else {
+        acc[companyName].quantity += quantity;
+        acc[companyName].totalPrice += totalPrice;
+      }
+      return acc;
+    }, {});
+    
+    result = Object.values(groupedData);
+    // setStockSum(result)
+  }
+  let stockName=[] //서버로 보낼 주식 목록 (현재가 받아오기 위)
+  let nowprice=[] // 주식 샀을 때 전체가격 / 양
+  let nowprice2=[]
+  function processArray(dataArray) {
+    const processedArray = [];
+    const getNowprice= async ()=>{
+      for (let i = 0; i < dataArray.length; i++) {
+        const companyOnlyName = dataArray[i].companyName;
+        stockName.push(companyOnlyName)
+      }
+      // console.log('stockName',stockName)
+      try{
+        const response = await fetch('http://10.0.2.2:5000/api/nowprice',{
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(stockName), // 플라스크로 데이터를 담아 요청을 보냄
+        })
+        if(response.ok){
+          const jsonData= await response.json();
+          // await nowprice2.push(jsonData)
+           setNowPrice(jsonData)
+          await console.log('nowPrice',nowPrice)
+        }
+        else {
+          throw new Error('현재가 받아오는 과정에서 오류')
+        }
+      } catch (error){
+        console.error(error);
+      }
+    };
+    getNowprice()
+
+    // console.log('getnowprice',nowprice2)
   
-  console.log('myStock',myStock)
-  console.log('유저 카테고리: ', userCategory)
+    for (let i = 0; i < dataArray.length; i++) {
+      const companyName = dataArray[i].companyName;
+      const quantity = dataArray[i].quantity.toString();
+      const totalPrice = dataArray[i].totalPrice.toString();
+      let getnowprice = dataArray[i].totalPrice/dataArray[i].quantity
+      nowprice.push(getnowprice)
+      let a = ""
+      // if (nowprice[i]>nowprice2[0][i]["현재가"]){
+      //     console.log('b')
+      // }
+      
+
+      processedArray.push([companyName,'현재가','등락',quantity, totalPrice]);
+    }
+
+  
+    return processedArray;
+  }
 
   function name_change(name:string) {
     if(name === '건설') {
@@ -81,12 +159,7 @@ const MyPage = () => {
       const response = await fetch('http://10.0.2.2:5000/api/getmystock')
       if(response.ok){
         const jsonData= await response.json();
-        console.log("구매 json")
-        console.log(jsonData)
-        // const newArray=['1','2','3','4']
         setMyStock(jsonData)
-        console.log("구매주식")
-        console.log(myStock)
       }
       else {
         throw new Error('주식 정보 받아오는 과정에서 오류')
@@ -104,16 +177,16 @@ const MyPage = () => {
   }, []);
   // 배열 안에 함수를 집어 넣음으로써 의존성 추가. 페이지가 렌더링 될 때 마다 fetchData와 getMyStock 함수 실행
 
-  console.log('data', data);
-  console.log('type');
-  console.log(typeof data);
   const interest = ['건설업', '금융업', '기계', '서비스업', '섬유·의복', '음식료품', '의약품', '전기·전자', '철강·금속', '통신', '화학', '미분류'];
   const enter = ['기업 명', '현재가', '등락', '보유 수량', '평가 금액'];
   const transaction = ['구매', '판매', '미체결'];
   const enterValue = [1, 2, 3, 4, 5];
   const transactionValue = [6, 7, 8, 9, 10];
 
+  console.log('processArray',processArray(result))
+  processArray(result)
 
+  // let value1 = result[0][]
   return (
     <View style={styles.root}>
       <View>
@@ -161,34 +234,17 @@ const MyPage = () => {
           </View>
         ))}
       </View>
-      <View style={styles.enterValueCss}>
-        {enterValue.map((item, index) => (
-          <View style={styles.enterInsertCss}>
-            <Text key={index}>{item}</Text>
+      
+      {processArray(result).map((arr, arrIndex) => (
+      <View style={styles.enterValueCss} key={arrIndex}>
+        {processArray(result)[arrIndex].map((item, index) => (
+          <View style={styles.enterInsertCss} key={index}>
+           <Text>{item}</Text>
           </View>
-        ))}
-      </View>
-      <View style={styles.enterValueCss}>
-        {enterValue.map((item, index) => (
-          <View style={styles.enterInsertCss}>
-            <Text key={index}>{item}</Text>
-          </View>
-        ))}
-      </View>
-      <View style={styles.enterValueCss}>
-        {enterValue.map((item, index) => (
-          <View style={styles.enterInsertCss}>
-            <Text key={index}>{item}</Text>
-          </View>
-        ))}
-      </View>
-      <View style={styles.enterValueCss}>
-        {enterValue.map((item, index) => (
-          <View style={styles.enterInsertCss}>
-            <Text key={index}>{item}</Text>
-          </View>
-        ))}
-      </View>
+         ))}
+       </View>
+      ))}
+     
       <View style={styles.transactionContainerCss}>
         {transaction.map((item, index) => (
           <TouchableOpacity style={styles.transactionCss}>
