@@ -148,7 +148,7 @@ const ComPonent2: React.FC<Component2Props> = ({
     // console.log(xData);
 
     return (
-      <View style={{height: 220, flexDirection: 'row'}}>
+      <View style={{width: 365, height: 220, flexDirection: 'row'}}>
         <Text>{title}</Text>
         <YAxis
           data={data.map(item => item.stck_prpr)}

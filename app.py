@@ -14,10 +14,9 @@ import callApiData.Mainpage_stock_data
 import callApiData.Search_stock_data
 import callDBData.category_name_changer
 import time
-import asyncio
+
 
 import json
-import websockets
 
 from base64 import b64decode
 
@@ -28,7 +27,6 @@ import os
 app = Flask(__name__)
 # 시크릿 키는 보안을 강화하기 위해 사용되는 값으로, 애플리케이션에서 사용되는 다양한 보안 기능에 필요
 app.secret_key = "nb1+d(7+2y1q0m*kig4+zxld$v00^7dr=nxqcjn5(fp@ul)yc@"
-
 
 os.environ['_BARD_API_KEY'] = "XQiP6_UOiNfmRxuQisZJYU3HJ8ou4gWiEtJHEK2YpJQhzjebXfozrSN1phM02G415pc2UQ."
 
@@ -488,6 +486,8 @@ def search_stock_server():
     search_value = request.get_json()
     print('들어온 회사명 ', search_value)
     search_response = callApiData.Search_stock_data.Search_data(search_value)
+    if type(search_response) == str:
+        return jsonify(search_response)
     return jsonify(search_response.to_dict())
 
 #! 구매로직 작성
@@ -500,15 +500,30 @@ def buy():
     # # 연결된 db에서 id가 로그인 한 id와 같은 데이터를 db에서 찾음
     find_id = db.user_info.find_one({"id": user_id})
     total_price = data.get('totalPrice')
+    company_name = data.get('companyName')
+    quantity = data.get('quantity')
+    print(company_name, quantity)
     account = None  # 초기값으로 None 설정
     if find_id is not None:
         account = find_id.get('account')
         # account 값을 수정하는 로직을 추가
         new_account = account - total_price  # 새로운 account 값으로 대체할 값 설정
         # 데이터베이스에서 account 값을 수정
+        print(total_price)
         db.user_info.update_one(
             {"id": user_id}, {"$set": {"account": new_account}})
         print('account 값이 수정되었습니다.')
+        db.user_info.update_one(
+            {"id": user_id},
+            {"$push": {
+                "companyData": {
+                    "companyName": company_name,
+                    "quantity": quantity,
+                    "totalPrice": total_price
+                }
+            }}
+        )
+        # db.user_info.insert_one()
         # 수정된 account 값을 다시 가져와서 확인
         updated_account = db.user_info.find_one({"id": user_id}).get('account')
         print('수정된 account 값:', str(updated_account))
@@ -517,6 +532,25 @@ def buy():
     print('data' + str(data))
     print('account' + str(account))
     return jsonify(data)
+
+# ? 마이페이지 업종 선택 변경
+
+
+@app.route('/categoryChange', methods=['POST'])
+def change():
+    data = request.get_json()
+    print('전달 받은 data: ', data)
+    user_id = session.get('user_id')
+    print('user_id: ', user_id)
+    collection = db['user_info']
+    if data != None:
+        document = collection.update_one(
+            {"id": user_id}, {"$set": {"choiceTwo": data}})
+        print('DB 업데이트 성공')
+    # user_category = document['choiceTwo']
+    # print('category 확인용: ', user_category)
+    print('업종 변경 종료')
+    return ''
 
 
 if (__name__) == '__main__':

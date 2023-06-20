@@ -77,7 +77,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#E8F6EF'
+    backgroundColor: '#E8F6EF',
+    borderRadius: 15,
   },
   newsTitle: {
     color: 'black',
