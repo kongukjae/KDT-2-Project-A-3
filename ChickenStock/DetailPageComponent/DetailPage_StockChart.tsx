@@ -49,14 +49,14 @@ const ComPonent2: React.FC<Component2Props> = ({
     const socket = io('http://10.0.2.2:5000');
 
     const interval = setInterval(() => {
-      socket.emit('get_data', { company_code });
+      socket.emit('get_data', {company_code});
     }, 5000);
 
     socket.on('data_response', (data: StockData[]) => {
       console.log('여기뭐냐');
       console.log(
         'day data stck_prpr:',
-        data.map(item => item.stck_prpr), 
+        data.map(item => item.stck_prpr),
       );
       console.log('여기뭐냐');
 
