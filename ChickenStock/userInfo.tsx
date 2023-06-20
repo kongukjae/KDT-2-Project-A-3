@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import {View, TouchableOpacity, Text, StyleSheet} from 'react-native';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
@@ -136,12 +136,12 @@ export const ChoicePageTwo: React.FC = () => {
         <View>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => handleChoice('건설')}>
+            onPress={() => handleChoice('건설업')}>
             <Text style={styles.text}>건설업</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => handleChoice('금융')}>
+            onPress={() => handleChoice('금융업')}>
             <Text style={styles.text}>금융업</Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -161,14 +161,14 @@ export const ChoicePageTwo: React.FC = () => {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => handleChoice('전기/전자')}>
+            onPress={() => handleChoice('전기·전자')}>
             <Text style={styles.text}>전기/전자</Text>
           </TouchableOpacity>
         </View>
         <View>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => handleChoice('섬유/의복')}>
+            onPress={() => handleChoice('섬유·의복')}>
             <Text style={styles.text}>섬유/의류</Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -188,7 +188,7 @@ export const ChoicePageTwo: React.FC = () => {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => handleChoice('철강/금속')}>
+            onPress={() => handleChoice('철강·금속')}>
             <Text style={styles.text}>철강/금속</Text>
           </TouchableOpacity>
           <TouchableOpacity

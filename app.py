@@ -268,12 +268,11 @@ def get_company_rate(company_code):
 
 #     output1 = data["output1"]
 #     output2 = data["output2"]
-
     output1 = data["output1"]
     output2 = data["output2"]
 
     combined_output = {
-        "prdy_ctrt": output1["prdy_ctrt"], "stck_prpr": output2[0]["stck_prpr"]}
+        "prdy_ctrt": output1["prdy_ctrt"], "stck_prpr": output2[0]["stck_prpr"], "cntg_vol": output2[0]["cntg_vol"]}
 
     emit('changerate', combined_output)
 # @app.route('/changerate', methods=['GET'])
@@ -559,11 +558,13 @@ def change():
     user_id = session.get('user_id')
     print('user_id: ', user_id)
     collection = db['user_info']
-    document = collection.update_one(
-        {"id": user_id}, {"$set": {"choiceTwo": data}})
-    print(document)
+    if data != None:
+        document = collection.update_one(
+            {"id": user_id}, {"$set": {"choiceTwo": data}})
+        print('DB 업데이트 성공')
     # user_category = document['choiceTwo']
     # print('category 확인용: ', user_category)
+    print('업종 변경 종료')
     return ''
 
 

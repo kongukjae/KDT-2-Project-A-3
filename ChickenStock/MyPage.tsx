@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -13,51 +13,61 @@ import {
   Linking,
 } from 'react-native';
 
-import { RouteProp, useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
+import {RouteProp, useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
 import TopMenuPage from './TopMenuPage';
+import {AuthContext} from './AllContext';
 
 const MyPage = () => {
+  // const { userCategoryCurrent } = useContext(AuthContext);
   const [data, setData] = useState<any>({}); // data useState를 사용하여 상태 설정
-  const [userCategory, setUserCategory] = useState<string>('화학');
-  const [selectedButtonIndex, setSelectedButtonIndex] = useState<string>(userCategory);
-  const selectedButtonRef = useRef<string>(selectedButtonIndex);
-  console.log('유저 카테고리: ', userCategory)
-  console.log('선택 된 카테고리: ', selectedButtonIndex)
-  console.log('선택 된 카테고리(최신): ', selectedButtonRef)
+  const [userCategory, setUserCategory] = useState<string | null>(null);
+  const [selectedButtonIndex, setSelectedButtonIndex] = useState<string | null>(
+    userCategory,
+  );
+  // const selectedButtonRef = useRef<any>(selectedButtonIndex);
+  console.log('유저 카테고리: ', userCategory);
+  console.log('선택 된 카테고리: ', selectedButtonIndex);
+  // console.log('선택 된 카테고리(최신): ', selectedButtonRef)
+
+  // useEffect(() => {
+  //   if (userCategory !== '') { // userCategory 값이 빈 문자열이 아닌 경우에만 실행
+  //     setSelectedButtonIndex(userCategory);
+  //   }
+  // }, [userCategory]);
 
   function name_change(name: string) {
     if (name === '건설') {
-      return '건설업'
+      return '건설업';
     } else if (name === '금융') {
-      return '금융업'
+      return '금융업';
     } else if (name === '기계') {
-      return '기계'
+      return '기계';
     } else if (name === '서비스업') {
-      return '서비스업'
-    } else if (name === '섬유/의복') {
-      return '섬유·의복'
+      return '서비스업';
+    } else if (name === '섬유/의복' || '섬유·의복') {
+      return '섬유·의복';
     } else if (name === '음식료품') {
-      return '음식료품'
+      return '음식료품';
     } else if (name === '의약품') {
-      return '의약품'
-    } else if (name === '전기/전자') {
-      return '전기·전자'
-    } else if (name === '철강/금속') {
-      return '철강·금속'
+      return '의약품';
+    } else if (name === '전기/전자' || '전기·전자') {
+      return '전기·전자';
+    } else if (name === '철강/금속' || '철강·금속') {
+      return '철강·금속';
     } else if (name === '통신업') {
-      return '통신'
+      return '통신';
     } else if (name === '화학') {
-      return '화학'
+      return '화학';
     } else {
-      return '미분류'
+      return '미분류';
     }
   }
 
   // 데이터 가져오는 함수
   // flask서버로 데이터 요청
   const fetchData = async () => {
-    console.log('요청보냄')
+    console.log('요청보냄');
     try {
       const response = await fetch('http://10.0.2.2:5000/account');
       if (response.ok) {
@@ -65,9 +75,9 @@ const MyPage = () => {
         setData(jsonData);
         console.log('서버 연결 완료');
         console.log('응답 받은 data: ', jsonData);
-        console.log('카테고리', jsonData['choiceTwo'])
-        setUserCategory(name_change(jsonData['choiceTwo']))
-        setSelectedButtonIndex(name_change(jsonData['choiceTwo']))
+        console.log('DB 카테고리: ', jsonData['choiceTwo']);
+        setUserCategory(jsonData['choiceTwo']);
+        setSelectedButtonIndex(jsonData['choiceTwo']);
       } else {
         throw new Error('서버 응답이 실패하였습니다.');
       }
@@ -77,7 +87,7 @@ const MyPage = () => {
   };
   console.log("setData" + data)
   const fetchCategory = async () => {
-    console.log('업종 요청 보냄')
+    console.log('업종 요청 보냄');
     try {
       const categoryReq = await fetch('http://10.0.2.2:5000/categoryChange', {
         method: 'POST',
@@ -86,24 +96,29 @@ const MyPage = () => {
         },
         body: JSON.stringify(selectedButtonIndex),
       });
-      const categoryData = await categoryReq.json();
-      console.log('카테고리 응답: ', categoryData)
-      await fetchData();
+      // const categoryData = await categoryReq.json();
+      // console.log('카테고리 응답: ', categoryData)
+      // await fetchData();
     } catch (error) {
       console.error(error);
     }
-  }
+  };
 
   // 업종 변경 시 DB에서 choiceTwo 항목 변경
   useEffect(() => {
+    setUserCategory(selectedButtonIndex);
     fetchCategory();
-  }, [selectedButtonIndex])
+  }, [selectedButtonIndex]);
+
+  // useEffect(() => {
+  //   setSelectedButtonIndex(userCategory)
+  // }, [userCategory])
 
   // 업종 버튼 선택 시 항상 최신 값으로 갱신
-  useEffect(() => {
-    selectedButtonRef.current = selectedButtonIndex;
-    console.log('category_ref 값: ', selectedButtonRef.current);
-  }, [selectedButtonIndex]);
+  // useEffect(() => {
+  //   selectedButtonRef.current = selectedButtonIndex;
+  //   console.log('category_ref 값: ', selectedButtonRef.current);
+  // }, [selectedButtonIndex]);
 
   // useEffect를 사용하여 페이지가 렌더링 될 때마다 fetchData()함수를 실행
   useEffect(() => {
@@ -117,17 +132,7 @@ const MyPage = () => {
   const enter = ['기업 명', '현재가', '등락', '보유 수량', '평가 금액'];
   const transaction = ['구매', '판매', '미체결'];
   const enterValue = [1, 2, 3, 4, 5];
-  // for(let i = 0; i < data.companyData.length; i++){
-  //   let transactionValue = [] ;
-  //   transactionValue[i]= [data.companyData[i].companyName, 7, 8, 9];
-  // }
-
-  // let transactionArray = []
-  // for(let i = 0; i<5; i++){
-  //   transactionArray[i] = [data.companyData[i].companyName, data.companyData[i].quantity, data.companyData[i].totalPrice, data.companyData[i].timestamp];
-  // }
-  const test = [6,7,8,9,10]
-    
+  const test = [6, 7, 8, 9, 10];
 
 
   return (
@@ -137,16 +142,12 @@ const MyPage = () => {
       </View>
       {Object.keys(data).length !== 0 && (
         <View style={styles.myMoneyCss}>
-          <Text style={styles.myMoneyText}>
-            나의 은행 : {data.bank}
-          </Text>
-          <Text style={styles.myMoneyText}>
-            계좌 잔액 : {data.account}
-          </Text>
+          <Text style={styles.myMoneyText}>나의 은행 : {data.bank}</Text>
+          <Text style={styles.myMoneyText}>계좌 잔액 : {parseInt(data.account).toLocaleString()}</Text>
         </View>
       )}
       <View style={styles.myInterestCss}>
-        <Text style={styles.myMoneyText}>본인 관심사</Text>
+        <Text style={styles.myCategoryText}>본인 관심사</Text>
       </View>
       <View style={styles.circleContainerCss}>
         {interest.map((item, index) => (
@@ -164,16 +165,17 @@ const MyPage = () => {
                 setSelectedButtonIndex(item);
               }
             }}
-            key={index}
-          >
-            <Text>{item}</Text>
+            key={index}>
+            <Text style={[selectedButtonIndex === item ? styles.selectedButtonTextCss : null]}>{item}</Text>
           </TouchableOpacity>
         ))}
       </View>
       <View style={styles.enterCss}>
         {enter.map((item, index) => (
           <View style={styles.enterNameCss}>
-            <Text style={styles.enterNameText} key={index}>{item}</Text>
+            <Text style={styles.enterNameText} key={index}>
+              {item}
+            </Text>
           </View>
         ))}
       </View>
@@ -214,7 +216,9 @@ const MyPage = () => {
       <View style={styles.transactionContainerCss}>
         {transaction.map((item, index) => (
           <TouchableOpacity style={styles.transactionCss}>
-            <Text style={styles.transactionText} key={index}>{item}</Text>
+            <Text style={styles.transactionText} key={index}>
+              {item}
+            </Text>
           </TouchableOpacity>
         ))}
       </View>
@@ -264,9 +268,14 @@ const styles = StyleSheet.create({
   },
   myMoneyText: {
     fontFamily: 'BagelFatOne-Regular',
-    fontSize: 21,
+    fontSize: 18,
     color: '#E8F6EF',
-    marginLeft: 10,
+  },
+  myCategoryText: {
+    fontFamily: 'BagelFatOne-Regular',
+    fontSize: 24,
+    color: '#E8F6EF',
+    paddingBottom: 5,
   },
   myMoneyCss: {
     width: '100%',
@@ -275,7 +284,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'flex-start',
+    justifyContent: 'space-evenly',
     gap: 20,
     borderRadius: 15,
   },
@@ -308,10 +317,13 @@ const styles = StyleSheet.create({
     flexBasis: '16%',
     borderColor: '#1B9C85',
     borderWidth: 2,
-    marginBottom: 5
+    marginBottom: 5,
   },
   selectedButtonCss: {
     backgroundColor: '#4C4C6D',
+  },
+  selectedButtonTextCss: {
+    color: 'white',
   },
   enterCss: {
     width: '100%',
@@ -341,7 +353,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 5
+    borderRadius: 5,
   },
   enterInsertCss: {
     width: '20%',
@@ -374,7 +386,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 5
+    borderRadius: 5,
   },
   transactionInsertCss: {
     width: '20%',

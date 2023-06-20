@@ -60,16 +60,17 @@ const styles = StyleSheet.create({
   buttonContainer: {
     width: '100%',
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    padding: 10,
+    justifyContent: 'space-between',
+    paddingTop: 5,
+    paddingBottom: 5,
   },
   button: {
-    width: 130, // 버튼의 너비
+    width: '49%', // 버튼의 너비
     height: 80, // 버튼의 높이
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#1B9C85', // 버튼의 배경 색
-    padding: 12,
+    padding: 10,
     borderRadius: 10,
   },
   buttonText: {
