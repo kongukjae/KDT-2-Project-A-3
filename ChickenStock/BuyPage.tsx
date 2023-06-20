@@ -1,12 +1,9 @@
-import React, { useState, useContext } from 'react';
-import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { useNavigation } from '@react-navigation/native';
+import React, {useState, useContext} from 'react';
+import {View, TouchableOpacity, Text, StyleSheet} from 'react-native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {useNavigation} from '@react-navigation/native';
 import HogaModal from './HogaModal';
-import { AuthContext } from './AllContext';
-
-
-
+import {AuthContext} from './AllContext';
 
 const styles = StyleSheet.create({
   container: {
@@ -106,18 +103,21 @@ const BuyPage = () => {
   const [quantity, setQuantity] = useState<number>(0);
   const [price, setPrice] = useState('');
   const [selectedInput, setSelectedInput] = useState<number>(0);
-  const [modal, setModal] = useState(false)
-  const { companyName, companyPrice } = useContext(AuthContext);
+  const [modal, setModal] = useState(false);
+  const {companyName, companyPrice} = useContext(AuthContext);
 
   const openModal = () => {
     setModal(true);
-    setInterval(()=>{
-      fetch('http://10.0.2.2:5000/api/hoga').then(res=>res.json()).then(data=>setUserHoga(data)).catch(error=>console.log(error))
-    },1000)
+    setInterval(() => {
+      fetch('http://10.0.2.2:5000/api/hoga')
+        .then(res => res.json())
+        .then(data => setUserHoga(data))
+        .catch(error => console.log(error));
+    }, 1000);
   };
   const closeModal = () => {
     setModal(false);
-  }
+  };
 
   const totalPrice = quantity * companyPrice;
   // quantity !== '' && price !== '' ? parseInt(quantity) * parseInt(price) : '';
@@ -126,9 +126,12 @@ const BuyPage = () => {
   const handleNumberPress = (number: number) => {
     if (selectedInput === quantity) {
       if (quantity === 0) {
-        setQuantity(number)
+        setQuantity(number);
       } else {
-        const updatedQuantity = parseInt(quantity.toString() + number.toString(), 10);
+        const updatedQuantity = parseInt(
+          quantity.toString() + number.toString(),
+          10,
+        );
         setQuantity(updatedQuantity);
       }
     }
@@ -150,7 +153,6 @@ const BuyPage = () => {
   >;
   const navigation = useNavigation<loginPageNavigationProp>();
 
-
   const handlePurchase = () => {
     console.log('주식 구매:', totalPrice);
     // Flask 서버로 totalPrice 전송하는 코드 작성
@@ -159,7 +161,7 @@ const BuyPage = () => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ totalPrice, companyName, quantity}),
+      body: JSON.stringify({totalPrice, companyName, quantity}),
     })
       .then(response => {
         if (response.ok) {
@@ -183,13 +185,14 @@ const BuyPage = () => {
 
   // const [data, setData] = useState('')
 
-
   return (
     <View style={styles.container}>
       <View style={styles.textBox}>
         <Text style={styles.title}>구매하기</Text>
         <TouchableOpacity style={styles.textBtn}>
-          <Text style={styles.btnText} onPress={openModal}>호가</Text>
+          <Text style={styles.btnText} onPress={openModal}>
+            호가
+          </Text>
           <HogaModal visible={modal} onClose={closeModal}></HogaModal>
         </TouchableOpacity>
       </View>
@@ -198,9 +201,7 @@ const BuyPage = () => {
           <Text style={styles.calculateText}>{companyName}</Text>
         </View>
         <View>
-          <Text style={styles.calculateText}>
-            {totalPrice} 원
-          </Text>
+          <Text style={styles.calculateText}>{totalPrice} 원</Text>
           {/* //! toLocaleString 1000 단위로 , 표시해줌 */}
         </View>
       </View>
@@ -283,7 +284,9 @@ const BuyPage = () => {
             style={styles.keyPad}>
             <Text style={styles.keyPadText}>0</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => handleDeletePress} style={styles.keyPad}>
+          <TouchableOpacity
+            onPress={() => handleDeletePress}
+            style={styles.keyPad}>
             <Text style={styles.keyPadText}>삭제</Text>
           </TouchableOpacity>
         </View>

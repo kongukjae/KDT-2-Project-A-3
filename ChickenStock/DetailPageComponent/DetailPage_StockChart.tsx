@@ -192,7 +192,7 @@ const ComPonent2: React.FC<Component2Props> = ({
             <TouchableOpacity
               style={styles.button}
               onPress={() => setCurrentChart('day')}>
-              <Text style={styles.buttonText}>일별 데이터 보기</Text>
+              <Text style={styles.buttonText}>실시간 데이터 보기</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.button}
@@ -219,7 +219,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#1B9C85',
     padding: 7,
     borderRadius: 5,
-    width: '40%',
+    width: '50%',
     alignItems: 'center',
   },
   buttonText: {
