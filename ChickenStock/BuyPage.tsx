@@ -109,7 +109,7 @@ const BuyPage = () => {
   const openModal = () => {
     setModal(true);
     setInterval(() => {
-      fetch('http://3.35.39.162:5000/api/hoga')
+      fetch('http://3.35.39.162:5010/api/hoga')
         .then(res => res.json())
         .then(data => setUserHoga(data))
         .catch(error => console.log(error));
@@ -156,7 +156,7 @@ const BuyPage = () => {
   const handlePurchase = () => {
     console.log('주식 구매:', totalPrice);
     // Flask 서버로 totalPrice 전송하는 코드 작성
-    fetch('http://3.35.39.162:5000/buy', {
+    fetch('http://3.35.39.162:5010/buy', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

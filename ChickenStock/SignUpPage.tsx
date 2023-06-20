@@ -46,7 +46,7 @@ export default function SignUpPage() {
   // id 중복 확인 로직
   const checkId = () => {
     
-    fetch('http://3.35.39.162:5000/checkId', {
+    fetch('http://3.35.39.162:5010/checkId', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -127,7 +127,7 @@ export default function SignUpPage() {
 
     if ((count % 2) === 1) {
       // 서버로 데이터 요청
-      fetch('http://3.35.39.162:5000/signup', {
+      fetch('http://3.35.39.162:5010/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

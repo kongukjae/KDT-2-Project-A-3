@@ -24,7 +24,7 @@ const ComPonent1: React.FC<Component1Props> = ({
   useEffect(() => {
     // 4. useEffect Hook을 사용해서 컴포넌트가 렌더링 될때, company_code가 변경될때마다 다르게 렌더링
     // 1.socket instance 생성, 서버와 연결되는 소켓 인스턴스를 생성한다.
-    const socket = io('http://3.35.39.162:5000');
+    const socket = io('http://3.35.39.162:5010');
 
     socket.emit('request_company_rate', {company_code});
     // socket 이벤트 리스너
