@@ -67,7 +67,7 @@ const ComPonent1: React.FC<Component1Props> = ({
                     : 'red',
                 fontSize: 16,
                 fontWeight: '900',
-                marginBottom: 2,
+                paddingRight: '1%',
               },
             ]}>
             등락률: {changeRate['prdy_ctrt']}
@@ -83,15 +83,16 @@ const ComPonent1: React.FC<Component1Props> = ({
 const styles1 = StyleSheet.create({
   container: {
     marginTop: 10,
-    width: '95%',
+    width: '100%',
     height: 85,
     backgroundColor: '#1B9C85',
     borderRadius: 10,
     flexDirection: 'column',
     justifyContent: 'space-between',
-    padding: 8,
+    padding: 5,
   },
   firstText: {
+    height: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
@@ -104,15 +105,17 @@ const styles1 = StyleSheet.create({
     fontSize: 15,
     color: '#E8F6EF',
     fontWeight: '900',
-    marginLeft: 140,
+    paddingRight: '1%'
   },
   // 등락률과 현재가
   left: {
     flexDirection: 'column',
+    justifyContent: 'space-evenly',
     alignItems: 'flex-start',
   },
   right: {
     flexDirection: 'column',
+    justifyContent: 'space-evenly',
     alignItems: 'flex-end',
   },
 });
@@ -122,18 +125,13 @@ const styles2 = StyleSheet.create({
   text: {
     fontSize: 16,
     color: 'black',
-    marginLeft: -8,
   },
 });
 // 단축코드, 단축코드
 const styles3 = StyleSheet.create({
   text: {
     fontSize: 15,
-    marginTop: 5,
-    marginLeft: -8,
-
     color: 'black',
-    backgroundColor: '#1B9C85',
     fontWeight: '900',
   },
 });
@@ -141,6 +139,7 @@ const redblue = StyleSheet.create({
   text: {
     fontSize: 12,
     color: 'red',
+    paddingRight: '1%',
   },
 });
 export default ComPonent1;

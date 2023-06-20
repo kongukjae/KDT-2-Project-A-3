@@ -34,6 +34,7 @@ const ComPonent3: React.FC<Component2Props> = ({
     num.toLocaleString('en-US') + '원';
   const styles = StyleSheet.create({
     container: {
+      width: '100%',
       flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',

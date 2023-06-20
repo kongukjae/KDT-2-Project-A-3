@@ -155,11 +155,11 @@ const MyPage = () => {
       {Object.keys(data).length !== 0 && (
         <View style={styles.myMoneyCss}>
           <Text style={styles.myMoneyText}>나의 은행 : {data.bank}</Text>
-          <Text style={styles.myMoneyText}>계좌 잔액 : {data.account}</Text>
+          <Text style={styles.myMoneyText}>계좌 잔액 : {parseInt(data.account).toLocaleString()}</Text>
         </View>
       )}
       <View style={styles.myInterestCss}>
-        <Text style={styles.myMoneyText}>본인 관심사</Text>
+        <Text style={styles.myCategoryText}>본인 관심사</Text>
       </View>
       <View style={styles.circleContainerCss}>
         {interest.map((item, index) => (
@@ -178,7 +178,7 @@ const MyPage = () => {
               }
             }}
             key={index}>
-            <Text>{item}</Text>
+            <Text style={[selectedButtonIndex === item ? styles.selectedButtonTextCss : null]}>{item}</Text>
           </TouchableOpacity>
         ))}
       </View>
@@ -274,9 +274,14 @@ const styles = StyleSheet.create({
   },
   myMoneyText: {
     fontFamily: 'BagelFatOne-Regular',
-    fontSize: 21,
+    fontSize: 18,
     color: '#E8F6EF',
-    marginLeft: 10,
+  },
+  myCategoryText: {
+    fontFamily: 'BagelFatOne-Regular',
+    fontSize: 24,
+    color: '#E8F6EF',
+    paddingBottom: 5,
   },
   myMoneyCss: {
     width: '100%',
@@ -285,7 +290,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'flex-start',
+    justifyContent: 'space-evenly',
     gap: 20,
     borderRadius: 15,
   },
@@ -322,6 +327,9 @@ const styles = StyleSheet.create({
   },
   selectedButtonCss: {
     backgroundColor: '#4C4C6D',
+  },
+  selectedButtonTextCss: {
+    color: 'white',
   },
   enterCss: {
     width: '100%',
