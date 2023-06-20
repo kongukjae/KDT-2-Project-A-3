@@ -283,7 +283,7 @@ const BuyPage = () => {
             style={styles.keyPad}>
             <Text style={styles.keyPadText}>0</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => handleDeletePress} style={styles.keyPad}>
+          <TouchableOpacity onPress={() => handleDeletePress(0)} style={styles.keyPad}>
             <Text style={styles.keyPadText}>삭제</Text>
           </TouchableOpacity>
         </View>
