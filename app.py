@@ -531,10 +531,12 @@ def change():
     user_id = session.get('user_id')
     print('user_id: ', user_id)
     collection = db['user_info']
-    document = collection.update_one({"id": user_id}, {"$set":{"choiceTwo": data}})
-    print(document)
+    if data != None:
+        document = collection.update_one({"id": user_id}, {"$set":{"choiceTwo": data}})
+        print('DB 업데이트 성공')
     # user_category = document['choiceTwo']
     # print('category 확인용: ', user_category)
+    print('업종 변경 종료')
     return ''
 
 
