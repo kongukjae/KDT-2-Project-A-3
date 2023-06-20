@@ -51,9 +51,10 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 @app.route('/account', methods=['GET'])
 def account():
     login_id = session.get('user_id')  # 로그인한 아이디를 세션을 사용하여 저장
-    print(login_id)
+    # print(login_id)
     # 연결된 db에서 id가 로그인 한 id와 같은 데이터를 db에서 찾음
     result = db.user_info.find_one({'id': login_id})
+    # print(result)
     if result:
         # ObjectId를 문자열로 변환
         result['_id'] = str(result['_id'])
@@ -545,8 +546,34 @@ def buy():
     print('data' + str(data))
     print('account' + str(account))
     return jsonify(data)
+#! 보유주식 가져오기
+@app.route('/api/getmystock', methods=['GET'])
+def get_my_stock():
+    user_id = session.get('user_id')
+    # # 연결된 db에서 id가 로그인 한 id와 같은 데이터를 db에서 찾음
+    find_id = db.user_info.find_one({"id": user_id})
+    print('데이터 간다')
+    print(find_id["companyData"])
+    
+    return jsonify(find_id["companyData"])
+    
+@app.route('/api/nowprice', methods=['POST'])
+def get_now_stock():
+    array=[]
+    request_data = request.get_json()
+    # print(request_data)
+    for x in request_data: 
+        symbols = broker.fetch_kospi_symbols()
+        company_row = symbols[symbols['한글명'] ==x]
+        company_code = company_row['단축코드'].values[0]
+        company_price = broker.fetch_price(company_code)
+        company_infof = {
+         '현재가': company_price['output']['stck_prpr'],
+        }
+        array.append(company_infof)
 
-#? 마이페이지 업종 선택 변경
+        # print(array)
+    return jsonify(array)
 @app.route('/categoryChange', methods=['POST'])
 def change():
     data = request.get_json()
@@ -561,8 +588,7 @@ def change():
     # user_category = document['choiceTwo']
     # print('category 확인용: ', user_category)
     print('업종 변경 종료')
-    return ''
-
+    
 
 if (__name__) == '__main__':
 
