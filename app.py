@@ -516,10 +516,8 @@ def buy():
                 }
             }}
         )
-        # db.user_info.insert_one()
-        # 수정된 account 값을 다시 가져와서 확인
-        updated_account = db.user_info.find_one({"id": user_id}).get('account')
-        print('수정된 account 값:', str(updated_account))
+    else:
+        raise Exception('데이터가 안왔습니다')
     print('find_id'+str(find_id))
     print('total' + str(total_price))
     print('data' + str(data))
