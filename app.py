@@ -527,6 +527,19 @@ def buy():
     print('account' + str(account))
     return jsonify(data)
 
+#? 마이페이지 업종 선택 변경
+@app.route('/categoryChange', methods=['POST'])
+def change():
+    data = request.get_json()
+    print('전달 받은 data: ', data)
+    user_id = session.get('user_id')
+    print('user_id: ', user_id)
+    collection = db['user_info']
+    document = collection.update_one({"id": user_id}, {"$set":{"choiceTwo": data}})
+    print(document)
+    # user_category = document['choiceTwo']
+    # print('category 확인용: ', user_category)
+    return ''
 
 
 if (__name__) == '__main__':

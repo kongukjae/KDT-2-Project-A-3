@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -19,9 +19,12 @@ import TopMenuPage from './TopMenuPage';
 
 const MyPage = () => {
   const [data, setData] = useState<any>({}); // data useState를 사용하여 상태 설정
-  const [userCategory, setUserCategory] = useState<string>();
-  const [selectedButtonIndex, setSelectedButtonIndex] = useState<number>(-1);
+  const [userCategory, setUserCategory] = useState<string>('화학');
+  const [selectedButtonIndex, setSelectedButtonIndex] = useState<string>(userCategory);
+  const selectedButtonRef = useRef<string>(selectedButtonIndex);
   console.log('유저 카테고리: ', userCategory)
+  console.log('선택 된 카테고리: ', selectedButtonIndex)
+  console.log('선택 된 카테고리(최신): ', selectedButtonRef)
 
   function name_change(name:string) {
     if(name === '건설') {
@@ -64,6 +67,7 @@ const MyPage = () => {
         console.log('응답 받은 data: ', jsonData);
         console.log('카테고리', jsonData['choiceTwo'])
         setUserCategory(name_change(jsonData['choiceTwo']))
+        setSelectedButtonIndex(name_change(jsonData['choiceTwo']))
       } else {
         throw new Error('서버 응답이 실패하였습니다.');
       }
@@ -71,6 +75,35 @@ const MyPage = () => {
       console.error(error);
     }
   };
+
+  const fetchCategory = async () => {
+    console.log('업종 요청 보냄')
+    try {
+      const categoryReq = await fetch('http://10.0.2.2:5000/categoryChange', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(selectedButtonIndex),
+      });
+      const categoryData = await categoryReq.json();
+      console.log('카테고리 응답: ', categoryData)
+      await fetchData();
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  // 업종 변경 시 DB에서 choiceTwo 항목 변경
+  useEffect(() => {
+    fetchCategory();
+  }, [selectedButtonIndex])
+
+  // 업종 버튼 선택 시 항상 최신 값으로 갱신
+  useEffect(() => {
+    selectedButtonRef.current = selectedButtonIndex;
+    console.log('category_ref 값: ', selectedButtonRef.current);
+  }, [selectedButtonIndex]);
 
   // useEffect를 사용하여 페이지가 렌더링 될 때마다 fetchData()함수를 실행
   useEffect(() => {
@@ -110,15 +143,15 @@ const MyPage = () => {
         <TouchableOpacity
           style={[
             styles.circleButtonCss,
-            selectedButtonIndex === index ? styles.selectedButtonCss : null,
+            selectedButtonIndex === item ? styles.selectedButtonCss : null,
           ]}
           onPress={() => {
-            if (selectedButtonIndex === index) {
+            if (selectedButtonIndex === item) {
               // 이미 선택된 버튼을 다시 누르면 선택 해제
-              setSelectedButtonIndex(-1);
+              setSelectedButtonIndex('미분류');
             } else {
               // 선택되지 않은 버튼을 누르면 선택
-              setSelectedButtonIndex(index);
+              setSelectedButtonIndex(item);
             }
           }}
           key={index}
