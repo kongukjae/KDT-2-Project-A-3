@@ -145,7 +145,7 @@ const SellPage = () => {
   return (
     <View style={styles.container}>
       <View style={styles.textBox}>
-        <Text style={styles.title}>구매하기</Text>
+        <Text style={styles.title}>판매하기</Text>
         <TouchableOpacity style={styles.textBtn}>
           <Text style={styles.btnText}>호가</Text>
         </TouchableOpacity>
@@ -247,7 +247,7 @@ const SellPage = () => {
       </View>
       <View style={styles.btnContainer}>
         <TouchableOpacity style={styles.btnBox} onPress={handlePurchase}>
-          <Text style={styles.btnText}>구매하기</Text>
+          <Text style={styles.btnText}>판매하기</Text>
         </TouchableOpacity>
       </View>
     </View>

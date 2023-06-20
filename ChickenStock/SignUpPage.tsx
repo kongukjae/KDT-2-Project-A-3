@@ -156,7 +156,9 @@ export default function SignUpPage() {
   };
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Sign up</Text>
+      <View style={styles.titleBox}>
+        <Text style={styles.title}>가입하기</Text>
+      </View>
       <View style={styles.innerContainer}>
         <TextInput
           style={styles.inputid}
@@ -203,47 +205,51 @@ export default function SignUpPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     padding: 16,
+    backgroundColor: '#1B9C85',
+    flexDirection: 'column',
+    justifyContent: 'center'
   },
   innerContainer: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'center',
     alignItems: 'center',
   },
+  titleBox: {
+    marginBottom: 50,
+  },
   title: {
-    fontSize: 24,
-    fontWeight: 'bold',
+    fontSize: 50,
     marginBottom: 16,
+    fontFamily: 'BagelFatOne-Regular',
+    color: '#FFE194',
   },
   input: {
     width: '80%',
     height: 40,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 4,
+    borderRadius: 5,
     marginBottom: 12,
     paddingHorizontal: 8,
+    backgroundColor: '#FFE194',
   },
   inputid: {
     width: '55%',
     height: 40,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 4,
+    borderRadius: 5,
     marginBottom: 12,
     paddingHorizontal: 8,
+    backgroundColor: '#FFE194',
   },
   button: {
-    backgroundColor: '#2196F3',
+    width: '80%',
+    backgroundColor: '#E8F6EF',
     paddingVertical: 8,
     paddingHorizontal: 24,
     borderRadius: 4,
+    alignItems: 'center',
   },
   buttonid: {
-    backgroundColor: '#2196F3',
+    backgroundColor: '#E8F6EF',
     paddingVertical: 8,
     paddingHorizontal: 10,
     marginBottom: 12,
@@ -251,8 +257,9 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   buttonText: {
-    color: '#fff',
+    height: 25,
+    color: '#1B9C85',
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: '900',
   },
 });
