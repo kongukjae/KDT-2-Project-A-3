@@ -12,12 +12,10 @@ import {
   TouchableHighlight,
   Linking,
 } from 'react-native';
-
 import {RouteProp, useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import TopMenuPage from './TopMenuPage';
 import {AuthContext} from './AllContext';
-
 const MyPage = () => {
   // const { userCategoryCurrent } = useContext(AuthContext);
   const [data, setData] = useState<any>({}); // data useState를 사용하여 상태 설정
@@ -29,13 +27,11 @@ const MyPage = () => {
   console.log('유저 카테고리: ', userCategory);
   console.log('선택 된 카테고리: ', selectedButtonIndex);
   // console.log('선택 된 카테고리(최신): ', selectedButtonRef)
-
   // useEffect(() => {
   //   if (userCategory !== '') { // userCategory 값이 빈 문자열이 아닌 경우에만 실행
   //     setSelectedButtonIndex(userCategory);
   //   }
   // }, [userCategory]);
-
   function name_change(name: string) {
     if (name === '건설') {
       return '건설업';
@@ -63,7 +59,6 @@ const MyPage = () => {
       return '미분류';
     }
   }
-
   // 데이터 가져오는 함수
   // flask서버로 데이터 요청
   const fetchData = async () => {
@@ -85,7 +80,7 @@ const MyPage = () => {
       console.error(error);
     }
   };
-
+  console.log("setData" + data)
   const fetchCategory = async () => {
     console.log('업종 요청 보냄');
     try {
@@ -103,50 +98,31 @@ const MyPage = () => {
       console.error(error);
     }
   };
-
   // 업종 변경 시 DB에서 choiceTwo 항목 변경
   useEffect(() => {
     setUserCategory(selectedButtonIndex);
     fetchCategory();
   }, [selectedButtonIndex]);
-
   // useEffect(() => {
   //   setSelectedButtonIndex(userCategory)
   // }, [userCategory])
-
   // 업종 버튼 선택 시 항상 최신 값으로 갱신
   // useEffect(() => {
   //   selectedButtonRef.current = selectedButtonIndex;
   //   console.log('category_ref 값: ', selectedButtonRef.current);
   // }, [selectedButtonIndex]);
-
   // useEffect를 사용하여 페이지가 렌더링 될 때마다 fetchData()함수를 실행
   useEffect(() => {
     fetchData();
   }, []);
-
-  console.log('data', data);
-  console.log('type');
-  console.log(typeof data);
-  const interest = [
-    '건설업',
-    '금융업',
-    '기계',
-    '서비스업',
-    '섬유·의복',
-    '음식료품',
-    '의약품',
-    '전기·전자',
-    '철강·금속',
-    '통신업',
-    '화학',
-    '미분류',
-  ];
+  // console.log('data', data);
+  // console.log('type');
+  // console.log(typeof data);
+  const interest = ['건설업', '금융업', '기계', '서비스업', '섬유·의복', '음식료품', '의약품', '전기·전자', '철강·금속', '통신', '화학', '미분류'];
   const enter = ['기업 명', '현재가', '등락', '보유 수량', '평가 금액'];
   const transaction = ['구매', '판매', '미체결'];
   const enterValue = [1, 2, 3, 4, 5];
-  const transactionValue = [6, 7, 8, 9, 10];
-
+  const test = [6, 7, 8, 9, 10];
   return (
     <View style={styles.root}>
       <View>
@@ -219,6 +195,7 @@ const MyPage = () => {
           </View>
         ))}
       </View>
+    {/* 여기서 구터 구매 판매 뷰 */}
       <View style={styles.transactionContainerCss}>
         {transaction.map((item, index) => (
           <TouchableOpacity style={styles.transactionCss}>
@@ -229,35 +206,35 @@ const MyPage = () => {
         ))}
       </View>
       <View style={styles.transactionValueCss}>
-        {transactionValue.map((item, index) => (
+        {test.map((item, index) => (
           <View style={styles.transactionInsertCss}>
             <Text key={index}>{item}</Text>
           </View>
         ))}
       </View>
       <View style={styles.transactionValueCss}>
-        {transactionValue.map((item, index) => (
+        {test.map((item, index) => (
           <View style={styles.transactionInsertCss}>
             <Text key={index}>{item}</Text>
           </View>
         ))}
       </View>
       <View style={styles.transactionValueCss}>
-        {transactionValue.map((item, index) => (
+        {test.map((item, index) => (
           <View style={styles.transactionInsertCss}>
             <Text key={index}>{item}</Text>
           </View>
         ))}
       </View>
       <View style={styles.transactionValueCss}>
-        {transactionValue.map((item, index) => (
+        {test.map((item, index) => (
           <View style={styles.transactionInsertCss}>
             <Text key={index}>{item}</Text>
           </View>
         ))}
       </View>
       <View style={styles.transactionValueCss}>
-        {transactionValue.map((item, index) => (
+        {test.map((item, index) => (
           <View style={styles.transactionInsertCss}>
             <Text key={index}>{item}</Text>
           </View>
@@ -266,7 +243,6 @@ const MyPage = () => {
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   root: {
     backgroundColor: '#FFE194',

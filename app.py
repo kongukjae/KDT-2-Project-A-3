@@ -14,7 +14,7 @@ import callApiData.Mainpage_stock_data
 import callApiData.Search_stock_data
 import callDBData.category_name_changer
 import time
-
+from datetime import datetime
 
 import json
 
@@ -54,11 +54,25 @@ def account():
     print(login_id)
     # 연결된 db에서 id가 로그인 한 id와 같은 데이터를 db에서 찾음
     result = db.user_info.find_one({'id': login_id})
-    print(result)
     if result:
         # ObjectId를 문자열로 변환
         result['_id'] = str(result['_id'])
-        print(result)
+        print(f'서버의 결과 값: +{result}')
+
+        # companyData 배열 접근
+        # company_data = result.get('companyData')
+        # if company_data:
+        #     for data in company_data:
+        #         # 각 객체의 속성에 접근
+        #         company_name = data.get('companyName')
+        #         quantity = data.get('quantity')
+        #         total_price = data.get('totalPrice')
+        #         timestamp = data.get('timestamp')
+
+        #         # 접근한 값 활용
+        #         print(
+        #             f"Company Name: {company_name}, Quantity: {quantity}, Total Price: {total_price}, Timestamp: {timestamp}")
+
         return jsonify(result)
     else:
         return jsonify({'error': 'Invalid login_id'})  # 유효하지 않은 로그인 아이디인 경우
@@ -380,7 +394,7 @@ def get_hoga_data():
     #     # 원하는 호출을 [tr_type, tr_id, tr_key] 순서대로 리스트 만들기
 
         ### 1. 국내주식 호가, 체결가, 체결통보 ###
-        code_list = [['1', 'H0STASP0', f"{stock_code}"]]
+        code_list = [['1',  'H0STASP0',  f"{stock_code}"]]
 
         senddata_list = []
 
@@ -444,7 +458,7 @@ def get_hoga_data():
                                     jsonObject["header"]["tr_key"], rt_cd, jsonObject["body"]["msg1"]))
 
                                 # 체결통보 처리를 위한 AES256 KEY, IV 처리 단계
-                                if trid == "H0STCNI0" or trid == "H0STCNI9":  # 국내주식
+                                if trid == "H0STCNI0" or trid == "H0STCNI9":   # 국내주식
                                     aes_key = jsonObject["body"]["output"]["key"]
                                     aes_iv = jsonObject["body"]["output"]["iv"]
                                     print("### TRID [%s] KEY[%s] IV[%s]" % (
@@ -465,8 +479,6 @@ def get_hoga_data():
     asyncio.get_event_loop().close()
 
 #! 챗봇 API
-
-
 @socketio.on('message')  # 수정된 부분
 def handle_message(message):
     print("받음")
@@ -478,8 +490,6 @@ def handle_message(message):
     emit('response', bard_answer)
 
 # ? 주식 검색
-
-
 @app.route('/search_stock', methods=['POST'])
 def search_stock_server():
     print('검색 진입')
@@ -491,8 +501,6 @@ def search_stock_server():
     return jsonify(search_response.to_dict())
 
 #! 구매로직 작성
-
-
 @app.route('/buy', methods=['POST'])
 def buy():
     data = request.get_json()
@@ -502,40 +510,43 @@ def buy():
     total_price = data.get('totalPrice')
     company_name = data.get('companyName')
     quantity = data.get('quantity')
-    print(company_name, quantity)
+    print('회사명, 수량: ', company_name, quantity)
     account = None  # 초기값으로 None 설정
     if find_id is not None:
         account = find_id.get('account')
         # account 값을 수정하는 로직을 추가
+        print('account: ', account)
+        print('account 타입: ', type(account))
+        print('total_price: ', total_price)
+        print('total_price 타입: ', type(total_price))
         new_account = account - total_price  # 새로운 account 값으로 대체할 값 설정
         # 데이터베이스에서 account 값을 수정
-        print(total_price)
+        print('총 가격: ', total_price)
         db.user_info.update_one(
             {"id": user_id}, {"$set": {"account": new_account}})
         print('account 값이 수정되었습니다.')
+        nowDatetime = datetime.now()
+
         db.user_info.update_one(
             {"id": user_id},
             {"$push": {
                 "companyData": {
                     "companyName": company_name,
                     "quantity": quantity,
-                    "totalPrice": total_price
+                    "totalPrice": total_price,
+                    "timestamp": (str(nowDatetime.year)+'년'+str(nowDatetime.month)+'월'+str(nowDatetime.day)+'일'+str(nowDatetime.hour)+'시'+str(nowDatetime.minute)+'분')
                 }
             }}
         )
-        # db.user_info.insert_one()
-        # 수정된 account 값을 다시 가져와서 확인
-        updated_account = db.user_info.find_one({"id": user_id}).get('account')
-        print('수정된 account 값:', str(updated_account))
+    else:
+        raise Exception('데이터가 안왔습니다')
     print('find_id'+str(find_id))
     print('total' + str(total_price))
     print('data' + str(data))
     print('account' + str(account))
     return jsonify(data)
 
-# ? 마이페이지 업종 선택 변경
-
-
+#? 마이페이지 업종 선택 변경
 @app.route('/categoryChange', methods=['POST'])
 def change():
     data = request.get_json()
