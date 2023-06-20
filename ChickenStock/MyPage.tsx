@@ -122,10 +122,11 @@ const MyPage = () => {
   //   transactionValue[i]= [data.companyData[i].companyName, 7, 8, 9];
   // }
 
-  let transactionArray = []
-  for(let i = 0; i<5; i++){
-    transactionArray[i] = [data.companyData[i].companyName, data.companyData[i].quantity, data.companyData[i].totalPrice, data.companyData[i].timestamp];
-  }
+  // let transactionArray = []
+  // for(let i = 0; i<5; i++){
+  //   transactionArray[i] = [data.companyData[i].companyName, data.companyData[i].quantity, data.companyData[i].totalPrice, data.companyData[i].timestamp];
+  // }
+  const test = [6,7,8,9,10]
     
 
 
@@ -218,35 +219,35 @@ const MyPage = () => {
         ))}
       </View>
       <View style={styles.transactionValueCss}>
-        {transactionArray[0].map((item, index) => (
+        {test.map((item, index) => (
           <View style={styles.transactionInsertCss}>
             <Text key={index}>{item}</Text>
           </View>
         ))}
       </View>
       <View style={styles.transactionValueCss}>
-        {transactionArray[1].map((item, index) => (
+        {test.map((item, index) => (
           <View style={styles.transactionInsertCss}>
             <Text key={index}>{item}</Text>
           </View>
         ))}
       </View>
       <View style={styles.transactionValueCss}>
-        {transactionArray[2].map((item, index) => (
+        {test.map((item, index) => (
           <View style={styles.transactionInsertCss}>
             <Text key={index}>{item}</Text>
           </View>
         ))}
       </View>
       <View style={styles.transactionValueCss}>
-        {transactionArray[3].map((item, index) => (
+        {test.map((item, index) => (
           <View style={styles.transactionInsertCss}>
             <Text key={index}>{item}</Text>
           </View>
         ))}
       </View>
       <View style={styles.transactionValueCss}>
-        {transactionArray[4].map((item, index) => (
+        {test.map((item, index) => (
           <View style={styles.transactionInsertCss}>
             <Text key={index}>{item}</Text>
           </View>
