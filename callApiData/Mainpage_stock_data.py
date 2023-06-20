@@ -61,7 +61,7 @@ def Mainpage_stock_list(collection_name):
             break
     company_Object = companyObject()
     # 반복문 실행 후 0.5초의 time.sleep을 주는 것으로 API 요청 회수 초과를 개선함
-    time.sleep(1.5)
+    time.sleep(1)
     # print(name_array)
 
     for i in range(len(code_array)):
