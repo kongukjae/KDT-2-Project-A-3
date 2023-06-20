@@ -268,12 +268,11 @@ def get_company_rate(company_code):
 
 #     output1 = data["output1"]
 #     output2 = data["output2"]
-
     output1 = data["output1"]
     output2 = data["output2"]
 
     combined_output = {
-        "prdy_ctrt": output1["prdy_ctrt"], "stck_prpr": output2[0]["stck_prpr"]}
+        "prdy_ctrt": output1["prdy_ctrt"], "stck_prpr": output2[0]["stck_prpr"], "cntg_vol": output2[0]["cntg_vol"]}
 
     emit('changerate', combined_output)
 # @app.route('/changerate', methods=['GET'])
@@ -395,7 +394,7 @@ def get_hoga_data():
     #     # 원하는 호출을 [tr_type, tr_id, tr_key] 순서대로 리스트 만들기
 
         ### 1. 국내주식 호가, 체결가, 체결통보 ###
-        code_list = [['1', 'H0STASP0', f"{stock_code}"]]
+        code_list = [['1',  'H0STASP0',  f"{stock_code}"]]
 
         senddata_list = []
 
@@ -459,7 +458,7 @@ def get_hoga_data():
                                     jsonObject["header"]["tr_key"], rt_cd, jsonObject["body"]["msg1"]))
 
                                 # 체결통보 처리를 위한 AES256 KEY, IV 처리 단계
-                                if trid == "H0STCNI0" or trid == "H0STCNI9":  # 국내주식
+                                if trid == "H0STCNI0" or trid == "H0STCNI9":   # 국내주식
                                     aes_key = jsonObject["body"]["output"]["key"]
                                     aes_iv = jsonObject["body"]["output"]["iv"]
                                     print("### TRID [%s] KEY[%s] IV[%s]" % (
@@ -480,8 +479,6 @@ def get_hoga_data():
     asyncio.get_event_loop().close()
 
 #! 챗봇 API
-
-
 @socketio.on('message')  # 수정된 부분
 def handle_message(message):
     print("받음")
@@ -493,8 +490,6 @@ def handle_message(message):
     emit('response', bard_answer)
 
 # ? 주식 검색
-
-
 @app.route('/search_stock', methods=['POST'])
 def search_stock_server():
     print('검색 진입')
@@ -506,8 +501,6 @@ def search_stock_server():
     return jsonify(search_response.to_dict())
 
 #! 구매로직 작성
-
-
 @app.route('/buy', methods=['POST'])
 def buy():
     data = request.get_json()
@@ -549,9 +542,7 @@ def buy():
     print('account' + str(account))
     return jsonify(data)
 
-# ? 마이페이지 업종 선택 변경
-
-
+#? 마이페이지 업종 선택 변경
 @app.route('/categoryChange', methods=['POST'])
 def change():
     data = request.get_json()
@@ -559,11 +550,13 @@ def change():
     user_id = session.get('user_id')
     print('user_id: ', user_id)
     collection = db['user_info']
-    document = collection.update_one(
-        {"id": user_id}, {"$set": {"choiceTwo": data}})
-    print(document)
+    if data != None:
+        document = collection.update_one(
+            {"id": user_id}, {"$set": {"choiceTwo": data}})
+        print('DB 업데이트 성공')
     # user_category = document['choiceTwo']
     # print('category 확인용: ', user_category)
+    print('업종 변경 종료')
     return ''
 
 

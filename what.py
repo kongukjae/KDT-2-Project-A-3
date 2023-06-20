@@ -1,7 +1,7 @@
 import re
 import mojito
 import json
-from flask import Flask, jsonify, request,session
+from flask import Flask, jsonify, request, session
 from pymongo import MongoClient
 # from pykrx import stock
 import pandas as pd
@@ -25,8 +25,7 @@ secret = lines[1].strip()
 acc_no = lines[2].strip()
 f.close()
 broker = mojito.KoreaInvestment(api_key=key, api_secret=secret, acc_no=acc_no)
-
-data = broker.fetch_domestic_price('055550','삼성전자')
+data = broker._fetch_today_1m_ohlcv("005930", to="15:30:00")
 # df = pd.DataFrame(data['output2'])
 # df['stck_cntg_hour'] = pd.to_datetime(
 #    df['stck_cntg_hour'], format='%H%M%S').dt.strftime('%H:%M:%S')
@@ -40,7 +39,7 @@ print(data)
 # df[['stck_prpr', 'stck_oprc', 'stck_hgpr', 'stck_lwpr', 'cntg_vol', 'acml_tr_pbmn']] = df[[
 #         'stck_prpr', 'stck_oprc', 'stck_hgpr', 'stck_lwpr', 'cntg_vol', 'acml_tr_pbmn']].astype(float)
 
-# data2=broker.fetch_ohlcv_recent30('005930')  
+# data2=broker.fetch_ohlcv_recent30('005930')
 # print(df)
 # data = broker.fetch_ohlcv_domestic('005930', "M","20220608")
 # df = pd.DataFrame(data['output2'])
@@ -59,4 +58,3 @@ print(data)
 # json_data = json.dumps(chart_data)
 # print(json_data)
 # print(data2)
-

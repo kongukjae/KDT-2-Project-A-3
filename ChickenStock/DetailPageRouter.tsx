@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {View, StyleSheet, ActivityIndicator, Image, Text} from 'react-native';
 import ComPonent1 from './DetailPageComponent/DetailPage_NameAndChange';
 import ComPonent2 from './DetailPageComponent/DetailPage_StockChart';
@@ -12,7 +12,6 @@ const AnotherPage = () => {
   const route = useRoute();
   const {company_name} = route.params as {company_name: string};
   const {company_code} = route.params as {company_code: string};
-
 
   // 각각의 컴포넌트에 지정한 매개변수를 전달한다.
   return (
