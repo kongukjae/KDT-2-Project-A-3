@@ -51,14 +51,14 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 @app.route('/account', methods=['GET'])
 def account():
     login_id = session.get('user_id')  # 로그인한 아이디를 세션을 사용하여 저장
-    print(login_id)
+    # print(login_id)
     # 연결된 db에서 id가 로그인 한 id와 같은 데이터를 db에서 찾음
     result = db.user_info.find_one({'id': login_id})
-    print(result)
+    # print(result)
     if result:
         # ObjectId를 문자열로 변환
         result['_id'] = str(result['_id'])
-        print(result)
+        # print(result)
         return jsonify(result)
     else:
         return jsonify({'error': 'Invalid login_id'})  # 유효하지 않은 로그인 아이디인 경우
@@ -526,8 +526,19 @@ def buy():
     print('data' + str(data))
     print('account' + str(account))
     return jsonify(data)
+#! 보유주식 가져오기
+@app.route('/api/getmystock', methods=['GET'])
+def get_my_stock():
+    user_id = session.get('user_id')
+    # # 연결된 db에서 id가 로그인 한 id와 같은 데이터를 db에서 찾음
+    find_id = db.user_info.find_one({"id": user_id})
+    print('데이터 간다')
+    print(find_id["companyData"])
+    
+    return jsonify(find_id["companyData"])
+    
 
-
+    
 
 if (__name__) == '__main__':
 

@@ -16,11 +16,15 @@ import {
 import { RouteProp, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import TopMenuPage from './TopMenuPage';
+// import { json } from 'stream/consumers';
 
 const MyPage = () => {
   const [data, setData] = useState<any>({}); // data useState를 사용하여 상태 설정
   const [userCategory, setUserCategory] = useState<string>();
   const [selectedButtonIndex, setSelectedButtonIndex] = useState<number>(-1);
+  const [myStock,setMyStock] = useState<any>([])
+  
+  console.log('myStock',myStock)
   console.log('유저 카테고리: ', userCategory)
 
   function name_change(name:string) {
@@ -72,10 +76,33 @@ const MyPage = () => {
     }
   };
 
+  const getMyStock= async ()=>{
+    try{
+      const response = await fetch('http://10.0.2.2:5000/api/getmystock')
+      if(response.ok){
+        const jsonData= await response.json();
+        console.log("구매 json")
+        console.log(jsonData)
+        // const newArray=['1','2','3','4']
+        setMyStock(jsonData)
+        console.log("구매주식")
+        console.log(myStock)
+      }
+      else {
+        throw new Error('주식 정보 받아오는 과정에서 오류')
+      }
+    } catch (error){
+      console.error(error);
+    }
+  };
+
+
   // useEffect를 사용하여 페이지가 렌더링 될 때마다 fetchData()함수를 실행
   useEffect(() => {
     fetchData();
+    getMyStock();
   }, []);
+  // 배열 안에 함수를 집어 넣음으로써 의존성 추가. 페이지가 렌더링 될 때 마다 fetchData와 getMyStock 함수 실행
 
   console.log('data', data);
   console.log('type');
@@ -103,7 +130,7 @@ const MyPage = () => {
         </View>
       )}
       <View style={styles.myInterestCss}>
-        <Text style={styles.myMoneyText}>본인 관심사</Text>
+        <Text style={styles.myMoneyText}>{} </Text>
       </View>
       <View style={styles.circleContainerCss}>
       {interest.map((item, index) => (
