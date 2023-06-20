@@ -461,8 +461,6 @@ def get_hoga_data():
     asyncio.get_event_loop().close()
 
 #! 챗봇 API
-
-
 @socketio.on('message')  # 수정된 부분
 def handle_message(message):
     print("받음")
@@ -474,19 +472,17 @@ def handle_message(message):
     emit('response', bard_answer)
 
 # ? 주식 검색
-
-
 @app.route('/search_stock', methods=['POST'])
 def search_stock_server():
     print('검색 진입')
     search_value = request.get_json()
     print('들어온 회사명 ', search_value)
     search_response = callApiData.Search_stock_data.Search_data(search_value)
+    if type(search_response) == str:
+        return jsonify(search_response)
     return jsonify(search_response.to_dict())
 
 #! 구매로직 작성
-
-
 @app.route('/buy', methods=['POST'])
 def buy():
     data = request.get_json()
