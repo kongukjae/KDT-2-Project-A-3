@@ -56,7 +56,7 @@ const TopMenuPage = () => {
   //* 모달창이 열렸을 때의 함수
   const openModal = () => {
     setModalVisible(true);
-    setSocket(io('http://3.35.39.162:5010')); //* 소켓 설정
+    setSocket(io('http://172.26.14.81:5010')); //* 소켓 설정
   };
 
   //* 모달 창을 닫혔을 때의 함수
@@ -152,7 +152,7 @@ const TopMenuPage = () => {
     const data = searchTerm;
     // console.log('data', data)
     try {
-      const search_req = await fetch('http://3.35.39.162:5010/search_stock', {
+      const search_req = await fetch('http://172.26.14.81:5010/search_stock', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
