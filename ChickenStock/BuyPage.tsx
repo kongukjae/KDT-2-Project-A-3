@@ -1,9 +1,10 @@
-import React, { useState ,useContext} from 'react';
+import React, { useState, useContext } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
 import HogaModal from './HogaModal';
 import { AuthContext } from './AllContext';
+
 
 
 
@@ -102,53 +103,55 @@ const styles = StyleSheet.create({
 });
 
 const BuyPage = () => {
-  const [quantity, setQuantity] = useState('');
+  const [quantity, setQuantity] = useState<number>(0);
   const [price, setPrice] = useState('');
-  const [selectedInput, setSelectedInput] = useState('');
-  const [modal,setModal] = useState(false)
-  const {setUserHoga}=useContext(AuthContext)
+  const [selectedInput, setSelectedInput] = useState<number>(0);
+  const [modal, setModal] = useState(false)
+  const { companyName, companyPrice } = useContext(AuthContext);
 
   const openModal = () => {
     setModal(true);
-    setInterval(()=>{
-      fetch('http://10.0.2.2:5000/api/hoga').then(res=>res.json()).then(data=>setUserHoga(data)).catch(error=>console.log(error))
-    },1000)
+    // const getHoga = async () => {
+    //   try {
+    //     const response = await fetch('http://10.0.2.2:5000/api/hoga', {
+    //       method: 'GET',
+    //       headers: {
+    //         'Content-Type': 'application/json',
+    //       },
+    //       // body: JSON.stringify({}), // 플라스크로 데이터를 담아 요청을 보냄
+    //     });
 
+    //     const jsonData = await response.json(); //여기서 플라스크로부터 반환값을 가져옴. 반환객체 ={'state':true or false,'message':"해당 에러 메세지"}\
+    //     console.log(jsonData)
+    //     // console.log(jsonData);
+    //   } catch (error) {
+    //     console.error(error);
+    //   }
+    // }
+    // getHoga()
   };
   const closeModal = () => {
     setModal(false);
   }
 
-  const totalPrice =
-    quantity !== '' && price !== '' ? parseInt(quantity) * parseInt(price) : '';
+  const totalPrice = quantity * companyPrice;
+  // quantity !== '' && price !== '' ? parseInt(quantity) * parseInt(price) : '';
   //! 수량과 가격이 ''이 아닐경우에 두 값을 곱하고 아닐경우에는 ''을 붙인다.
 
-  const handleNumberPress = (number: string) => {
-    //? selectedInput 변수를 확인하여 현재 선택된 입력 상자를 확인. 선택된 입력 상자는 'quantity'(수량)인지, 'price'(가격)인지를 나타냄.
-    if (selectedInput === 'quantity') {
-      if (quantity === '0') {
-        setQuantity(number);
-        //? 0일경우 누르는 값으로 값을 대체
+  const handleNumberPress = (number: number) => {
+    if (selectedInput === quantity) {
+      if (quantity === 0) {
+        setQuantity(number)
       } else {
-        setQuantity(quantity + number);
-        //? 0이 아닐경우 그 뒤에 값을 붙임
-      }
-    } else if (selectedInput === 'price') {
-      if (price === '0') {
-        setPrice(number);
-        //? 0일경우 누르는 값으로 값을 대체
-      } else {
-        setPrice(price + number);
-        //? 0이 아닐경우 그 뒤에 값을 붙임
+        const updatedQuantity = parseInt(quantity.toString() + number.toString(), 10);
+        setQuantity(updatedQuantity);
       }
     }
   };
 
-  const handleDeletePress = () => {
-    if (selectedInput === 'quantity') {
-      setQuantity(quantity.slice(0, -1));
-    } else if (selectedInput === 'price') {
-      setPrice(price.slice(0, -1));
+  const handleDeletePress = (number: number) => {
+    if (selectedInput === quantity) {
+      setQuantity(0);
     }
   };
   type RootStackParamList = {
@@ -171,11 +174,11 @@ const BuyPage = () => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ totalPrice }),
+      body: JSON.stringify({ totalPrice, companyName, quantity}),
     })
       .then(response => {
         if (response.ok) {
-          navigation.navigate('MainPage'); 
+          navigation.navigate('MainPage');
         } else {
           throw new Error('구매 요청 실패');
         }
@@ -189,11 +192,11 @@ const BuyPage = () => {
       });
   };
 
-  const handleInputSelection = (inputType: string) => {
+  const handleInputSelection = (inputType: number) => {
     setSelectedInput(inputType);
   };
 
-  const [data, setData] = useState('')
+  // const [data, setData] = useState('')
 
 
   return (
@@ -207,11 +210,11 @@ const BuyPage = () => {
       </View>
       <View style={styles.calculateBox}>
         <View>
-          <Text style={styles.calculateText}>카카오뱅크</Text>
+          <Text style={styles.calculateText}>{companyName}</Text>
         </View>
         <View>
           <Text style={styles.calculateText}>
-            {totalPrice !== '' ? totalPrice.toLocaleString() : ''} 원
+            {totalPrice} 원
           </Text>
           {/* //! toLocaleString 1000 단위로 , 표시해줌 */}
         </View>
@@ -220,68 +223,68 @@ const BuyPage = () => {
         <View style={styles.calculateBox}>
           <TouchableOpacity
             style={styles.inputContainer}
-            onPress={() => handleInputSelection('quantity')}>
+            onPress={() => handleInputSelection(quantity)}>
             <Text style={styles.input}>{quantity}</Text>
           </TouchableOpacity>
           <Text>주</Text>
         </View>
-        <View style={styles.calculateBox}>
+        {/* <View style={styles.calculateBox}>
           <TouchableOpacity
             style={styles.inputContainer}
-            onPress={() => handleInputSelection('price')}>
+            onPress={() => handleInputSelection()}>
             <Text style={styles.input}>{price}</Text>
           </TouchableOpacity>
           <Text>원</Text>
-        </View>
+        </View> */}
       </View>
       <View style={styles.keyPadContainer}>
         <View style={styles.keyPadBox}>
           <TouchableOpacity
-            onPress={() => handleNumberPress('1')}
+            onPress={() => handleNumberPress(1)}
             style={styles.keyPad}>
             <Text style={styles.keyPadText}>1</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => handleNumberPress('2')}
+            onPress={() => handleNumberPress(2)}
             style={styles.keyPad}>
             <Text style={styles.keyPadText}>2</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => handleNumberPress('3')}
+            onPress={() => handleNumberPress(3)}
             style={styles.keyPad}>
             <Text style={styles.keyPadText}>3</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.keyPadBox}>
           <TouchableOpacity
-            onPress={() => handleNumberPress('4')}
+            onPress={() => handleNumberPress(4)}
             style={styles.keyPad}>
             <Text style={styles.keyPadText}>4</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => handleNumberPress('5')}
+            onPress={() => handleNumberPress(5)}
             style={styles.keyPad}>
             <Text style={styles.keyPadText}>5</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => handleNumberPress('6')}
+            onPress={() => handleNumberPress(6)}
             style={styles.keyPad}>
             <Text style={styles.keyPadText}>6</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.keyPadBox}>
           <TouchableOpacity
-            onPress={() => handleNumberPress('7')}
+            onPress={() => handleNumberPress(7)}
             style={styles.keyPad}>
             <Text style={styles.keyPadText}>7</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => handleNumberPress('8')}
+            onPress={() => handleNumberPress(8)}
             style={styles.keyPad}>
             <Text style={styles.keyPadText}>8</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => handleNumberPress('9')}
+            onPress={() => handleNumberPress(9)}
             style={styles.keyPad}>
             <Text style={styles.keyPadText}>9</Text>
           </TouchableOpacity>
@@ -291,7 +294,7 @@ const BuyPage = () => {
             <Text style={styles.keyPadText}></Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => handleNumberPress('0')}
+            onPress={() => handleNumberPress(0)}
             style={styles.keyPad}>
             <Text style={styles.keyPadText}>0</Text>
           </TouchableOpacity>
