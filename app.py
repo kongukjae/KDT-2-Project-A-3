@@ -206,9 +206,11 @@ def get_Mdata(company_code):
     return jsonify(chart_data)
 
 # 컴포넌트 2-3 주가데이터(연단위)
+
+
 @app.route('/get_Ydata/<string:company_code>', methods=['GET'])
 def get_Ydata(company_code):
-    code3=company_code
+    code3 = company_code
     data = broker.fetch_ohlcv_domestic([(f'{code3}')], "Y", "20000000")
     print(data)
     df = pd.DataFrame(data['output2'])
@@ -221,7 +223,7 @@ def get_Ydata(company_code):
     # df['stck_bsop_date'] = df['stck_bsop_date'].dt.strftime('%Y-%m-%d')
     # 필요한 정보만 포함된 json 데이터로 변환
     chart_data1 = df[['stck_bsop_date', 'stck_oprc', 'stck_hgpr',
-                    'stck_lwpr', 'stck_clpr', 'acml_vol']].to_dict(orient='records')
+                      'stck_lwpr', 'stck_clpr', 'acml_vol']].to_dict(orient='records')
     print(chart_data1)
     return jsonify(chart_data1)
 
@@ -400,6 +402,8 @@ def get_hoga_data():
     return jsonify()
 
 #! 챗봇 API
+
+
 @socketio.on('message')  # 수정된 부분
 def handle_message(message):
     print("받음")
@@ -411,6 +415,8 @@ def handle_message(message):
     emit('response', bard_answer)
 
 # ? 주식 검색
+
+
 @app.route('/search_stock', methods=['POST'])
 def search_stock_server():
     print('검색 진입')
@@ -422,6 +428,8 @@ def search_stock_server():
     return jsonify(search_response.to_dict())
 
 #! 구매로직 작성
+
+
 @app.route('/buy', methods=['POST'])
 def buy():
     data = request.get_json()
@@ -429,15 +437,30 @@ def buy():
     # # 연결된 db에서 id가 로그인 한 id와 같은 데이터를 db에서 찾음
     find_id = db.user_info.find_one({"id": user_id})
     total_price = data.get('totalPrice')
+    company_name = data.get('companyName')
+    quantity = data.get('quantity')
+    print(company_name, quantity)
     account = None  # 초기값으로 None 설정
     if find_id is not None:
         account = find_id.get('account')
         # account 값을 수정하는 로직을 추가
         new_account = account - total_price  # 새로운 account 값으로 대체할 값 설정
         # 데이터베이스에서 account 값을 수정
+        print(total_price)
         db.user_info.update_one(
             {"id": user_id}, {"$set": {"account": new_account}})
         print('account 값이 수정되었습니다.')
+        db.user_info.update_one(
+            {"id": user_id},
+            {"$push": {
+                "companyData": {
+                    "companyName": company_name,
+                    "quantity": quantity,
+                    "totalPrice": total_price
+                }
+            }}
+        )
+        # db.user_info.insert_one()
         # 수정된 account 값을 다시 가져와서 확인
         updated_account = db.user_info.find_one({"id": user_id}).get('account')
         print('수정된 account 값:', str(updated_account))

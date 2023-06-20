@@ -156,7 +156,7 @@ const BuyPage = () => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ totalPrice }),
+      body: JSON.stringify({ totalPrice, companyName, quantity}),
     })
       .then(response => {
         if (response.ok) {
