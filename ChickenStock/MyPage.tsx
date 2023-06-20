@@ -75,7 +75,7 @@ const MyPage = () => {
       console.error(error);
     }
   };
-
+  console.log("setData" + data)
   const fetchCategory = async () => {
     console.log('업종 요청 보냄')
     try {
@@ -110,14 +110,23 @@ const MyPage = () => {
     fetchData();
   }, []);
 
-  console.log('data', data);
-  console.log('type');
-  console.log(typeof data);
+  // console.log('data', data);
+  // console.log('type');
+  // console.log(typeof data);
   const interest = ['건설업', '금융업', '기계', '서비스업', '섬유·의복', '음식료품', '의약품', '전기·전자', '철강·금속', '통신', '화학', '미분류'];
   const enter = ['기업 명', '현재가', '등락', '보유 수량', '평가 금액'];
   const transaction = ['구매', '판매', '미체결'];
   const enterValue = [1, 2, 3, 4, 5];
-  const transactionValue = [6, 7, 8, 9];
+  // for(let i = 0; i < data.companyData.length; i++){
+  //   let transactionValue = [] ;
+  //   transactionValue[i]= [data.companyData[i].companyName, 7, 8, 9];
+  // }
+
+  let transactionArray = []
+  for(let i = 0; i<5; i++){
+    transactionArray[i] = [data.companyData[i].companyName, data.companyData[i].quantity, data.companyData[i].totalPrice, data.companyData[i].timestamp];
+  }
+    
 
 
   return (
@@ -195,6 +204,12 @@ const MyPage = () => {
           </View>
         ))}
       </View>
+
+
+
+    {/* 여기서 구터 구매 판매 뷰 */}
+
+
       <View style={styles.transactionContainerCss}>
         {transaction.map((item, index) => (
           <TouchableOpacity style={styles.transactionCss}>
@@ -203,35 +218,35 @@ const MyPage = () => {
         ))}
       </View>
       <View style={styles.transactionValueCss}>
-        {transactionValue.map((item, index) => (
+        {transactionArray[0].map((item, index) => (
           <View style={styles.transactionInsertCss}>
             <Text key={index}>{item}</Text>
           </View>
         ))}
       </View>
       <View style={styles.transactionValueCss}>
-        {transactionValue.map((item, index) => (
+        {transactionArray[1].map((item, index) => (
           <View style={styles.transactionInsertCss}>
             <Text key={index}>{item}</Text>
           </View>
         ))}
       </View>
       <View style={styles.transactionValueCss}>
-        {transactionValue.map((item, index) => (
+        {transactionArray[2].map((item, index) => (
           <View style={styles.transactionInsertCss}>
             <Text key={index}>{item}</Text>
           </View>
         ))}
       </View>
       <View style={styles.transactionValueCss}>
-        {transactionValue.map((item, index) => (
+        {transactionArray[3].map((item, index) => (
           <View style={styles.transactionInsertCss}>
             <Text key={index}>{item}</Text>
           </View>
         ))}
       </View>
       <View style={styles.transactionValueCss}>
-        {transactionValue.map((item, index) => (
+        {transactionArray[4].map((item, index) => (
           <View style={styles.transactionInsertCss}>
             <Text key={index}>{item}</Text>
           </View>
