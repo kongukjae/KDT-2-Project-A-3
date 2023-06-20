@@ -35,7 +35,7 @@ function Main_page(): JSX.Element {
   const stock_list = async () => {
     console.log('파라미터 값 ref: ', selectedButtonRef.current);
     try {
-      const response = await fetch('http://10.0.2.2:5000/api/main_page', {
+      const response = await fetch('http://3.35.39.162:5000/api/main_page', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

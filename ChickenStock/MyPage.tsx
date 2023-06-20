@@ -69,7 +69,7 @@ const MyPage = () => {
   const fetchData = async () => {
     console.log('요청보냄');
     try {
-      const response = await fetch('http://10.0.2.2:5000/account');
+      const response = await fetch('http://3.35.39.162:5000/account');
       if (response.ok) {
         const jsonData = await response.json();
         setData(jsonData);
@@ -89,7 +89,7 @@ const MyPage = () => {
   const fetchCategory = async () => {
     console.log('업종 요청 보냄');
     try {
-      const categoryReq = await fetch('http://10.0.2.2:5000/categoryChange', {
+      const categoryReq = await fetch('http://3.35.39.162:5000/categoryChange', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

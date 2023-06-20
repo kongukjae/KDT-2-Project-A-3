@@ -96,7 +96,7 @@ const LoginPage = () => {
   const [password, setPassword] = React.useState('');
   const postData = async () => {
     try {
-      const response = await fetch('http://10.0.2.2:5000/api/login', {
+      const response = await fetch('http://3.35.39.162:5000/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

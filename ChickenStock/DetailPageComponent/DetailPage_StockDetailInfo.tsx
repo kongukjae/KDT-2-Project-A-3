@@ -21,7 +21,7 @@ const ComPonent3: React.FC<Component2Props> = ({
   });
 
   useEffect(() => {
-    fetch(`http://10.0.2.2:5000/companyupdown/${company_name}`)
+    fetch(`http://3.35.39.162:5000/companyupdown/${company_name}`)
       .then(response => response.json())
       .then(data => {
         setCompany(data);

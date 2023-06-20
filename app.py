@@ -555,4 +555,4 @@ def change():
 
 if (__name__) == '__main__':
 
-    socketio.run(app, host='0.0.0.0', port=5000)
+    socketio.run(app, host='3.35.39.162', port=5000)
