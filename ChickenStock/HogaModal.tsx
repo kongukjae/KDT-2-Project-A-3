@@ -1,18 +1,36 @@
 
-import React, { useState } from 'react';
+import React, { useState ,useContext,useEffect} from 'react';
 import { Button, Modal, StyleSheet, Text, TouchableOpacity, View, ModalProps } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import { ScreenStackHeaderBackButtonImage } from 'react-native-screens';
+import {AuthContext} from './AllContext';
 
 
+
+// 모달팝업안의 자식들 타입 지정
 interface HogaModalProps extends ModalProps{
   onClose: () => void;
 }
+ 
 
+const HogaModal:React.FC<HogaModalProps> = ({visible, onClose,}) => {
+ 
+  const {userHoga} = useContext(AuthContext); //컨텍스트 사
+  const [hogaGap,setHogaGap] = useState<number>(0)//매수 매도 차 저장 용도
+  let a = parseInt(userHoga[43])
+  let b = parseInt(userHoga[44])
 
-const HogaModal:React.FC<HogaModalProps> = ({visible, onClose}) => {
   
+  
+  //마운트 될 떄 마다 매수 매도 차이 계산 후 hogaGap에 저장 
+  useEffect(()=>{
+    const newHogaGap= a-b
+    setHogaGap(newHogaGap)
+  })
+  
+
+
   return (
       <Modal visible={visible} transparent={true}>
         <TouchableOpacity style={styles.modalContainer} onPress={onClose}>
@@ -28,7 +46,7 @@ const HogaModal:React.FC<HogaModalProps> = ({visible, onClose}) => {
                   <Text>매도잔량</Text>
                 </View>
                 <View style={styles.hogaTopText}>
-                  <Text>시간</Text>
+                  <Text>{userHoga[1]}</Text>
                 </View>
                 <View style={styles.hogaTopText}>
                   <Text>매수잔량</Text>
@@ -38,36 +56,36 @@ const HogaModal:React.FC<HogaModalProps> = ({visible, onClose}) => {
                 <View style={styles.hogaBuyBox1}>
                   <View style={styles.hogadivide}>
                     <View style={styles.hogaContents1}>
-                      <Text>매수잔량1</Text>
+                      <Text>{userHoga[27]}</Text>
                     </View>
                     <View style={styles.hogaContents1}>
-                      <Text>매수잔량2</Text>
+                      <Text>{userHoga[26]}</Text>
                     </View>
                     <View style={styles.hogaContents1}>
-                      <Text>매수잔량3</Text>
+                      <Text>{userHoga[25]}</Text>
                     </View>
                     <View style={styles.hogaContents1}>
-                      <Text>매수잔량4</Text>
+                      <Text>{userHoga[24]}</Text>
                     </View>
                     <View style={styles.hogaContents1}>
-                      <Text>매수잔량5</Text>
+                      <Text>{userHoga[23]}</Text>
                     </View>
                   </View>
                   <View style={styles.hogadivide}>
                     <View style={styles.hogaContents1}>
-                      <Text>매수시간1</Text>
+                      <Text>{userHoga[7]}</Text>
                     </View>
                     <View style={styles.hogaContents1}>
-                      <Text>매수시간2</Text>
+                      <Text>{userHoga[6]}</Text>
                     </View>
                     <View style={styles.hogaContents1}>
-                      <Text>매수시간3</Text>
+                      <Text>{userHoga[5]}</Text>
                     </View>
                     <View style={styles.hogaContents1}>
-                      <Text>매수시간4</Text>
+                      <Text>{userHoga[4]}</Text>
                     </View>
                     <View style={styles.hogaContents1}>
-                      <Text>매수시간5</Text>
+                      <Text>{userHoga[3]}</Text>
                     </View>
                   </View>
                 </View>
@@ -79,50 +97,50 @@ const HogaModal:React.FC<HogaModalProps> = ({visible, onClose}) => {
                   {/* 매수시간view */}
                   <View style={styles.hogadivide}>
                     <View style={styles.hogaContents2}>
-                      <Text>매수시간1</Text>
+                      <Text>{userHoga[13]}</Text>
                     </View>
                     <View style={styles.hogaContents2}>
-                      <Text>매수시간2</Text>
+                      <Text>{userHoga[14]}</Text>
                     </View>
                     <View style={styles.hogaContents2}>
-                      <Text>매수시간3</Text>
+                      <Text>{userHoga[15]}</Text>
                     </View>
                     <View style={styles.hogaContents2}>
-                      <Text>매수시간4</Text>
+                      <Text>{userHoga[16]}</Text>
                     </View>
                     <View style={styles.hogaContents2}>
-                      <Text>매수시간5</Text>
+                      <Text>{userHoga[17]}</Text>
                     </View>
                   </View>
                   {/* 매수잔량 view */}
                   <View style={styles.hogadivide}> 
                     <View style={styles.hogaContents2}>
-                      <Text>매수잔량1</Text>
+                      <Text>{userHoga[33]}</Text>
                     </View>
                     <View style={styles.hogaContents2}>
-                      <Text>매수잔량2</Text>
+                      <Text>{userHoga[34]}</Text>
                     </View>
                     <View style={styles.hogaContents2}>
-                      <Text>매수잔량3</Text>
+                      <Text>{userHoga[35]}</Text>
                     </View>
                     <View style={styles.hogaContents2}>
-                      <Text>매수잔량4</Text>
+                      <Text>{userHoga[36]}</Text>
                     </View>
                     <View style={styles.hogaContents2}>
-                      <Text>매수잔량5</Text>
+                      <Text>{userHoga[37]}</Text>
                     </View>
                   </View>
                 </View>
               </View>
               <View style={styles.hogaBottomContent}>
                 <View style={styles.hogaBottomText}>
-                  <Text>1,704,940</Text>
+                  <Text>{userHoga[43]}</Text>
                 </View>
                 <View style={styles.hogaBottomText}>
-                  <Text>-197,713</Text>
+                  <Text>{hogaGap}</Text>
                 </View>
                 <View style={styles.hogaBottomText}>
-                  <Text>1,507,227</Text>
+                  <Text>{userHoga[44]}</Text>
                 </View>
               </View>
             </View>

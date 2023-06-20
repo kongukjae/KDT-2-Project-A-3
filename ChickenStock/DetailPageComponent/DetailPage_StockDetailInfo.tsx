@@ -39,33 +39,53 @@ const ComPonent3: React.FC<Component2Props> = ({
       })
       .catch(error => console.error(error));
   }, []);
+
+  const formatNumber = (num: number): string =>
+    num.toLocaleString('en-US') + '원';
+  const styles = StyleSheet.create({
+    container: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: 38,
+      backgroundColor: '#4C4C6D',
+      borderRadius: 10,
+    },
+    text: {
+      fontSize: 25,
+      padding: 5,
+    },
+    coloredText: {
+      fontSize: 25,
+      padding: 5,
+      color: 'white',
+    },
+    priceContainer: {
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+    },
+  });
+
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>시가: {upAndDown['시가']}원</Text>
-      <Text style={styles.text}>오늘최고가: {upAndDown['오늘최고가']}원</Text>
       <View style={styles.priceContainer}>
-        <Text style={styles.text}>오늘최저가: {upAndDown['오늘최저가']}원</Text>
-        <Text style={styles.text}>현재가: {upAndDown['현재가']}원</Text>
-        <Text style={styles.text}>시가총액: {upAndDown['시가총액']}</Text>
+        <Text style={styles.coloredText}>
+          시가: {formatNumber(Number(upAndDown['시가']))}
+        </Text>
+        <Text style={styles.coloredText}>
+          오늘최고가: {formatNumber(Number(upAndDown['오늘최고가']))}
+        </Text>
+        <Text style={styles.coloredText}>
+          오늘최저가: {formatNumber(Number(upAndDown['오늘최저가']))}
+        </Text>
+        <Text style={styles.coloredText}>
+          현재가: {formatNumber(Number(upAndDown['현재가']))}
+        </Text>
+        <Text style={styles.coloredText}>
+          시가총액: {upAndDown['시가총액']}
+        </Text>
       </View>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    marginTop: 20,
-    padding: 30,
-    backgroundColor: 'pink',
-  },
-  text: {
-    fontSize: 20,
-    padding: 5,
-  },
-  priceContainer: {
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-  },
-});
-
 export default ComPonent3;

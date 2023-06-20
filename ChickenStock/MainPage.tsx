@@ -29,6 +29,7 @@ function Main_page(): JSX.Element {
   const [selectedButton, setSelectedButton] = useState('시가총액'); // 버튼 색상 변경을 위한 상태 선언, 페이지 로드 시 시가총액을 선택한 것으로 표현
   const selectedButtonRef = useRef<string>(selectedButton); // 페이지의 랜더링 상태와 관계없이, 항상 눌려져 있는 버튼의 최신 값을 받아오기 위해 사용
   // console.log('선택된 버튼', selectedButton)
+  console.log("test: ",dataArray)
   const isDarkMode = useColorScheme() === 'dark';
   // 메인 페이지 진입 시 서버에게 주식 리스트 데이터 요청하는 함수
   const stock_list = async () => {
@@ -260,9 +261,7 @@ function Main_page(): JSX.Element {
             {dataArray.map((item, index) => {
               const name_data = item[0];
               const company_data: any = item[1]; // up_down과 current_price에서 타입 에러가 발생하므로 any로 할당함
-              const company_code = company_data['종목코드']
-                .toString()
-                .padStart(6, '0');
+              const company_code = company_data['종목코드'].toString().padStart(6, '0');  
               const up_down = parseInt(company_data['등락']).toLocaleString();
               const current_price = parseInt(
                 company_data['현재가'],

@@ -1,6 +1,12 @@
 import React, {useState, useEffect} from 'react';
 import {LineChart, Grid, XAxis, YAxis} from 'react-native-svg-charts';
-import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  ActivityIndicator,
+} from 'react-native';
 import io from 'socket.io-client';
 // 매개변수를 정의
 type Component2Props = {
@@ -30,10 +36,11 @@ const ComPonent2: React.FC<Component2Props> = ({
   const [data, setData] = useState<StockData[]>([]);
   const [dayData, setDayData] = useState<StockData[]>([]);
   const [monthData, setMonthData] = useState<StockData[]>([]);
-  const [yearData, setYearData] = useState<StockData[]>([]);
   const [currentChart, setCurrentChart] = useState<'day' | 'month' | 'year'>(
     'day',
   );
+  const [isLoading, setIsLoading] = useState(true);
+  console.log('차트 로딩: ', isLoading);
   // console.log('여기는 일간');
   // console.log(dayData);
   // console.log('여기는 일간');
@@ -49,14 +56,14 @@ const ComPonent2: React.FC<Component2Props> = ({
     const socket = io('http://10.0.2.2:5000');
 
     const interval = setInterval(() => {
-      socket.emit('get_data', { company_code });
+      socket.emit('get_data', {company_code});
     }, 5000);
 
     socket.on('data_response', (data: StockData[]) => {
       console.log('여기뭐냐');
       console.log(
         'day data stck_prpr:',
-        data.map(item => item.stck_prpr), 
+        data.map(item => item.stck_prpr),
       );
       console.log('여기뭐냐');
 
@@ -64,6 +71,7 @@ const ComPonent2: React.FC<Component2Props> = ({
       if (currentChart === 'day') {
         setData(data);
       }
+      setIsLoading(false);
     });
 
     return () => {
@@ -97,25 +105,7 @@ const ComPonent2: React.FC<Component2Props> = ({
         }
       });
   }, [currentChart]);
-  // 3. 연간 차트 요청
-  useEffect(() => {
-    fetch(`http://10.0.2.2:5000/get_Ydata/${company_code}`)
-      .then(response => response.json())
-      .then((data: StockData[]) => {
-        const modifiedData = data.map(item => ({
-          ...item,
-          stck_prpr: item.stck_clpr,
-        }));
-        // console.log(
-        //   '수정된 YEAR data stck_prpr:',
-        //   modifiedData.map(item => item.stck_prpr).reverse(),
-        // );
-        setYearData(modifiedData.reverse());
-        if (currentChart === 'year') {
-          setData(modifiedData);
-        }
-      });
-  }, [currentChart]);
+
   // 차트를 그리는 함수, 주어진 데이터를 통해서 차트를 그린다
   const renderChart = (data: StockData[], title: string) => {
     // 데이터가 없으면 아무것도 그리지 않는다.
@@ -158,7 +148,7 @@ const ComPonent2: React.FC<Component2Props> = ({
     // console.log(xData);
 
     return (
-      <View style={{height: 220, flexDirection: 'row'}}>
+      <View style={{width: 365, height: 220, flexDirection: 'row'}}>
         <Text>{title}</Text>
         <YAxis
           data={data.map(item => item.stck_prpr)}
@@ -174,7 +164,7 @@ const ComPonent2: React.FC<Component2Props> = ({
           <LineChart
             style={{flex: 1}}
             data={data.map(item => item.stck_prpr)}
-            svg={{stroke: '#1B9C85', strokeWidth: '6px'}}
+            svg={{stroke: '#1B9C85', strokeWidth: '3px'}}
             contentInset={{top: 10, bottom: 10}}>
             <Grid />
           </LineChart>
@@ -189,32 +179,37 @@ const ComPonent2: React.FC<Component2Props> = ({
   };
 
   return (
-    <View>
-      {data.length > 0 && renderChart(data, '')}
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => setCurrentChart('day')}>
-          <Text style={styles.buttonText}>일별 데이터 보기</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => setCurrentChart('month')}>
-          <Text style={styles.buttonText}>월별 데이터 보기</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => setCurrentChart('year')}>
-          <Text style={styles.buttonText}>년 데이터 보기</Text>
-        </TouchableOpacity>
-      </View>
+    <View style={styles.root}>
+      {isLoading == true ? (
+        <View style={styles.loading_window}>
+          <ActivityIndicator size="large" color="#1B9C85" />
+          <Text>Loading...</Text>
+        </View>
+      ) : (
+        <View>
+          {data.length > 0 && renderChart(data, '')}
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => setCurrentChart('day')}>
+              <Text style={styles.buttonText}>일별 데이터 보기</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => setCurrentChart('month')}>
+              <Text style={styles.buttonText}>월별 데이터 보기</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+  },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -222,13 +217,22 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: '#1B9C85',
-    padding: 10,
+    padding: 7,
     borderRadius: 5,
-    width: '30%',
+    width: '40%',
     alignItems: 'center',
   },
   buttonText: {
     color: 'white',
+  },
+  loading_window: {
+    width: '100%',
+    height: 265,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'transparent',
   },
 });
 export default ComPonent2;

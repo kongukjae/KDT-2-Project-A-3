@@ -58,21 +58,24 @@ const Component4: React.FC<Component4Props> = ({
 
 const styles = StyleSheet.create({
   buttonContainer: {
+    width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-around',
     padding: 10,
   },
   button: {
-    width: 170, // 버튼의 너비
-    height: 100, // 버튼의 높이
+    width: 130, // 버튼의 너비
+    height: 80, // 버튼의 높이
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#1B9C85', // 버튼의 배경 색
     padding: 12,
+    borderRadius: 10,
   },
   buttonText: {
     fontSize: 18,
-    color: '#000', // 버튼의 텍스트 색
+    color: '#E8F6EF', // 버튼의 텍스트 색
+    fontWeight: '700',
   },
 });
 
