@@ -14,7 +14,7 @@ import callApiData.Mainpage_stock_data
 import callApiData.Search_stock_data
 import callDBData.category_name_changer
 import time
-
+from datetime import datetime
 
 import json
 
@@ -503,13 +503,16 @@ def buy():
         db.user_info.update_one(
             {"id": user_id}, {"$set": {"account": new_account}})
         print('account 값이 수정되었습니다.')
+        nowDatetime = datetime.now()
+
         db.user_info.update_one(
             {"id": user_id},
             {"$push": {
                 "companyData": {
                     "companyName": company_name,
                     "quantity": quantity,
-                    "totalPrice": total_price
+                    "totalPrice": total_price,
+                    "timestamp": (str(nowDatetime.year)+'년'+str(nowDatetime.month)+'월'+str(nowDatetime.day)+'일'+str(nowDatetime.hour)+'시'+str(nowDatetime.minute)+'분')
                 }
             }}
         )

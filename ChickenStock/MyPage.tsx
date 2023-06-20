@@ -26,28 +26,28 @@ const MyPage = () => {
   console.log('선택 된 카테고리: ', selectedButtonIndex)
   console.log('선택 된 카테고리(최신): ', selectedButtonRef)
 
-  function name_change(name:string) {
-    if(name === '건설') {
+  function name_change(name: string) {
+    if (name === '건설') {
       return '건설업'
-    } else if(name === '금융') {
+    } else if (name === '금융') {
       return '금융업'
-    } else if(name === '기계') {
+    } else if (name === '기계') {
       return '기계'
-    } else if(name === '서비스업') {
+    } else if (name === '서비스업') {
       return '서비스업'
-    } else if(name === '섬유/의복') {
+    } else if (name === '섬유/의복') {
       return '섬유·의복'
-    } else if(name === '음식료품') {
+    } else if (name === '음식료품') {
       return '음식료품'
-    } else if(name === '의약품') {
+    } else if (name === '의약품') {
       return '의약품'
-    } else if(name === '전기/전자') {
+    } else if (name === '전기/전자') {
       return '전기·전자'
-    } else if(name === '철강/금속') {
+    } else if (name === '철강/금속') {
       return '철강·금속'
-    } else if(name === '통신업') {
+    } else if (name === '통신업') {
       return '통신'
-    } else if(name === '화학') {
+    } else if (name === '화학') {
       return '화학'
     } else {
       return '미분류'
@@ -117,7 +117,7 @@ const MyPage = () => {
   const enter = ['기업 명', '현재가', '등락', '보유 수량', '평가 금액'];
   const transaction = ['구매', '판매', '미체결'];
   const enterValue = [1, 2, 3, 4, 5];
-  const transactionValue = [6, 7, 8, 9, 10];
+  const transactionValue = [6, 7, 8, 9];
 
 
   return (
@@ -139,27 +139,27 @@ const MyPage = () => {
         <Text style={styles.myMoneyText}>본인 관심사</Text>
       </View>
       <View style={styles.circleContainerCss}>
-      {interest.map((item, index) => (
-        <TouchableOpacity
-          style={[
-            styles.circleButtonCss,
-            selectedButtonIndex === item ? styles.selectedButtonCss : null,
-          ]}
-          onPress={() => {
-            if (selectedButtonIndex === item) {
-              // 이미 선택된 버튼을 다시 누르면 선택 해제
-              setSelectedButtonIndex('미분류');
-            } else {
-              // 선택되지 않은 버튼을 누르면 선택
-              setSelectedButtonIndex(item);
-            }
-          }}
-          key={index}
-        >
-          <Text>{item}</Text>
-        </TouchableOpacity>
-      ))}
-    </View>
+        {interest.map((item, index) => (
+          <TouchableOpacity
+            style={[
+              styles.circleButtonCss,
+              selectedButtonIndex === item ? styles.selectedButtonCss : null,
+            ]}
+            onPress={() => {
+              if (selectedButtonIndex === item) {
+                // 이미 선택된 버튼을 다시 누르면 선택 해제
+                setSelectedButtonIndex('미분류');
+              } else {
+                // 선택되지 않은 버튼을 누르면 선택
+                setSelectedButtonIndex(item);
+              }
+            }}
+            key={index}
+          >
+            <Text>{item}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
       <View style={styles.enterCss}>
         {enter.map((item, index) => (
           <View style={styles.enterNameCss}>
@@ -198,7 +198,7 @@ const MyPage = () => {
       <View style={styles.transactionContainerCss}>
         {transaction.map((item, index) => (
           <TouchableOpacity style={styles.transactionCss}>
-            <Text style={styles.transactionText}key={index}>{item}</Text>
+            <Text style={styles.transactionText} key={index}>{item}</Text>
           </TouchableOpacity>
         ))}
       </View>
