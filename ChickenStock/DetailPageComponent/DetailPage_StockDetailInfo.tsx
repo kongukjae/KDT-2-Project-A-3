@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useContext } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React, {useEffect, useState, useContext} from 'react';
+import {View, Text, StyleSheet} from 'react-native';
 import { AuthContext } from '../AllContext';
 
 type Component2Props = {
@@ -21,20 +21,17 @@ const ComPonent3: React.FC<Component2Props> = ({
     시가총액: '',
   });
 
-
   const { setCompanyName, setCompanyPrice } = useContext(AuthContext)
-
   setCompanyName(company_name);
   setCompanyPrice(parseInt(upAndDown.현재가))
   console.log(setCompanyName)
   console.log(setCompanyPrice)
-  
+
   useEffect(() => {
     fetch(`http://10.0.2.2:5000/companyupdown/${company_name}`)
       .then(response => response.json())
       .then(data => {
         setCompany(data);
-
         console.log(data);
       })
       .catch(error => console.error(error));
@@ -44,6 +41,7 @@ const ComPonent3: React.FC<Component2Props> = ({
     num.toLocaleString('en-US') + '원';
   const styles = StyleSheet.create({
     container: {
+      width: '100%',
       flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',
@@ -59,6 +57,7 @@ const ComPonent3: React.FC<Component2Props> = ({
       fontSize: 25,
       padding: 5,
       color: 'white',
+      justifyContent: 'center',
     },
     priceContainer: {
       flexDirection: 'column',

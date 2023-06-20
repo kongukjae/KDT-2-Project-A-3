@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -12,16 +12,17 @@ import {
   TouchableHighlight,
   Linking,
 } from 'react-native';
-
-import { RouteProp, useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
+import {RouteProp, useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
 import TopMenuPage from './TopMenuPage';
-// import { json } from 'stream/consumers';
-
+import {AuthContext} from './AllContext';
 const MyPage = () => {
+  // const { userCategoryCurrent } = useContext(AuthContext);
   const [data, setData] = useState<any>({}); // data useState를 사용하여 상태 설정
-  const [userCategory, setUserCategory] = useState<string>();
-  const [selectedButtonIndex, setSelectedButtonIndex] = useState<number>(-1);
+  const [userCategory, setUserCategory] = useState<string | null>(null);
+  const [selectedButtonIndex, setSelectedButtonIndex] = useState<string | null>(
+    userCategory,
+  );
   const [myStock,setMyStock] = useState<any>([])
   const [stockSum,setStockSum] = useState<any>([])
   const [nowPrice,setNowPrice] = useState<number>()
@@ -129,14 +130,13 @@ const MyPage = () => {
     } else if(name === '화학') {
       return '화학'
     } else {
-      return '미분류'
+      return '미분류';
     }
   }
-
   // 데이터 가져오는 함수
   // flask서버로 데이터 요청
   const fetchData = async () => {
-    console.log('요청보냄')
+    console.log('요청보냄');
     try {
       const response = await fetch('http://10.0.2.2:5000/account');
       if (response.ok) {
@@ -144,8 +144,9 @@ const MyPage = () => {
         setData(jsonData);
         console.log('서버 연결 완료');
         console.log('응답 받은 data: ', jsonData);
-        console.log('카테고리', jsonData['choiceTwo'])
-        setUserCategory(name_change(jsonData['choiceTwo']))
+        console.log('DB 카테고리: ', jsonData['choiceTwo']);
+        setUserCategory(jsonData['choiceTwo']);
+        setSelectedButtonIndex(jsonData['choiceTwo']);
       } else {
         throw new Error('서버 응답이 실패하였습니다.');
       }
@@ -153,7 +154,37 @@ const MyPage = () => {
       console.error(error);
     }
   };
-
+  console.log("setData" + data)
+  const fetchCategory = async () => {
+    console.log('업종 요청 보냄');
+    try {
+      const categoryReq = await fetch('http://10.0.2.2:5000/categoryChange', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(selectedButtonIndex),
+      });
+      // const categoryData = await categoryReq.json();
+      // console.log('카테고리 응답: ', categoryData)
+      // await fetchData();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  // 업종 변경 시 DB에서 choiceTwo 항목 변경
+  useEffect(() => {
+    setUserCategory(selectedButtonIndex);
+    fetchCategory();
+  }, [selectedButtonIndex]);
+  // useEffect(() => {
+  //   setSelectedButtonIndex(userCategory)
+  // }, [userCategory])
+  // 업종 버튼 선택 시 항상 최신 값으로 갱신
+  // useEffect(() => {
+  //   selectedButtonRef.current = selectedButtonIndex;
+  //   console.log('category_ref 값: ', selectedButtonRef.current);
+  // }, [selectedButtonIndex]);
   const getMyStock= async ()=>{
     try{
       const response = await fetch('http://10.0.2.2:5000/api/getmystock')
@@ -182,6 +213,7 @@ const MyPage = () => {
   const transaction = ['구매', '판매', '미체결'];
   const enterValue = [1, 2, 3, 4, 5];
   const transactionValue = [6, 7, 8, 9, 10];
+  const test = [6, 7, 8, 9, 10];
 
   console.log('processArray',processArray(result))
   processArray(result)
@@ -194,47 +226,43 @@ const MyPage = () => {
       </View>
       {Object.keys(data).length !== 0 && (
         <View style={styles.myMoneyCss}>
-          <Text style={styles.myMoneyText}>
-            나의 은행 : {data.bank}
-          </Text>
-          <Text style={styles.myMoneyText}>
-            계좌 잔액 : {data.account}
-          </Text>
+          <Text style={styles.myMoneyText}>나의 은행 : {data.bank}</Text>
+          <Text style={styles.myMoneyText}>계좌 잔액 : {parseInt(data.account).toLocaleString()}</Text>
         </View>
       )}
       <View style={styles.myInterestCss}>
-        <Text style={styles.myMoneyText}>{} </Text>
+        <Text style={styles.myCategoryText}>본인 관심사</Text>
       </View>
       <View style={styles.circleContainerCss}>
-      {interest.map((item, index) => (
-        <TouchableOpacity
-          style={[
-            styles.circleButtonCss,
-            selectedButtonIndex === index ? styles.selectedButtonCss : null,
-          ]}
-          onPress={() => {
-            if (selectedButtonIndex === index) {
-              // 이미 선택된 버튼을 다시 누르면 선택 해제
-              setSelectedButtonIndex(-1);
-            } else {
-              // 선택되지 않은 버튼을 누르면 선택
-              setSelectedButtonIndex(index);
-            }
-          }}
-          key={index}
-        >
-          <Text>{item}</Text>
-        </TouchableOpacity>
-      ))}
-    </View>
+        {interest.map((item, index) => (
+          <TouchableOpacity
+            style={[
+              styles.circleButtonCss,
+              selectedButtonIndex === item ? styles.selectedButtonCss : null,
+            ]}
+            onPress={() => {
+              if (selectedButtonIndex === item) {
+                // 이미 선택된 버튼을 다시 누르면 선택 해제
+                setSelectedButtonIndex('미분류');
+              } else {
+                // 선택되지 않은 버튼을 누르면 선택
+                setSelectedButtonIndex(item);
+              }
+            }}
+            key={index}>
+            <Text style={[selectedButtonIndex === item ? styles.selectedButtonTextCss : null]}>{item}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
       <View style={styles.enterCss}>
         {enter.map((item, index) => (
           <View style={styles.enterNameCss}>
-            <Text style={styles.enterNameText} key={index}>{item}</Text>
+            <Text style={styles.enterNameText} key={index}>
+              {item}
+            </Text>
           </View>
         ))}
       </View>
-      
       {processArray(result).map((arr, arrIndex) => (
       <View style={styles.enterValueCss} key={arrIndex}>
         {processArray(result)[arrIndex].map((item, index) => (
@@ -244,53 +272,55 @@ const MyPage = () => {
          ))}
        </View>
       ))}
-     
+      
+    {/* 여기서 구터 구매 판매 뷰 */}
       <View style={styles.transactionContainerCss}>
         {transaction.map((item, index) => (
           <TouchableOpacity style={styles.transactionCss}>
-            <Text style={styles.transactionText}key={index}>{item}</Text>
+            <Text style={styles.transactionText} key={index}>
+              {item}
+            </Text>
           </TouchableOpacity>
         ))}
       </View>
       <View style={styles.transactionValueCss}>
-        {transactionValue.map((item, index) => (
+        {test.map((item, index) => (
           <View style={styles.transactionInsertCss}>
             <Text key={index}>{item}</Text>
           </View>
         ))}
       </View>
       <View style={styles.transactionValueCss}>
-        {transactionValue.map((item, index) => (
+        {test.map((item, index) => (
           <View style={styles.transactionInsertCss}>
             <Text key={index}>{item}</Text>
           </View>
         ))}
       </View>
       <View style={styles.transactionValueCss}>
-        {transactionValue.map((item, index) => (
+        {test.map((item, index) => (
           <View style={styles.transactionInsertCss}>
             <Text key={index}>{item}</Text>
           </View>
         ))}
       </View>
       <View style={styles.transactionValueCss}>
-        {transactionValue.map((item, index) => (
+        {test.map((item, index) => (
           <View style={styles.transactionInsertCss}>
             <Text key={index}>{item}</Text>
           </View>
         ))}
       </View>
       <View style={styles.transactionValueCss}>
-        {transactionValue.map((item, index) => (
+        {test.map((item, index) => (
           <View style={styles.transactionInsertCss}>
             <Text key={index}>{item}</Text>
           </View>
         ))}
       </View>
     </View>
-  );
+  )
 };
-
 const styles = StyleSheet.create({
   root: {
     backgroundColor: '#FFE194',
@@ -298,9 +328,14 @@ const styles = StyleSheet.create({
   },
   myMoneyText: {
     fontFamily: 'BagelFatOne-Regular',
-    fontSize: 21,
+    fontSize: 18,
     color: '#E8F6EF',
-    marginLeft: 10,
+  },
+  myCategoryText: {
+    fontFamily: 'BagelFatOne-Regular',
+    fontSize: 24,
+    color: '#E8F6EF',
+    paddingBottom: 5,
   },
   myMoneyCss: {
     width: '100%',
@@ -309,7 +344,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'flex-start',
+    justifyContent: 'space-evenly',
     gap: 20,
     borderRadius: 15,
   },
@@ -342,10 +377,13 @@ const styles = StyleSheet.create({
     flexBasis: '16%',
     borderColor: '#1B9C85',
     borderWidth: 2,
-    marginBottom: 5
+    marginBottom: 5,
   },
   selectedButtonCss: {
     backgroundColor: '#4C4C6D',
+  },
+  selectedButtonTextCss: {
+    color: 'white',
   },
   enterCss: {
     width: '100%',
@@ -375,7 +413,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 5
+    borderRadius: 5,
   },
   enterInsertCss: {
     width: '20%',
@@ -408,7 +446,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 5
+    borderRadius: 5,
   },
   transactionInsertCss: {
     width: '20%',
