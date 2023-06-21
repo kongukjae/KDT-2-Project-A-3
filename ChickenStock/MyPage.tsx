@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -12,10 +12,12 @@ import {
   TouchableHighlight,
   Linking,
 } from 'react-native';
-import {RouteProp, useNavigation} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
+import { RouteProp, useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import TopMenuPage from './TopMenuPage';
-import {AuthContext} from './AllContext';
+import { AuthContext } from './AllContext';
+import DetailPage from './DetailPageRouter';
+import SellPage from './SellPage';
 const MyPage = () => {
   // const { userCategoryCurrent } = useContext(AuthContext);
   const [data, setData] = useState<any>({}); // data useState를 사용하여 상태 설정
@@ -23,18 +25,13 @@ const MyPage = () => {
   const [selectedButtonIndex, setSelectedButtonIndex] = useState<string | null>(
     userCategory,
   );
-  const [myStock,setMyStock] = useState<any>([])
-  const [stockSum,setStockSum] = useState<any>([])
-  const [nowPrice,setNowPrice] = useState<number>()
-  // let stockData = myStock[0]
-  // console.log('stock',stockData)
-  // let stockData1 = myStock[0]["companyName"]
-  // console.log('stock1',stockData1)
-  // console.log('myStock',myStock)
+  const [myStock, setMyStock] = useState<any>([])
+  const [stockSum, setStockSum] = useState<any>([])
+  const [nowPrice, setNowPrice] = useState<number>()
+
   let result
   stockSumLojic()
-  console.log('result',result)
-  // console.log({stockSum})
+  console.log('result', result)
 
   function stockSumLojic() {
     const groupedData = myStock.reduce((acc, stock) => {
@@ -47,87 +44,87 @@ const MyPage = () => {
       }
       return acc;
     }, {});
-    
+
     result = Object.values(groupedData);
     // setStockSum(result)
   }
-  let stockName=[] //서버로 보낼 주식 목록 (현재가 받아오기 위)
-  let nowprice=[] // 주식 샀을 때 전체가격 / 양
-  let nowprice2=[]
+  let stockName = [] //서버로 보낼 주식 목록 (현재가 받아오기 위)
+  let nowprice = [] // 주식 샀을 때 전체가격 / 양
+  let nowprice2 = []
   function processArray(dataArray) {
     const processedArray = [];
-    const getNowprice= async ()=>{
+    const getNowprice = async () => {
       for (let i = 0; i < dataArray.length; i++) {
         const companyOnlyName = dataArray[i].companyName;
         stockName.push(companyOnlyName)
       }
       // console.log('stockName',stockName)
-      try{
-        const response = await fetch('http://10.0.2.2:5000/api/nowprice',{
+      try {
+        const response = await fetch('http://10.0.2.2:5000/api/nowprice', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(stockName), // 플라스크로 데이터를 담아 요청을 보냄
         })
-        if(response.ok){
-          const jsonData= await response.json();
+        if (response.ok) {
+          const jsonData = await response.json();
           // await nowprice2.push(jsonData)
-           setNowPrice(jsonData)
-          await console.log('nowPrice',nowPrice)
+          setNowPrice(jsonData)
+          await console.log('nowPrice', nowPrice)
         }
         else {
           throw new Error('현재가 받아오는 과정에서 오류')
         }
-      } catch (error){
+      } catch (error) {
         console.error(error);
       }
     };
     getNowprice()
 
     // console.log('getnowprice',nowprice2)
-  
+
     for (let i = 0; i < dataArray.length; i++) {
       const companyName = dataArray[i].companyName;
       const quantity = dataArray[i].quantity.toString();
       const totalPrice = dataArray[i].totalPrice.toString();
-      let getnowprice = dataArray[i].totalPrice/dataArray[i].quantity
+      let getnowprice = dataArray[i].totalPrice / dataArray[i].quantity
       nowprice.push(getnowprice)
       let a = ""
       // if (nowprice[i]>nowprice2[0][i]["현재가"]){
       //     console.log('b')
       // }
-      
 
-      processedArray.push([companyName,'현재가','등락',quantity, totalPrice]);
+
+      processedArray.push([companyName, '현재가', '등락', quantity, totalPrice]);
     }
 
-  
+
     return processedArray;
   }
 
-  function name_change(name:string) {
-    if(name === '건설') {
+  function name_change(name: string) {
+    if (name === '건설') {
       return '건설업'
-    } else if(name === '금융') {
+    } else if (name === '금융') {
       return '금융업'
-    } else if(name === '기계') {
+    } else if (name === '기계') {
       return '기계'
-    } else if(name === '서비스업') {
+    } else if (name === '서비스업') {
       return '서비스업'
-    } else if(name === '섬유/의복') {
+    } else if (name === '섬유/의복') {
       return '섬유·의복'
-    } else if(name === '음식료품') {
+    } else if (name === '음식료품') {
       return '음식료품'
-    } else if(name === '의약품') {
+    } else if (name === '의약품') {
       return '의약품'
-    } else if(name === '전기/전자') {
+    } else if (name === '전기/전자') {
       return '전기·전자'
-    } else if(name === '철강/금속') {
+    } else if (name === '철강/금속') {
       return '철강·금속'
-    } else if(name === '통신업') {
+    } else if (name === '통신업') {
       return '통신'
-    } else if(name === '화학') {
+    } else if (name === '화학') {
       return '화학'
     } else {
       return '미분류';
@@ -185,17 +182,17 @@ const MyPage = () => {
   //   selectedButtonRef.current = selectedButtonIndex;
   //   console.log('category_ref 값: ', selectedButtonRef.current);
   // }, [selectedButtonIndex]);
-  const getMyStock= async ()=>{
-    try{
+  const getMyStock = async () => {
+    try {
       const response = await fetch('http://10.0.2.2:5000/api/getmystock')
-      if(response.ok){
-        const jsonData= await response.json();
+      if (response.ok) {
+        const jsonData = await response.json();
         setMyStock(jsonData)
       }
       else {
         throw new Error('주식 정보 받아오는 과정에서 오류')
       }
-    } catch (error){
+    } catch (error) {
       console.error(error);
     }
   };
@@ -207,15 +204,29 @@ const MyPage = () => {
     getMyStock();
   }, []);
   // 배열 안에 함수를 집어 넣음으로써 의존성 추가. 페이지가 렌더링 될 때 마다 fetchData와 getMyStock 함수 실행
-
+  const navigation = useNavigation<ChoicePageOneNavigationProp>();
+  type RootStackParamList = {
+    DetailPage: undefined;
+    SellPage: undefined;
+  }
+  type ChoicePageOneNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'SellPage'
+>;
+  const cellPage = async() => {
+    navigation.navigate('SellPage');
+  }
   const interest = ['건설업', '금융업', '기계', '서비스업', '섬유·의복', '음식료품', '의약품', '전기·전자', '철강·금속', '통신', '화학', '미분류'];
   const enter = ['기업 명', '현재가', '등락', '보유 수량', '평가 금액'];
   const transaction = ['구매', '판매', '미체결'];
   const enterValue = [1, 2, 3, 4, 5];
   const transactionValue = [6, 7, 8, 9, 10];
   const test = [6, 7, 8, 9, 10];
+  // const test2 = [data.companyData[0].companyName, data.companyData[0].quantity, data.companyData[0].totalPrice, data.companyData[0].
+  // timestamp]
 
-  console.log('processArray',processArray(result))
+
+  console.log('processArray', processArray(result))
   processArray(result)
 
   // let value1 = result[0][]
@@ -264,16 +275,18 @@ const MyPage = () => {
         ))}
       </View>
       {processArray(result).map((arr, arrIndex) => (
-      <View style={styles.enterValueCss} key={arrIndex}>
-        {processArray(result)[arrIndex].map((item, index) => (
-          <View style={styles.enterInsertCss} key={index}>
-           <Text>{item}</Text>
-          </View>
-         ))}
-       </View>
+        <View style={styles.enterValueCss} key={arrIndex}>
+          {processArray(result)[arrIndex].map((item, index) => (
+            <View style={styles.enterInsertCss} key={index}>
+              <TouchableOpacity onPress={cellPage}>
+                <Text>{item}</Text>
+              </TouchableOpacity>
+            </View>
+          ))}
+        </View>
       ))}
-      
-    {/* 여기서 구터 구매 판매 뷰 */}
+
+      {/* 여기서 구터 구매 판매 뷰 */}
       <View style={styles.transactionContainerCss}>
         {transaction.map((item, index) => (
           <TouchableOpacity style={styles.transactionCss}>
