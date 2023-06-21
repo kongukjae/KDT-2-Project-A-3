@@ -133,8 +133,8 @@ const MyPage = () => {
   const transaction = ['구매', '판매', '미체결'];
   const enterValue = [1, 2, 3, 4, 5];
   const test = [6, 7, 8, 9, 10];
-
-
+  // const test2 = []
+  
   return (
     <View style={styles.root}>
       <View>
