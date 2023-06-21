@@ -28,7 +28,7 @@ app = Flask(__name__)
 # 시크릿 키는 보안을 강화하기 위해 사용되는 값으로, 애플리케이션에서 사용되는 다양한 보안 기능에 필요
 app.secret_key = "nb1+d(7+2y1q0m*kig4+zxld$v00^7dr=nxqcjn5(fp@ul)yc@"
 
-os.environ['_BARD_API_KEY'] = "XQiP6_UOiNfmRxuQisZJYU3HJ8ou4gWiEtJHEK2YpJQhzjebXfozrSN1phM02G415pc2UQ."
+os.environ['_BARD_API_KEY'] = "XwiP69_kgQxCbVVsxNRQqVepNWB5clIpDpN53cOpJkudKk7aWxVPiuzIVVhvVO9v3xEkcQ."
 
 f = open("./secret.key")
 lines = f.readlines()
