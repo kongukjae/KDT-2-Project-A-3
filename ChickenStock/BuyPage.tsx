@@ -120,6 +120,9 @@ const BuyPage = () => {
   };
 
   const totalPrice = quantity * companyPrice;
+  console.log('합계: ', totalPrice);
+  console.log('수량: ', quantity);
+  console.log('가격: ', companyPrice);
   // quantity !== '' && price !== '' ? parseInt(quantity) * parseInt(price) : '';
   //! 수량과 가격이 ''이 아닐경우에 두 값을 곱하고 아닐경우에는 ''을 붙인다.
 

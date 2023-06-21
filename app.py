@@ -51,9 +51,10 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 @app.route('/account', methods=['GET'])
 def account():
     login_id = session.get('user_id')  # 로그인한 아이디를 세션을 사용하여 저장
-    print(login_id)
+    # print(login_id)
     # 연결된 db에서 id가 로그인 한 id와 같은 데이터를 db에서 찾음
     result = db.user_info.find_one({'id': login_id})
+    # print(result)
     if result:
         # ObjectId를 문자열로 변환
         result['_id'] = str(result['_id'])
@@ -394,7 +395,7 @@ def get_hoga_data():
     #     # 원하는 호출을 [tr_type, tr_id, tr_key] 순서대로 리스트 만들기
 
         ### 1. 국내주식 호가, 체결가, 체결통보 ###
-        code_list = [['1', 'H0STASP0', f"{stock_code}"]]
+        code_list = [['1',  'H0STASP0',  f"{stock_code}"]]
 
         senddata_list = []
 
@@ -458,7 +459,7 @@ def get_hoga_data():
                                     jsonObject["header"]["tr_key"], rt_cd, jsonObject["body"]["msg1"]))
 
                                 # 체결통보 처리를 위한 AES256 KEY, IV 처리 단계
-                                if trid == "H0STCNI0" or trid == "H0STCNI9":  # 국내주식
+                                if trid == "H0STCNI0" or trid == "H0STCNI9":   # 국내주식
                                     aes_key = jsonObject["body"]["output"]["key"]
                                     aes_iv = jsonObject["body"]["output"]["iv"]
                                     print("### TRID [%s] KEY[%s] IV[%s]" % (
@@ -479,8 +480,6 @@ def get_hoga_data():
     asyncio.get_event_loop().close()
 
 #! 챗봇 API
-
-
 @socketio.on('message')  # 수정된 부분
 def handle_message(message):
     print("받음")
@@ -492,8 +491,6 @@ def handle_message(message):
     emit('response', bard_answer)
 
 # ? 주식 검색
-
-
 @app.route('/search_stock', methods=['POST'])
 def search_stock_server():
     print('검색 진입')
@@ -505,8 +502,6 @@ def search_stock_server():
     return jsonify(search_response.to_dict())
 
 #! 구매로직 작성
-
-
 @app.route('/buy', methods=['POST'])
 def buy():
     data = request.get_json()
@@ -516,14 +511,18 @@ def buy():
     total_price = data.get('totalPrice')
     company_name = data.get('companyName')
     quantity = data.get('quantity')
-    print(company_name, quantity)
+    print('회사명, 수량: ', company_name, quantity)
     account = None  # 초기값으로 None 설정
     if find_id is not None:
         account = find_id.get('account')
         # account 값을 수정하는 로직을 추가
+        print('account: ', account)
+        print('account 타입: ', type(account))
+        print('total_price: ', total_price)
+        print('total_price 타입: ', type(total_price))
         new_account = account - total_price  # 새로운 account 값으로 대체할 값 설정
         # 데이터베이스에서 account 값을 수정
-        print(total_price)
+        print('총 가격: ', total_price)
         db.user_info.update_one(
             {"id": user_id}, {"$set": {"account": new_account}})
         print('account 값이 수정되었습니다.')
@@ -547,10 +546,34 @@ def buy():
     print('data' + str(data))
     print('account' + str(account))
     return jsonify(data)
+#! 보유주식 가져오기
+@app.route('/api/getmystock', methods=['GET'])
+def get_my_stock():
+    user_id = session.get('user_id')
+    # # 연결된 db에서 id가 로그인 한 id와 같은 데이터를 db에서 찾음
+    find_id = db.user_info.find_one({"id": user_id})
+    print('데이터 간다')
+    print(find_id["companyData"])
+    
+    return jsonify(find_id["companyData"])
+    
+@app.route('/api/nowprice', methods=['POST'])
+def get_now_stock():
+    array=[]
+    request_data = request.get_json()
+    # print(request_data)
+    for x in request_data: 
+        symbols = broker.fetch_kospi_symbols()
+        company_row = symbols[symbols['한글명'] ==x]
+        company_code = company_row['단축코드'].values[0]
+        company_price = broker.fetch_price(company_code)
+        company_infof = {
+         '현재가': company_price['output']['stck_prpr'],
+        }
+        array.append(company_infof)
 
-# ? 마이페이지 업종 선택 변경
-
-
+        # print(array)
+    return jsonify(array)
 @app.route('/categoryChange', methods=['POST'])
 def change():
     data = request.get_json()
@@ -565,8 +588,7 @@ def change():
     # user_category = document['choiceTwo']
     # print('category 확인용: ', user_category)
     print('업종 변경 종료')
-    return ''
-
+    
 
 if (__name__) == '__main__':
 
