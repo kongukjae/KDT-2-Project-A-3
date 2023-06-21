@@ -78,7 +78,7 @@ const ComPonent3: React.FC<Component2Props> = ({
           오늘최저가: {formatNumber(Number(upAndDown['오늘최저가']))}
         </Text>
         <Text style={styles.coloredText}>
-          현재가: {formatNumber(Number(upAndDown['현재가']))}
+          평균가: {formatNumber(Number(upAndDown['현재가']))}
         </Text>
         <Text style={styles.coloredText}>
           시가총액: {upAndDown['시가총액']}
